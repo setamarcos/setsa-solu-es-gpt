@@ -34,3 +34,93 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
     .servicos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .servico {
+      background: #f0f4f8;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .servico h3 {
+      margin-top: 0;
+      color: #004080;
+    }
+    .botoes {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .botao {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      background: #007BFF;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+    .botao:hover {
+      background: #0056b3;
+    }
+    .botao.whatsapp {
+      background: #25D366;
+    }
+    footer {
+      background: #004080;
+      color: white;
+      text-align: center;
+      padding: 20px 10px;
+      margin-top: 40px;
+    }
+    footer a {
+      color: #ffd700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Soluções Elétricas e de Automação com Excelência Técnica e Valor Acessível</h1>
+    <p>Há mais de 10 anos oferecendo qualidade, segurança e inovação em projetos elétricos e automação.</p>
+  </header>
+
+  <div class="container">
+    <div class="servicos">
+      <div class="servico">
+        <h3>Automação Residencial e Empresarial</h3>
+        <p>Controle remoto de lâmpadas, acionamento de equipamentos eletrônicos, botoeiras eletrônicas, sensores e integração com dispositivos móveis.</p>
+      </div>
+      <div class="servico">
+        <h3>Integração com CFTV e Alarmes</h3>
+        <p>O sistema de CFTV é totalmente integrado ao alarme, iluminação automatizada, portões e demais dispositivos eletrônicos da sua residência ou empresa.</p>
+      </div>
+      <div class="servico">
+        <h3>Projetos Elétricos e Cabeamento</h3>
+        <p>Soluções completas em instalações elétricas, cabeamento estruturado e projetos personalizados com garantia de segurança e desempenho.</p>
+      </div>
+      <div class="servico">
+        <h3>Manutenção e Suporte Técnico</h3>
+        <p>Atendimento rápido e suporte especializado para residências, empresas e indústrias. Confiança e qualidade no serviço prestado.</p>
+      </div>
+    </div>
+
+    <div class="botoes">
+      <a class="botao" href="mailto:setamarcos@gmail.com">Solicite um Orçamento</a>
+      <a class="botao whatsapp" href="https://wa.me/5531984821901" target="_blank">Chamar no WhatsApp</a>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>Seta Soluções</strong></p>
+    <p>Rua 12, nº 196, Bairro Monte Sinal, Esmeraldas - MG, Brasil</p>
+    <p><a href="tel:+5531984821901">📞 (31) 98482-1901</a> | <a href="mailto:setamarcos@gmail.com">✉️ setamarcos@gmail.com</a></p>
+  </footer>
+
+</body>
+</html>
