@@ -1,59 +1,130 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seta Soluções</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #0073e6;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        main {
-            max-width: 700px;
-            margin: 40px auto;
-            background-color: white;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            color: #0073e6;
-        }
-        p {
-            font-size: 18px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seta Soluções - Automação e Elétrica</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #004aad;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffa53d;
+    }
+    .contact a {
+      font-size: 14px;
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .contact a:hover {
+      text-decoration: underline;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .hero {
+      padding: 60px 20px;
+      text-align: center;
+      background: linear-gradient(45deg, #ffa53d, #004aad);
+      color: white;
+    }
+    .hero h1 {
+      font-size: 36px;
+    }
+    .hero p {
+      font-size: 20px;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .services {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .service {
+      background-color: white;
+      border-left: 5px solid #004aad;
+      margin-bottom: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    footer small {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div style="display: flex; align-items: center;">
+      <div class="logo">MP</div>
+      <div class="contact">
+        <a href="https://wa.me/5531984821901" target="_blank">(31) 98482-1901</a>
+      </div>
+    </div>
+  </header>
 
-<header>
-    <h1>Seta Soluções</h1>
-    <p>Soluções em elétrica e redes</p>
-</header>
+  <section class="hero">
+    <h1>Automação e Soluções Elétricas a um Preço Justo</h1>
+    <p>Mais de 10 anos oferecendo excelência em serviços elétricos, automação residencial e empresarial, CFTV, projetos personalizados e cabeamento estruturado.</p>
+  </section>
 
-<main>
-    <h2>Entre em Contato</h2>
-    <p><strong>Telefone:</strong> (31) 98482-1901</p>
-    <p><strong>Email:</strong> <a href="mailto:setamarcos@gmail.com">setamarcos@gmail.com</a></p>
+  <section class="services" id="servicos">
+    <div class="service">
+      <h2>Atendimento Elétrico 24h</h2>
+      <p>Serviços emergenciais com rapidez e segurança. Profissional capacitado disponível a qualquer hora.</p>
+    </div>
+    <div class="service">
+      <h2>CFTV e Monitoramento</h2>
+      <p>Instalação de câmeras de segurança com acesso remoto, qualidade de imagem e suporte técnico especializado.</p>
+    </div>
+    <div class="service">
+      <h2>Automação Residencial e Empresarial</h2>
+      <p>Soluções inteligentes para modernizar sua casa ou empresa, com controle por celular, sensores e mais.</p>
+    </div>
+    <div class="service">
+      <h2>Cabeamento Estruturado</h2>
+      <p>Organização e instalação de redes elétricas e de dados com alto padrão técnico e durabilidade.</p>
+    </div>
+    <div class="service">
+      <h2>Projetos Elétricos e de Automação</h2>
+      <p>Planejamento e execução de projetos sob medida, com eficiência, economia e tecnologia.</p>
+    </div>
+  </section>
 
-    <h2>Endereço</h2>
-    <p>EUA 12, nº 196</p>
-    <p>Bairro Monte Sinai</p>
-    <p>Esmeraldas - MG</p>
-
-    <h2>Sobre</h2>
-    <p>Oferecemos soluções personalizadas em elétrica residencial, comercial e redes de computadores.</p>
-</main>
-
+  <footer>
+    <strong>MARCOS PAULO DE OLIVEIRA SOUZA LTDA.</strong>
+    <small>Rua 12, nº 196 - Bairro Monte Sinal - Esmeraldas - MG - Brasil</small>
+    <small><a href="https://wa.me/5531984821901" target="_blank" style="color:white;text-decoration:none;">Tel/WhatsApp: (31) 98482-1901</a></small>
+  </footer>
 </body>
 </html>
