@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+# Reexecutando após resetar o ambiente: gerar o arquivo HTML corrigido novamente
+
+html_corrigido = """<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
@@ -63,7 +65,7 @@
 </head>
 <body>
 <header>
- <img src="logotipo-mp.png" alt="Logotipo MP" class="logo">
+  <img src="logotipo-mp.png" alt="Logotipo MP" class="logo">
   <h1>MP Instalações Inteligentes</h1>
   <p>Tecnologia, segurança e eficiência para sua casa ou empresa</p>
 </header>
@@ -102,4 +104,10 @@
     &copy; 2025 MP Instalações Inteligentes | Seta Soluções. Todos os direitos reservados.
   </footer>
 </body>
-</html>
+</html>"""
+
+# Salvar o arquivo
+with open("/mnt/data/index.html", "w", encoding="utf-8") as f:
+    f.write(html_corrigido)
+
+"/mnt/data/index.html"
