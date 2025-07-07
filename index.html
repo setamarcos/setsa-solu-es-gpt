@@ -1,106 +1,117 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MP Instalações Inteligentes</title>
+  <title>Seta Soluções - Automação e Elétrica</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
     }
     header {
-      background-color: #1A33D8;
-      color: #fff;
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header p {
-      margin: 0.5rem 0 0;
-      font-size: 1.2rem;
+      background-color: #004aad;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .logo {
-      max-width: 250px;
-      margin-bottom: 1rem;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffa53d;
     }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background-color: #fff;
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
     }
-    .servico {
-      margin-bottom: 1.5rem;
-    }
-    .servico h3 {
-      color: #003366;
-    }
-    .contato {
-      background-color: #003366;
-      color: #fff;
+    .hero {
+      padding: 60px 20px;
       text-align: center;
-      padding: 1.5rem;
-      margin-top: 2rem;
+      background: linear-gradient(45deg, #ffa53d, #004aad);
+      color: white;
     }
-    .contato p {
-      margin: 0.5rem 0;
+    .hero h1 {
+      font-size: 36px;
+    }
+    .hero p {
+      font-size: 20px;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .services {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .service {
+      background-color: white;
+      border-left: 5px solid #004aad;
+      margin-bottom: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     footer {
+      background-color: #333;
+      color: white;
+      padding: 20px;
       text-align: center;
-      padding: 1rem;
-      background-color: #ccc;
-      font-size: 0.9rem;
+    }
+    footer small {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-<header>
-  <img src="logomarca5.png" alt="Logotipo MP" class="logo">
-  <h1>MP Instalações Inteligentes</h1>
-  <p>Tecnologia, segurança e eficiência para sua casa ou empresa</p>
-</header>
+  <header>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div class="logo">MP</div>
+  </header>
 
-  <div class="container">
-    <div class="servico">
-      <h3>🔌 Instalação elétrica completa ou parcial</h3>
-      <p>Projetos residenciais e comerciais com materiais de qualidade e garantia total.</p>
+  <section class="hero">
+    <h1>Automação e Soluções Elétricas a um Preço Justo</h1>
+    <p>Mais de 10 anos oferecendo excelência em serviços elétricos, automação residencial e empresarial, CFTV, projetos personalizados e cabeamento estruturado.</p>
+  </section>
+
+  <section class="services" id="servicos">
+    <div class="service">
+      <h2>Atendimento Elétrico 24h</h2>
+      <p>Serviços emergenciais com rapidez e segurança. Profissional capacitado disponível a qualquer hora.</p>
     </div>
-
-    <div class="servico">
-      <h3>📶 Cabeamento de internet</h3>
-      <p>Rede lenta? A gente resolve! Instalação de cabeamento estruturado com alta performance.</p>
+    <div class="service">
+      <h2>CFTV e Monitoramento</h2>
+      <p>Instalação de câmeras de segurança com acesso remoto, qualidade de imagem e suporte técnico especializado.</p>
     </div>
-
-    <div class="servico">
-      <h3>📱 Automação de iluminação e equipamentos</h3>
-      <p>Controle da iluminação e aparelhos pelo celular. Mais comodidade e economia.</p>
+    <div class="service">
+      <h2>Automação Residencial e Empresarial</h2>
+      <p>Soluções inteligentes para modernizar sua casa ou empresa, com controle por celular, sensores e mais.</p>
     </div>
-
-    <div class="servico">
-      <h3>🛠 Revisão e manutenção preventiva</h3>
-      <p>Evite curtos e problemas maiores com revisões periódicas e profissionais.</p>
+    <div class="service">
+      <h2>Cabeamento Estruturado</h2>
+      <p>Organização e instalação de redes elétricas e de dados com alto padrão técnico e durabilidade.</p>
     </div>
-  </div>
-
-  <div class="contato">
-    <h2>Solicite seu orçamento agora</h2>
-    <p><strong>Marcos</strong></p>
-    <p>📞 <a href="https://wa.me/5531984821901" style="color: #fff; text-decoration: underline;" target="_blank"><strong>(31) 98482-1901</strong> (WhatsApp)</a></p>
-    <p>🌐 <a href="https://www.setasolucoes.com.br" style="color: #fff; text-decoration: underline;">www.setasolucoes.com.br</a></p>
-    <p>📍 Esmeraldas/MG</p>
-  </div>
+    <div class="service">
+      <h2>Projetos Elétricos e de Automação</h2>
+      <p>Planejamento e execução de projetos sob medida, com eficiência, economia e tecnologia.</p>
+    </div>
+  </section>
 
   <footer>
-    &copy; 2025 MP Instalações Inteligentes | Seta Soluções. Todos os direitos reservados.
+    <strong>MARCOS PAULO DE OLIVEIRA SOUZA LTDA.</strong>
+    <small>Rua 12, nº 196 - Bairro Monte Sinal - Esmeraldas - MG - Brasil</small>
+    <small>Tel/Fax: (31) 3397-7279</small>
   </footer>
 </body>
 </html>
-
