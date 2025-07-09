@@ -1,124 +1,188 @@
 <!DOCTYPE html>
-
-</footer>
-</body>
-</html><!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <title>MP Instalações Inteligentes | Contagem MG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MP Instalações Inteligentes</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
     }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fa;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
     header {
-      background-color: #003366;
+      background: #003366;
       color: #fff;
       text-align: center;
-      padding: 2rem 1rem 1rem 1rem;
+      padding: 2.5rem 1rem 1.2rem;
+      position: relative;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2.2rem;
+    .frase-impacto {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1.2rem;
+      text-shadow: 1px 1px 8px #001a33;
     }
-    header p {
-      margin: 0.5rem 0 0;
+    .cta-wpp {
+      display: inline-block;
+      background: #25d366;
+      color: #fff;
+      padding: 1rem 2.2rem;
+      border-radius: 50px;
       font-size: 1.2rem;
-    }
-    .logo {
-      max-width: 300px;
-      margin-bottom: 1rem;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background-color: #fff;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 0 16px rgba(0, 0, 0, 0.10);
-      border-radius: 10px;
-    }
-    .servico {
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 2px 8px #00336655;
       margin-bottom: 1.5rem;
+      transition: background 0.2s;
     }
-    .servico h3 {
-      color: #003366;
-      margin-bottom: 0.2rem;
-    }
-    .contato {
-      background-color: #003366;
-      color: #fff;
+    .cta-wpp:hover { background: #1ebc59; }
+    .video-bloco {
+      max-width: 700px;
+      margin: 1.5rem auto 1rem;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px #00336622;
+      padding: 1.6rem 1rem 1.2rem 1rem;
       text-align: center;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-top: 2rem;
     }
-    .contato a {
+    video {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 12px;
+      margin-bottom: 0.6rem;
+      border: 4px solid #003366;
+      background: #000;
+    }
+    .servicos {
+      max-width: 700px;
+      margin: 1.2rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px #00336622;
+      padding: 1.2rem 1rem 0.8rem 1rem;
+      text-align: left;
+    }
+    .servicos h2 { color: #003366; margin-top: 0; }
+    .servicos ul { padding-left: 1.2rem; margin: 1rem 0 0.5rem 0; }
+    .servicos li { font-size:1.05rem; margin-bottom:0.7rem; }
+    .formulario {
+      background: #fff;
+      max-width: 400px;
+      margin: 1.5rem auto 1rem auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #00336622;
+      padding: 1.2rem 1rem 1rem 1rem;
+    }
+    .formulario label { display: block; margin: 0.4rem 0 0.1rem; color: #003366; }
+    .formulario input, .formulario textarea, .formulario select {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 0.7rem;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .formulario button {
+      background: #003366;
       color: #fff;
-      text-decoration: underline;
-    }
-    .contato p {
-      margin: 0.5rem 0;
+      border: 0;
+      padding: 0.7rem 2rem;
+      border-radius: 7px;
+      font-size: 1.09rem;
+      margin-top: 0.4rem;
+      cursor: pointer;
     }
     footer {
-      background-color: #003366;
+      background: #003366;
       color: #fff;
       text-align: center;
-      padding: 1rem;
-      font-size: 0.95rem;
-      margin-top: 2rem;
+      padding: 1rem 0 0.6rem 0;
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    @media (max-width: 980px) {
-      .container {
-        max-width: 98vw;
-        padding: 1rem 0.3rem;
-      }
-      .logo {
-        max-width: 90vw;
-      }
+    .footer-logo {
+      max-width: 160px;
+      margin: 0.2rem auto 0.4rem auto;
+      display: block;
+      filter: drop-shadow(0 2px 8px #001a33bb);
+    }
+    .footer-info { font-size: 0.99rem; }
+    @media (max-width: 800px) {
+      .video-bloco, .servicos { max-width:98vw; padding:1rem 0.2rem; }
+      .formulario { max-width:96vw; }
+      .frase-impacto { font-size: 1.25rem; }
     }
   </style>
 </head>
 <body>
-<header>
-  <img src="logomarca2.png" alt="Logotipo MP" class="logo">
-  <h1>MP Instalações Inteligentes</h1>
-  <p>Tecnologia, segurança e eficiência para sua casa ou empresa</p>
-</header>
+  <header>
+    <div class="frase-impacto">
+      Sua casa ou empresa mais segura, tecnológica<br> e conectada em Contagem e região!
+    </div>
+    <a class="cta-wpp" href="https://wa.me/5531984821901">Chamar no WhatsApp</a>
+  </header>
 
-<div class="container">
-  <div class="servico">
-    <h3>🔌 Instalação elétrica completa ou parcial</h3>
-    <p>Projetos residenciais e comerciais com materiais de qualidade e garantia total.</p>
+  <div class="video-bloco">
+    <h2>Veja na prática:</h2>
+    <video controls poster="video-capa.jpg">
+      <source src="portao 01.mp4" type="video/mp4">
+      Seu navegador não suporta vídeo.
+    </video>
+    <div style="font-size:1.05rem;color:#003366;margin-top:0.4rem;">
+      Controle remoto do portão e monitoramento de câmeras CFTV em tempo real.
+    </div>
   </div>
-  <div class="servico">
-    <h3>📶 Cabeamento de internet</h3>
-    <p>Rede lenta? A gente resolve! Instalação de cabeamento estruturado com alta performance.</p>
-  </div>
-  <div class="servico">
-    <h3>📱 Automação de iluminação e equipamentos</h3>
-    <p>Controle da iluminação e aparelhos pelo celular. Mais comodidade e economia.</p>
-  </div>
-  <div class="servico">
-    <h3>🛠 Revisão e manutenção preventiva</h3>
-    <p>Evite curtos e problemas maiores com revisões periódicas e profissionais.</p>
-  </div>
-  <div class="contato">
-    <h2>Solicite seu orçamento agora</h2>
-    <p><strong>Marcos</strong></p>
-    <p>📞 <strong>(31) 98482-1901</strong> (WhatsApp)</p>
-    <p>✉️ <a href="mailto:setamarcos@gmail.com">setamarcos@gmail.com</a></p>
-    <p>🌐 <a href="https://www.setasolucoes.com.br">www.setasolucoes.com.br</a></p>
-    <p>📍 Esmeraldas/MG</p>
-  </div>
-</div>
 
-<footer>
-  &copy; 2025 MP Instalações Inteligentes | Seta Soluções. Todos os direitos reservados.
-</footer>
+  <section class="servicos">
+    <h2>Diferenciais e Serviços</h2>
+    <ul>
+      <li>✅ Instalação e automação de portão eletrônico</li>
+      <li>✅ CFTV: monitoramento por câmeras para você e vizinhos</li>
+      <li>✅ Controle pelo celular: portão, câmeras e iluminação</li>
+      <li>✅ Atendimento 24h, garantia e preço justo</li>
+      <li>✅ Orçamento rápido e sem compromisso</li>
+    </ul>
+  </section>
+
+  <section class="formulario">
+    <h2>Solicite seu orçamento</h2>
+    <form action="mailto:setamarcos@gmail.com" method="POST" enctype="text/plain">
+      <label for="nome">Nome:</label>
+      <input type="text" name="nome" id="nome" required>
+      <label for="telefone">Telefone/WhatsApp:</label>
+      <input type="text" name="telefone" id="telefone" required>
+      <label for="servico">Qual serviço deseja?</label>
+      <select name="servico" id="servico">
+        <option value="portao">Portão Automático</option>
+        <option value="cftv">CFTV e Monitoramento</option>
+        <option value="automacao">Automação Residencial/Empresarial</option>
+        <option value="elétrica">Elétrica</option>
+        <option value="outro">Outro</option>
+      </select>
+      <label for="mensagem">Descreva o que precisa:</label>
+      <textarea name="mensagem" id="mensagem" rows="3"></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <footer>
+    <img src="logomarca2.png" alt="Logotipo MP" class="footer-logo">
+    <div class="footer-info">
+      &copy; 2025 MP Instalações Inteligentes | Seta Soluções.<br>
+      WhatsApp: (31) 98482-1901 | E-mail: setamarcos@gmail.com<br>
+      Contagem, MG
+    </div>
+  </footer>
 </body>
 </html>
