@@ -22,13 +22,15 @@
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 2.5rem 1rem 1.2rem;
+      /* Altura do padding reduzida em 40% */
+      padding: 2.4rem 1rem 1.2rem 1rem;
       position: relative;
+      width: 100%;
     }
     .frase-impacto {
-      font-size: 2rem;
+      font-size: 2.1rem; /* Reduzi um pouco para acompanhar o header menor */
       font-weight: bold;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.1rem;
       text-shadow: 1px 1px 8px #001a33;
     }
     .cta-wpp {
@@ -56,7 +58,7 @@
     }
     video {
       width: 100%;
-      max-width: 480px;
+      max-width: 700px; /* sempre o maior */
       border-radius: 12px;
       margin-bottom: 0.6rem;
       border: 4px solid #003366;
@@ -76,7 +78,7 @@
     .servicos li { font-size:1.05rem; margin-bottom:0.7rem; }
     .formulario {
       background: #fff;
-      max-width: 400px;
+      max-width: 400px; /* menor */
       margin: 1.5rem auto 1rem auto;
       border-radius: 12px;
       box-shadow: 0 2px 12px #00336622;
@@ -105,23 +107,35 @@
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 1rem 0 0.6rem 0;
+      padding: 0.6rem 0 0.6rem 0;
       margin-top: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
     }
     .footer-logo {
-      max-width: 160px;
-      margin: 0.2rem auto 0.4rem auto;
+      max-width: 240px; /* 3x maior que antes */
+      height: auto;     /* mantém altura proporcional */
+      margin: 0.2rem auto 0.3rem auto;
       display: block;
       filter: drop-shadow(0 2px 8px #001a33bb);
     }
-    .footer-info { font-size: 0.99rem; }
+    .footer-info {
+      font-size: 0.49rem; /* metade do tamanho */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100vw;
+      max-width: 100%;
+    }
     @media (max-width: 800px) {
       .video-bloco, .servicos { max-width:98vw; padding:1rem 0.2rem; }
       .formulario { max-width:96vw; }
-      .frase-impacto { font-size: 1.25rem; }
+      .frase-impacto { font-size: 1.1rem; }
+      header { padding: 1.2rem 0.5rem 0.7rem 0.5rem; }
+      .footer-info { font-size: 0.69rem; }
+      .footer-logo { max-width: 140px; }
     }
   </style>
 </head>
@@ -179,9 +193,7 @@
   <footer>
     <img src="logomarca2.png" alt="Logotipo MP" class="footer-logo">
     <div class="footer-info">
-      &copy; 2025 MP Instalações Inteligentes | Seta Soluções.<br>
-      WhatsApp: (31) 98482-1901 | E-mail: setamarcos@gmail.com<br>
-      Contagem, MG
+      &copy; 2025 MP Instalações Inteligentes | Seta Soluções. WhatsApp: (31) 98482-1901 | E-mail: setamarcos@gmail.com | Contagem, MG
     </div>
   </footer>
 </body>
