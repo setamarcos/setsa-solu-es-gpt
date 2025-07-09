@@ -22,134 +22,124 @@
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 1.25rem 1rem 0.6rem 1rem; /* metade da altura original */
+      padding: 2.5rem 1rem 1.2rem;
       position: relative;
     }
     .frase-impacto {
-      font-size: 1.1rem; /* menor */
+      font-size: 2rem;
       font-weight: bold;
-      margin-bottom: 0.7rem;
+      margin-bottom: 1.2rem;
       text-shadow: 1px 1px 8px #001a33;
     }
     .cta-wpp {
       display: inline-block;
       background: #25d366;
       color: #fff;
-      padding: 0.5rem 1.1rem;
+      padding: 1rem 2.2rem;
       border-radius: 50px;
-      font-size: 1rem;
+      font-size: 1.2rem;
       text-decoration: none;
       font-weight: bold;
       box-shadow: 0 2px 8px #00336655;
-      margin-bottom: 0.7rem;
+      margin-bottom: 1.5rem;
       transition: background 0.2s;
     }
     .cta-wpp:hover { background: #1ebc59; }
     .video-bloco {
       max-width: 700px;
-      margin: 0.75rem auto 0.5rem auto; /* metade das margens */
+      margin: 1.5rem auto 1rem;
       background: #fff;
       border-radius: 18px;
       box-shadow: 0 2px 16px #00336622;
-      padding: 0.8rem 0.5rem; /* metade do padding */
+      padding: 1.6rem 1rem 1.2rem 1rem;
       text-align: center;
     }
     video {
       width: 100%;
-      max-width: 340px; /* reduzido */
-      height: 95px; /* 25% da altura original aprox */
+      max-width: 480px;
       border-radius: 12px;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.6rem;
       border: 4px solid #003366;
       background: #000;
-      object-fit: cover;
     }
     .servicos {
       max-width: 700px;
-      margin: 0.6rem auto;
+      margin: 1.2rem auto;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 16px #00336622;
-      padding: 0.6rem 0.5rem 0.4rem 0.5rem; /* metade do painel de informações */
+      padding: 1.2rem 1rem 0.8rem 1rem;
       text-align: left;
     }
-    .servicos h2 { color: #003366; margin-top: 0; font-size: 1.1rem;}
-    .servicos ul { padding-left: 1.2rem; margin: 0.5rem 0 0.2rem 0; }
-    .servicos li { font-size:0.98rem; margin-bottom:0.3rem; }
+    .servicos h2 { color: #003366; margin-top: 0; }
+    .servicos ul { padding-left: 1.2rem; margin: 1rem 0 0.5rem 0; }
+    .servicos li { font-size:1.05rem; margin-bottom:0.7rem; }
     .formulario {
       background: #fff;
       max-width: 400px;
-      margin: 0.7rem auto 0.5rem auto;
+      margin: 1.5rem auto 1rem auto;
       border-radius: 12px;
       box-shadow: 0 2px 12px #00336622;
-      padding: 0.6rem 0.5rem;
+      padding: 1.2rem 1rem 1rem 1rem;
     }
-    .formulario label { display: block; margin: 0.2rem 0 0.05rem; color: #003366; font-size:0.97rem;}
+    .formulario label { display: block; margin: 0.4rem 0 0.1rem; color: #003366; }
     .formulario input, .formulario textarea, .formulario select {
       width: 100%;
-      padding: 0.3rem;
-      margin-bottom: 0.4rem;
+      padding: 0.6rem;
+      margin-bottom: 0.7rem;
       border: 1px solid #bbb;
       border-radius: 6px;
-      font-size: 0.97rem;
+      font-size: 1rem;
     }
     .formulario button {
       background: #003366;
       color: #fff;
       border: 0;
-      padding: 0.4rem 1.2rem;
+      padding: 0.7rem 2rem;
       border-radius: 7px;
-      font-size: 1rem;
-      margin-top: 0.3rem;
+      font-size: 1.09rem;
+      margin-top: 0.4rem;
       cursor: pointer;
     }
     footer {
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 0.8rem 0 0.2rem 0;
+      padding: 1rem 0 0.6rem 0;
       margin-top: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .footer-logo {
-      max-width: 320px; /* dobro da largura padrão */
-      max-height: 120px; /* dobro da altura padrão */
+      max-width: 160px;
       margin: 0.2rem auto 0.4rem auto;
       display: block;
       filter: drop-shadow(0 2px 8px #001a33bb);
-      object-fit: contain;
     }
-    .footer-info {
-      font-size: 0.92rem;
-      margin-bottom: 0.2rem;
-      white-space: nowrap;
-      overflow-x: auto;
-    }
+    .footer-info { font-size: 0.99rem; }
     @media (max-width: 800px) {
-      .video-bloco, .servicos { max-width:98vw; }
+      .video-bloco, .servicos { max-width:98vw; padding:1rem 0.2rem; }
       .formulario { max-width:96vw; }
-      .footer-logo { max-width: 90vw; }
-      .footer-info { font-size: 0.85rem; }
+      .frase-impacto { font-size: 1.25rem; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="frase-impacto">
-      Sua casa ou empresa mais segura, tecnológica e conectada em Contagem e região!
+      Sua casa ou empresa mais segura, tecnológica<br> e conectada em Contagem e região!
     </div>
     <a class="cta-wpp" href="https://wa.me/5531984821901">Chamar no WhatsApp</a>
   </header>
 
   <div class="video-bloco">
-    <h2 style="font-size:1.04rem;color:#003366;margin-bottom:0.4rem;">Veja na prática:</h2>
+    <h2>Veja na prática:</h2>
     <video controls poster="video-capa.jpg">
       <source src="portao 01.mp4" type="video/mp4">
       Seu navegador não suporta vídeo.
     </video>
-    <div style="font-size:0.98rem;color:#003366;margin-top:0.2rem;">
+    <div style="font-size:1.05rem;color:#003366;margin-top:0.4rem;">
       Controle remoto do portão e monitoramento de câmeras CFTV em tempo real.
     </div>
   </div>
@@ -166,7 +156,7 @@
   </section>
 
   <section class="formulario">
-    <h2 style="font-size:1.07rem;margin-bottom:0.5rem;">Solicite seu orçamento</h2>
+    <h2>Solicite seu orçamento</h2>
     <form action="mailto:setamarcos@gmail.com" method="POST" enctype="text/plain">
       <label for="nome">Nome:</label>
       <input type="text" name="nome" id="nome" required>
@@ -181,7 +171,7 @@
         <option value="outro">Outro</option>
       </select>
       <label for="mensagem">Descreva o que precisa:</label>
-      <textarea name="mensagem" id="mensagem" rows="2"></textarea>
+      <textarea name="mensagem" id="mensagem" rows="3"></textarea>
       <button type="submit">Enviar</button>
     </form>
   </section>
@@ -189,7 +179,9 @@
   <footer>
     <img src="logomarca2.png" alt="Logotipo MP" class="footer-logo">
     <div class="footer-info">
-      &copy; 2025 MP Instalações Inteligentes | Seta Soluções | WhatsApp: (31) 98482-1901 | E-mail: setamarcos@gmail.com | Contagem, MG
+      &copy; 2025 MP Instalações Inteligentes | Seta Soluções.<br>
+      WhatsApp: (31) 98482-1901 | E-mail: setamarcos@gmail.com<br>
+      Contagem, MG
     </div>
   </footer>
 </body>
