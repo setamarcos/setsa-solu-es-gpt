@@ -36,6 +36,7 @@
       background-color: #fff;
       padding: 2rem;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
     .servico {
       margin-bottom: 1.5rem;
@@ -43,6 +44,27 @@
     .servico h3 {
       color: #003366;
     }
+    
+    /* BOTÃO DE GOVERNANÇA */
+    .btn-governanca {
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+      padding: 15px 30px;
+      background-color: #0ea5e9;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+      transition: 0.3s;
+      border: 2px solid transparent;
+    }
+    .btn-governanca:hover {
+      background-color: #0284c7;
+      transform: translateY(-2px);
+    }
+
     .contato {
       background-color: #003366;
       color: #fff;
@@ -59,6 +81,7 @@
       background-color: #ccc;
       font-size: 0.9rem;
     }
+    a { text-decoration: none; }
   </style>
 </head>
 <body>
@@ -69,6 +92,12 @@
 </header>
 
   <div class="container">
+    <a href="governança/index.html" class="btn-governanca">
+      ⚙️ ACESSAR MARCOS GOVERNANÇA
+    </a>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
     <div class="servico">
       <h3>🔌 Instalação elétrica completa ou parcial</h3>
       <p>Projetos residenciais e comerciais com materiais de qualidade e garantia total.</p>
@@ -103,4 +132,3 @@
   </footer>
 </body>
 </html>
-~
