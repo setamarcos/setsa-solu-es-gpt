@@ -2,20 +2,63 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>MP Hub IA - Final</title>
+<title>MP Hub IA v4 | Seta Soluções</title>
+
 <style>
-body { font-family: Arial; padding:20px; background:#f5f5f5; }
-.container { background:#fff; padding:20px; border-radius:10px; max-width:900px; margin:auto; }
-input, select, textarea { width:100%; margin-bottom:10px; padding:8px; }
-button { padding:10px; margin:5px; cursor:pointer; }
-.result { background:#eef; padding:10px; margin-top:15px; border-radius:5px; white-space:pre-wrap; }
-.preview { margin-top:10px; max-width:100%; }
+body {
+  margin:0;
+  font-family: Arial;
+  background:#003366;
+  color:#fff;
+}
+
+header {
+  text-align:center;
+  padding:2rem;
+}
+
+.container {
+  background:#fff;
+  color:#000;
+  max-width:900px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:10px;
+}
+
+input, textarea, select {
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+}
+
+button {
+  background:#ff6600;
+  color:#fff;
+  border:none;
+  padding:12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.result {
+  background:#eef;
+  padding:10px;
+  margin-top:15px;
+  white-space:pre-wrap;
+}
+
 </style>
 </head>
+
 <body>
 
+<header>
+<h2>MP Hub IA v4</h2>
+<p>Controle inteligente de interação com IA</p>
+</header>
+
 <div class="container">
-<h2>MP Hub IA - Final</h2>
 
 <label>Tipo:</label>
 <select id="tipo">
@@ -23,20 +66,16 @@ button { padding:10px; margin:5px; cursor:pointer; }
 <option>Técnica</option>
 <option>Comercial</option>
 <option>Casa</option>
-<option>Outros</option>
 </select>
 
 <label>Subtipo:</label>
 <input id="subtipo">
 
+<label>Problema Principal:</label>
+<textarea id="problema"></textarea>
+
 <label>Contexto:</label>
 <textarea id="contexto"></textarea>
-
-<label>Dúvida:</label>
-<textarea id="duvida"></textarea>
-
-<label>Motivo:</label>
-<textarea id="motivo"></textarea>
 
 <label>Objetivo:</label>
 <textarea id="objetivo"></textarea>
@@ -44,77 +83,46 @@ button { padding:10px; margin:5px; cursor:pointer; }
 <label>Resultado Esperado:</label>
 <textarea id="resultadoEsperado"></textarea>
 
-<label>O que NÃO quero:</label>
+<label>O que NÃO quer:</label>
 <textarea id="naoQuero"></textarea>
 
-<label>IA:</label>
-<select id="ia">
-<option>ChatGPT</option>
-<option>Gemini</option>
-<option>Copilot</option>
-</select>
+<button onclick="gerar()">Gerar Prompt</button>
+<button onclick="copiar()">Copiar</button>
 
-<label>Imagem:</label>
-<input type="file" id="imagem" accept="image/*">
-<img id="preview" class="preview"/>
-
-<button onclick="enviar()">Enviar</button>
-<button onclick="copiar()">Copiar Prompt</button>
-<button onclick="exportar()">Exportar JSON</button>
-
-<div class="result" id="resultado"></div>
+<div class="result" id="saida"></div>
 
 </div>
 
 <script>
-let banco = JSON.parse(localStorage.getItem("mpHub")) || [];
-let promptFinal = "";
+let textoFinal = "";
 
-imagem.onchange = evt => {
-    const [file] = imagem.files;
-    if (file) preview.src = URL.createObjectURL(file);
-};
-
-function analisarEstado(tipo, contexto) {
-    if (!contexto || contexto.length < 20) return "Contexto insuficiente — refine antes de prosseguir";
-
-    if (tipo === "Pessoal") return "Falta de clareza / risco de dispersão";
-    if (tipo === "Técnica") return "Execução técnica em andamento";
-    if (tipo === "Comercial") return "Oportunidade com potencial de fechamento";
-    if (tipo === "Casa") return "Demanda doméstica ativa";
-    return "Em análise";
+function detectarTipoResposta(tipo) {
+  if (tipo === "Técnica") return "Técnica";
+  if (tipo === "Comercial") return "Comercial";
+  if (tipo === "Pessoal") return "Direta e prática";
+  return "Objetiva";
 }
 
-function gerarSugestao(tipo, objetivo, contexto) {
-    if (!contexto || contexto.length < 20) {
-        return "Refine o contexto para obter uma sugestão válida.";
-    }
+function gerar() {
 
-    if (tipo === "Pessoal") {
-        return "Reduzir dispersão, definir foco único e executar com clareza.";
-    }
+let tipoResp = detectarTipoResposta(tipo.value);
 
-    if (tipo === "Técnica") {
-        return "Organizar escopo técnico e partir para execução direta.";
-    }
+let estado = "Em análise";
 
-    if (tipo === "Comercial") {
-        return "Estruturar proposta clara visando fechamento.";
-    }
-
-    return "Organizar escopo e executar de forma objetiva.";
+if (problema.value.length < 10) {
+  estado = "Problema mal definido";
 }
 
-function enviar() {
+if (contexto.value.length < 20) {
+  estado = "Contexto insuficiente";
+}
 
-    let estado = analisarEstado(tipo.value, contexto.value);
-    let sugestao = gerarSugestao(tipo.value, objetivo.value, contexto.value);
-
-    let assunto = tipo.value + " - " + subtipo.value;
-
-    promptFinal = `
+textoFinal = `
 ASSUNTO:
-${assunto}
+${tipo.value} - ${subtipo.value}
+
+PROBLEMA PRINCIPAL:
+${problema.value}
 
 OBJETIVO:
 ${objetivo.value}
@@ -127,55 +135,199 @@ ${naoQuero.value}
 
 CONTEXTO:
 ${contexto.value}
-${duvida.value}
-${motivo.value}
 
-ESTADO ATUAL:
-${estado}
+TIPO DE RESPOSTA:
+${tipoResp}
+
+FOCO PRINCIPAL:
+Resolver o problema principal descrito
+
+REGRAS:
+- Não fugir do problema principal
+- Não expandir para estratégia sem solicitação
+- Resposta deve ser direta e aplicável
 
 SOLICITAÇÃO:
-Analise, organize e gere uma resposta objetiva e utilizável.
-Se faltar informação, peça de forma direta.
+Gerar resposta objetiva, prática e utilizável.
+Se faltar informação, pedir de forma direta.
+
+ESTADO:
+${estado}
+`;
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>MP Hub IA v4 | Seta Soluções</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#003366;
+  color:#fff;
+}
+
+header {
+  text-align:center;
+  padding:2rem;
+}
+
+.container {
+  background:#fff;
+  color:#000;
+  max-width:900px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:10px;
+}
+
+input, textarea, select {
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+}
+
+button {
+  background:#ff6600;
+  color:#fff;
+  border:none;
+  padding:12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.result {
+  background:#eef;
+  padding:10px;
+  margin-top:15px;
+  white-space:pre-wrap;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>MP Hub IA v4</h2>
+<p>Controle inteligente de interação com IA</p>
+</header>
+
+<div class="container">
+
+<label>Tipo:</label>
+<select id="tipo">
+<option>Pessoal</option>
+<option>Técnica</option>
+<option>Comercial</option>
+<option>Casa</option>
+</select>
+
+<label>Subtipo:</label>
+<input id="subtipo">
+
+<label>Problema Principal:</label>
+<textarea id="problema"></textarea>
+
+<label>Contexto:</label>
+<textarea id="contexto"></textarea>
+
+<label>Objetivo:</label>
+<textarea id="objetivo"></textarea>
+
+<label>Resultado Esperado:</label>
+<textarea id="resultadoEsperado"></textarea>
+
+<label>O que NÃO quer:</label>
+<textarea id="naoQuero"></textarea>
+
+<button onclick="gerar()">Gerar Prompt</button>
+<button onclick="copiar()">Copiar</button>
+
+<div class="result" id="saida"></div>
+
+</div>
+
+<script>
+let textoFinal = "";
+
+function detectarTipoResposta(tipo) {
+  if (tipo === "Técnica") return "Técnica";
+  if (tipo === "Comercial") return "Comercial";
+  if (tipo === "Pessoal") return "Direta e prática";
+  return "Objetiva";
+}
+
+function gerar() {
+
+let tipoResp = detectarTipoResposta(tipo.value);
+
+let estado = "Em análise";
+
+if (problema.value.length < 10) {
+  estado = "Problema mal definido";
+}
+
+if (contexto.value.length < 20) {
+  estado = "Contexto insuficiente";
+}
+
+textoFinal = `
+ASSUNTO:
+${tipo.value} - ${subtipo.value}
+
+PROBLEMA PRINCIPAL:
+${problema.value}
+
+OBJETIVO:
+${objetivo.value}
+
+RESULTADO ESPERADO:
+${resultadoEsperado.value}
+
+RESTRIÇÕES:
+${naoQuero.value}
+
+CONTEXTO:
+${contexto.value}
+
+TIPO DE RESPOSTA:
+${tipoResp}
+
+FOCO PRINCIPAL:
+Resolver o problema principal descrito
+
+REGRAS:
+- Não fugir do problema principal
+- Não expandir para estratégia sem solicitação
+- Resposta deve ser direta e aplicável
+
+SOLICITAÇÃO:
+Gerar resposta objetiva, prática e utilizável.
+Se faltar informação, pedir de forma direta.
+
+ESTADO:
+${estado}
 `;
 
-    let resultadoTexto = `
-SUGESTÃO IA:
-${sugestao}
-
-------------------------------
-
-BLOCO UNIVERSAL:
-${promptFinal}
-`;
-
-    resultado.innerText = resultadoTexto;
-
-    banco.push({
-        tipo: tipo.value,
-        subtipo: subtipo.value,
-        contexto: contexto.value,
-        objetivo: objetivo.value,
-        resultadoEsperado: resultadoEsperado.value,
-        estado: estado,
-        sugestao: sugestao,
-        prompt: promptFinal,
-        data: new Date().toLocaleString()
-    });
-
-    localStorage.setItem("mpHub", JSON.stringify(banco));
+saida.innerText = textoFinal;
 }
 
 function copiar() {
-    navigator.clipboard.writeText(promptFinal);
-    alert("Prompt copiado!");
+navigator.clipboard.writeText(textoFinal);
+alert("Copiado!");
+}
+</script>
+
+</body>
+</html>
+saida.innerText = textoFinal;
 }
 
-function exportar() {
-    let blob = new Blob([JSON.stringify(banco, null, 2)], {type:"application/json"});
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "mp_hub.json";
-    link.click();
+function copiar() {
+navigator.clipboard.writeText(textoFinal);
+alert("Copiado!");
 }
 </script>
 
