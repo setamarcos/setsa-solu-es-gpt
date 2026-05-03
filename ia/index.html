@@ -4,55 +4,104 @@
 <meta charset="UTF-8">
 <title>MP Hub IA</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
 <style>
 body {
   margin:0;
-  font-family: 'Roboto', sans-serif;
+  font-family: Arial, sans-serif;
   background:#003366;
   color:#fff;
 }
 
+/* HEADER */
 header {
   text-align:center;
-  padding:1.5rem;
+  padding:2rem 1rem;
 }
 
+header h2 {
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+header p {
+  font-size:16px;
+  line-height:1.5;
+  opacity:0.95;
+}
+
+/* CONTAINER */
 .container {
   background:#fff;
   color:#000;
-  max-width:800px;
+  max-width:780px;
   margin:20px auto;
-  padding:20px;
-  border-radius:10px;
+  padding:24px;
+  border-radius:12px;
 }
 
-textarea {
+/* CAMPOS */
+label {
+  font-size:15px;
+  font-weight:bold;
+}
+
+small {
+  display:block;
+  font-size:13px;
+  color:#555;
+  margin-bottom:10px;
+}
+
+input, textarea, select {
   width:100%;
-  padding:10px;
+  padding:12px;
   font-size:16px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  margin-bottom:16px;
 }
 
+/* BOTÕES */
 button {
   background:#ff6600;
   color:#fff;
   border:none;
-  padding:12px;
-  border-radius:6px;
-  margin-top:10px;
+  padding:14px;
+  font-size:16px;
+  border-radius:8px;
   cursor:pointer;
+  margin-right:8px;
+  margin-top:5px;
+  min-height:44px;
 }
 
+button:hover {
+  opacity:0.9;
+}
+
+/* RESULTADO */
 .result {
-  margin-top:15px;
-  padding:10px;
   background:#eef;
+  padding:14px;
+  margin-top:20px;
+  border-radius:8px;
   white-space:pre-wrap;
+  font-size:14px;
 }
 
-.erro {
-  color:red;
+/* FEEDBACK COPIADO */
+.toast {
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:20px;
+  font-size:14px;
+  opacity:0;
+  transition:0.3s;
 }
 </style>
 </head>
@@ -60,76 +109,129 @@ button {
 <body>
 
 <header>
-<p>Estamos juntos nisso.</p>
-<p>Fala do seu jeito — eu organizo.<br>
-Simples ou mais a fundo, a gente resolve.</p>
+<h2>Estamos juntos nisso.</h2>
+<p>
+Fala do seu jeito — eu organizo.<br>
+Simples ou mais a fundo, a gente resolve.
+</p>
 </header>
 
 <div class="container">
 
-<textarea id="entrada" placeholder="O que tá pegando?"></textarea>
+<label>Pra que você precisa agora?</label>
+<small>(Escolha o tipo de ajuda mais próximo do que você precisa)</small>
+<select id="tipo">
+<option>Pessoal</option>
+<option>Técnica</option>
+<option>Comercial</option>
+<option>Casa</option>
+</select>
 
-<button onclick="processar()">Me ajuda com isso</button>
-<button onclick="copiar()">Copiar</button>
+<label>Se quiser detalhar melhor</label>
+<small>(Opcional — ajuda a deixar mais específico)</small>
+<input id="subtipo">
+
+<label>O que tá pegando aí?</label>
+<small>(Explica do seu jeito, sem precisar organizar)</small>
+<textarea id="problema"></textarea>
+
+<label>O que já aconteceu até aqui?</label>
+<small>(O que você tentou ou percebeu)</small>
+<textarea id="contexto"></textarea>
+
+<label>O que você quer resolver?</label>
+<small>(Qual resultado você quer alcançar)</small>
+<textarea id="objetivo"></textarea>
+
+<label>Como você sabe que deu certo?</label>
+<small>(O que precisa acontecer pra considerar resolvido)</small>
+<textarea id="resultadoEsperado"></textarea>
+
+<label>O que você quer evitar?</label>
+<small>(Ex: perder tempo, gastar dinheiro, solução complicada)</small>
+<textarea id="naoQuero"></textarea>
+
+<button onclick="gerar()">Me ajuda com isso</button>
+<button onclick="copiar()">Copiar e usar na IA</button>
+<button onclick="exportarXLS()">Exportar XLS</button>
+
+<small>
+(Clique, copie e cole em uma IA como ChatGPT, Gemini ou Copilot.
+Ela vai entender tudo e te responder direto ao ponto.)
+</small>
 
 <div class="result" id="saida"></div>
 
 </div>
 
+<div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
+
 <script>
 
-let textoFinal = "";
+let banco = [];
 
-function detectarModo(texto){
-  if(texto.length < 40) return "direto";
-  if(texto.match(/erro|problema|não funciona/i)) return "técnico";
-  return "organizar";
-}
+function gerar() {
 
-function corrigirTexto(texto){
-  const erros = {
-    "automativo":"automático",
-    "expliccar":"explicar",
-    "exesso":"excesso",
-    "semelhancia":"semelhança"
-  };
+let textoFinal = `
+ASSUNTO:
+${tipo.value} - ${subtipo.value}
 
-  let resultado = texto;
+PROBLEMA:
+${problema.value}
 
-  for(let errado in erros){
-    let regex = new RegExp(errado,"gi");
-    resultado = resultado.replace(regex, `<span class="erro">${errado}</span>`);
-  }
+OBJETIVO:
+${objetivo.value}
 
-  return resultado;
-}
+RESULTADO:
+${resultadoEsperado.value}
 
-function processar(){
+RESTRIÇÕES:
+${naoQuero.value}
 
-let texto = entrada.value;
-
-let modo = detectarModo(texto);
-
-textoFinal = `
-ENTRADA:
-${texto}
-
-MODO:
-${modo}
+CONTEXTO:
+${contexto.value}
 
 INSTRUÇÃO:
 Responder de forma direta, prática e sem excesso.
-Focar no problema principal.
 `;
 
-saida.innerHTML = corrigirTexto(textoFinal);
+saida.innerText = textoFinal;
+
+window.textoFinal = textoFinal;
+
+banco.push({
+tipo: tipo.value,
+problema: problema.value,
+data: new Date().toLocaleString()
+});
 }
 
-function copiar(){
-navigator.clipboard.writeText(textoFinal);
-alert("Copiado");
+function copiar() {
+navigator.clipboard.writeText(window.textoFinal);
+
+let toast = document.getElementById("toast");
+toast.style.opacity = 1;
+
+setTimeout(() => {
+  toast.style.opacity = 0;
+}, 2000);
 }
 
+function exportarXLS() {
+
+let tabela = "Tipo\tProblema\tData\n";
+
+banco.forEach(item => {
+tabela += `${item.tipo}\t${item.problema}\t${item.data}\n`;
+});
+
+let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+let link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = "mp_hub.xls";
+link.click();
+}
 </script>
 
 </body>
