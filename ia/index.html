@@ -2,151 +2,237 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Diagnóstico Direto 5.0</title>
+<title>MP Hub IA</title>
+
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #0d3b66;
-    margin: 0;
-    padding: 20px;
-    color: #333;
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#003366;
+  color:#fff;
 }
+
+/* HEADER */
+header {
+  text-align:center;
+  padding:2rem 1rem;
+}
+
+header h2 {
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+header p {
+  font-size:16px;
+  line-height:1.5;
+  opacity:0.95;
+}
+
+/* CONTAINER */
 .container {
-    max-width: 700px;
-    margin: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
+  background:#fff;
+  color:#000;
+  max-width:780px;
+  margin:20px auto;
+  padding:24px;
+  border-radius:12px;
 }
-h1 {
-    text-align: center;
-    color: #0d3b66;
-}
+
+/* CAMPOS */
 label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
+  font-size:15px;
+  font-weight:bold;
 }
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+
+small {
+  display:block;
+  font-size:13px;
+  color:#555;
+  margin-bottom:10px;
 }
+
+input, textarea, select {
+  width:100%;
+  padding:12px;
+  font-size:16px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  margin-bottom:16px;
+}
+
+/* BOTÕES */
 button {
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
+  background:#ff6600;
+  color:#fff;
+  border:none;
+  padding:14px;
+  font-size:16px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-right:8px;
+  margin-top:5px;
+  min-height:44px;
 }
-.btn-main { background: #0077cc; color: white; width: 100%; }
-.output {
-    background: #f4f4f4;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 8px;
-    white-space: pre-line;
+
+button:hover {
+  opacity:0.9;
+}
+
+/* RESULTADO */
+.result {
+  background:#eef;
+  padding:14px;
+  margin-top:20px;
+  border-radius:8px;
+  white-space:pre-wrap;
+  font-size:14px;
+}
+
+/* FEEDBACK COPIADO */
+.toast {
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:20px;
+  font-size:14px;
+  opacity:0;
+  transition:0.3s;
 }
 </style>
 </head>
+
 <body>
+
+<header>
+<h2>Estamos juntos nisso.</h2>
+<p>
+Fala do seu jeito — eu organizo.<br>
+Simples ou mais a fundo, a gente resolve.
+</p>
+</header>
+
 <div class="container">
-    <h1>Diagnóstico Direto 5.0</h1>
 
-    <label>Situação atual</label>
-    <textarea id="situacao"></textarea>
+<label>Pra que você precisa agora?</label>
+<small>(Escolha o tipo de ajuda mais próximo do que você precisa)</small>
+<select id="tipo">
+<option>Pessoal</option>
+<option>Técnica</option>
+<option>Comercial</option>
+<option>Casa</option>
+</select>
 
-    <label>O que mais pesa</label>
-    <textarea id="peso"></textarea>
+<label>Se quiser detalhar melhor</label>
+<small>(Opcional — ajuda a deixar mais específico)</small>
+<input id="subtipo">
 
-    <label>Há quanto tempo</label>
-    <textarea id="tempo"></textarea>
+<label>O que tá pegando aí?</label>
+<small>(Explica do seu jeito, sem precisar organizar)</small>
+<textarea id="problema"></textarea>
 
-    <label>O que não pode perder</label>
-    <textarea id="limite"></textarea>
+<label>O que já aconteceu até aqui?</label>
+<small>(O que você tentou ou percebeu)</small>
+<textarea id="contexto"></textarea>
 
-    <label>O que você quer de verdade</label>
-    <textarea id="objetivo"></textarea>
+<label>O que você quer resolver?</label>
+<small>(Qual resultado você quer alcançar)</small>
+<textarea id="objetivo"></textarea>
 
-    <button class="btn-main" onclick="gerar()">Gerar Diagnóstico</button>
+<label>Como você sabe que deu certo?</label>
+<small>(O que precisa acontecer pra considerar resolvido)</small>
+<textarea id="resultadoEsperado"></textarea>
 
-    <div class="output" id="saida"></div>
+<label>O que você quer evitar?</label>
+<small>(Ex: perder tempo, gastar dinheiro, solução complicada)</small>
+<textarea id="naoQuero"></textarea>
+
+<button onclick="gerar()">Me ajuda com isso</button>
+<button onclick="copiar()">Copiar e usar na IA</button>
+<button onclick="exportarXLS()">Exportar XLS</button>
+
+<small>
+(Clique, copie e cole em uma IA como ChatGPT, Gemini ou Copilot.
+Ela vai entender tudo e te responder direto ao ponto.)
+</small>
+
+<div class="result" id="saida"></div>
+
 </div>
 
+<div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
+
 <script>
-let historico = [];
+
+let banco = [];
 
 function gerar() {
-    let situacao = document.getElementById("situacao").value;
-    let peso = document.getElementById("peso").value;
-    let tempo = document.getElementById("tempo").value;
-    let limite = document.getElementById("limite").value;
-    let objetivo = document.getElementById("objetivo").value;
 
-    // PROCESSAMENTO (simulação de IA lógica)
-    let diagnostico = peso || situacao;
-    let erro = "Manter esforço sem retorno claro";
-    let decisao = "Interromper padrão atual e focar em resultado direto";
+let textoFinal = `
+ASSUNTO:
+${tipo.value} - ${subtipo.value}
 
-    let plano1 = "Eliminar atividades que não geram retorno";
-    let plano2 = "Focar em uma fonte de renda imediata";
-    let plano3 = "Criar rotina mínima com meta diária";
+PROBLEMA:
+${problema.value}
 
-    let risco = "Continuidade do desgaste + perda de energia + estagnação total";
+OBJETIVO:
+${objetivo.value}
 
-    // --- NOVO BLOCO: cálculo de chance ---
-    let score = 50; // ponto de partida neutro
+RESULTADO:
+${resultadoEsperado.value}
 
-    if (objetivo.trim() !== "") score += 20; // ter objetivo claro aumenta sucesso
-    if (limite.trim() !== "") score += 10; // saber limite ajuda
-    if (tempo.trim().length > 10) score -= 10; // muito tempo sem resultado reduz sucesso
-    if (peso.trim().length > 20) score -= 10; // peso grande reduz sucesso
+RESTRIÇÕES:
+${naoQuero.value}
 
-    // limitar entre 0 e 100
-    score = Math.max(0, Math.min(100, score));
+CONTEXTO:
+${contexto.value}
 
-    let sucesso = score;
-    let derrota = 100 - score;
+INSTRUÇÃO:
+Responder de forma direta, prática e sem excesso.
+`;
 
-    let resultado =
-`DIAGNÓSTICO:
-${diagnostico}
+saida.innerText = textoFinal;
 
-ERRO ATUAL:
-${erro}
+window.textoFinal = textoFinal;
 
-DECISÃO NECESSÁRIA:
-${decisao}
+banco.push({
+tipo: tipo.value,
+problema: problema.value,
+data: new Date().toLocaleString()
+});
+}
 
-PLANO DE AÇÃO (3 PASSOS):
-1. ${plano1}
-2. ${plano2}
-3. ${plano3}
+function copiar() {
+navigator.clipboard.writeText(window.textoFinal);
 
-RISCO SE NÃO AGIR:
-${risco}
+let toast = document.getElementById("toast");
+toast.style.opacity = 1;
 
-CHANCE DE SUCESSO: ${sucesso}%
-CHANCE DE DERROTA: ${derrota}%`;
+setTimeout(() => {
+  toast.style.opacity = 0;
+}, 2000);
+}
 
-    document.getElementById("saida").innerText = resultado;
+function exportarXLS() {
 
-    historico.push({
-        data: new Date().toLocaleString(),
-        diagnostico,
-        decisao,
-        plano1,
-        plano2,
-        plano3,
-        risco,
-        sucesso,
-        derrota
-    });
+let tabela = "Tipo\tProblema\tData\n";
+
+banco.forEach(item => {
+tabela += `${item.tipo}\t${item.problema}\t${item.data}\n`;
+});
+
+let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+let link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = "mp_hub.xls";
+link.click();
 }
 </script>
+
 </body>
 </html>
