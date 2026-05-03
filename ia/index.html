@@ -2,34 +2,36 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>MP Hub IA | Seta Soluções</title>
+<title>MP Hub IA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin:0;
-  font-family: Arial;
+  font-family: 'Roboto', sans-serif;
   background:#003366;
   color:#fff;
 }
 
 header {
   text-align:center;
-  padding:2rem;
+  padding:1.5rem;
 }
 
 .container {
   background:#fff;
   color:#000;
-  max-width:900px;
+  max-width:800px;
   margin:20px auto;
   padding:20px;
   border-radius:10px;
 }
 
-input, textarea, select {
+textarea {
   width:100%;
-  padding:8px;
-  margin-bottom:10px;
+  padding:10px;
+  font-size:16px;
 }
 
 button {
@@ -38,15 +40,19 @@ button {
   border:none;
   padding:12px;
   border-radius:6px;
+  margin-top:10px;
   cursor:pointer;
-  margin-right:5px;
 }
 
 .result {
-  background:#eef;
-  padding:10px;
   margin-top:15px;
+  padding:10px;
+  background:#eef;
   white-space:pre-wrap;
+}
+
+.erro {
+  color:red;
 }
 </style>
 </head>
@@ -54,41 +60,17 @@ button {
 <body>
 
 <header>
-<h2>MP Hub IA</h2>
-<p>Organização e decisão com IA</p>
+<p>Estamos juntos nisso.</p>
+<p>Fala do seu jeito — eu organizo.<br>
+Simples ou mais a fundo, a gente resolve.</p>
 </header>
 
 <div class="container">
 
-<label>Tipo:</label>
-<select id="tipo">
-<option>Pessoal</option>
-<option>Técnica</option>
-<option>Comercial</option>
-<option>Casa</option>
-</select>
+<textarea id="entrada" placeholder="O que tá pegando?"></textarea>
 
-<label>Subtipo:</label>
-<input id="subtipo">
-
-<label>Problema Principal:</label>
-<textarea id="problema"></textarea>
-
-<label>Contexto:</label>
-<textarea id="contexto"></textarea>
-
-<label>Objetivo:</label>
-<textarea id="objetivo"></textarea>
-
-<label>Resultado Esperado:</label>
-<textarea id="resultadoEsperado"></textarea>
-
-<label>O que NÃO quer:</label>
-<textarea id="naoQuero"></textarea>
-
-<button onclick="gerar()">Gerar Prompt</button>
-<button onclick="copiar()">Copiar Prompt</button>
-<button onclick="exportarXLS()">Exportar XLS</button>
+<button onclick="processar()">Me ajuda com isso</button>
+<button onclick="copiar()">Copiar</button>
 
 <div class="result" id="saida"></div>
 
@@ -96,91 +78,58 @@ button {
 
 <script>
 
-let banco = [];
+let textoFinal = "";
 
-function detectarTipoResposta(tipo) {
-  if (tipo === "Técnica") return "Técnica";
-  if (tipo === "Comercial") return "Comercial";
-  return "Direta e prática";
+function detectarModo(texto){
+  if(texto.length < 40) return "direto";
+  if(texto.match(/erro|problema|não funciona/i)) return "técnico";
+  return "organizar";
 }
 
-function gerar() {
+function corrigirTexto(texto){
+  const erros = {
+    "automativo":"automático",
+    "expliccar":"explicar",
+    "exesso":"excesso",
+    "semelhancia":"semelhança"
+  };
 
-let tipoResp = detectarTipoResposta(tipo.value);
+  let resultado = texto;
 
-let estado = "Em análise";
+  for(let errado in erros){
+    let regex = new RegExp(errado,"gi");
+    resultado = resultado.replace(regex, `<span class="erro">${errado}</span>`);
+  }
 
-if (problema.value.length < 10) {
-  estado = "Problema mal definido";
+  return resultado;
 }
 
-let textoFinal = `
-ASSUNTO:
-${tipo.value} - ${subtipo.value}
+function processar(){
 
-PROBLEMA PRINCIPAL:
-${problema.value}
+let texto = entrada.value;
 
-OBJETIVO:
-${objetivo.value}
+let modo = detectarModo(texto);
 
-RESULTADO ESPERADO:
-${resultadoEsperado.value}
+textoFinal = `
+ENTRADA:
+${texto}
 
-RESTRIÇÕES:
-${naoQuero.value}
+MODO:
+${modo}
 
-CONTEXTO:
-${contexto.value}
-
-TIPO DE RESPOSTA:
-${tipoResp}
-
-REGRAS:
-- Não fugir do problema principal
-- Resposta direta e aplicável
-
-SOLICITAÇÃO:
-Gerar resposta prática.
-
-ESTADO:
-${estado}
+INSTRUÇÃO:
+Responder de forma direta, prática e sem excesso.
+Focar no problema principal.
 `;
 
-saida.innerText = textoFinal;
-
-banco.push({
-tipo: tipo.value,
-subtipo: subtipo.value,
-problema: problema.value,
-objetivo: objetivo.value,
-resultado: resultadoEsperado.value,
-data: new Date().toLocaleString()
-});
-
-window.textoFinal = textoFinal;
+saida.innerHTML = corrigirTexto(textoFinal);
 }
 
-function copiar() {
-navigator.clipboard.writeText(window.textoFinal);
-alert("Prompt copiado!");
+function copiar(){
+navigator.clipboard.writeText(textoFinal);
+alert("Copiado");
 }
 
-function exportarXLS() {
-
-let tabela = "Tipo\tSubtipo\tProblema\tObjetivo\tResultado\tData\n";
-
-banco.forEach(item => {
-tabela += `${item.tipo}\t${item.subtipo}\t${item.problema}\t${item.objetivo}\t${item.resultado}\t${item.data}\n`;
-});
-
-let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
-let link = document.createElement("a");
-
-link.href = URL.createObjectURL(blob);
-link.download = "mp_hub.xls";
-link.click();
-}
 </script>
 
 </body>
