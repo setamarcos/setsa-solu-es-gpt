@@ -2,119 +2,112 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
-    <title>Portal de Redação — Mentoria Sábia</title>
+    <title>Seta Soluções — Mentoria de Escrita</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #0b63c6; --orange: #ff7a18; --bg: #f4f7f9; --card: #ffffff; --text: #1e293b; }
-        body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin: 20px; line-height: 1.6; }
-        .wrap { max-width: 800px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        h1 { font-size: 1.5rem; margin-bottom: 5px; color: var(--blue); }
-        label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #64748b; }
-        select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px; font-size: 15px; box-sizing: border-box; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        button { flex: 1; padding: 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
-        .btn-primary { background: var(--blue); color: white; }
-        .btn-ia { background: #1e293b; color: white; }
+        :root { --blue: #0b63c6; --orange: #ff7a18; --bg: #f0f4f8; --card: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 850px; width: 100%; background: var(--card); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; border-top: 8px solid var(--blue); }
+        .header { background: white; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }
+        .seta-icon { font-size: 40px; color: var(--orange); margin-bottom: 10px; display: block; }
+        .content { padding: 30px; }
+        label { font-weight: bold; color: var(--blue); display: block; margin: 15px 0 5px; text-transform: uppercase; font-size: 12px; }
+        select, textarea, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e1e8ed; font-size: 15px; margin-bottom: 10px; transition: 0.3s; }
+        select:focus, textarea:focus { border-color: var(--blue); outline: none; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        button { padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-main { background: var(--blue); color: white; }
+        .btn-mentor { background: #1e293b; color: white; }
         .btn-save { background: var(--orange); color: white; }
-        .btn-share { background: #25d366; color: white; display: none; }
-        #feedbackArea { background: #f8fafc; border-left: 4px solid var(--blue); padding: 20px; margin-top: 20px; display: none; }
-        .error-msg { color: #dc2626; font-weight: bold; display: none; padding: 10px; border: 1px solid #dc2626; border-radius: 8px; margin-bottom: 10px; }
+        .btn-share { background: #25d366; color: white; grid-column: span 2; }
+        #feedbackResult { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 15px; padding: 20px; margin-top: 25px; display: none; }
+        .warning { color: #dc2626; background: #fee2e2; padding: 15px; border-radius: 10px; display: none; font-weight: bold; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="wrap">
-        <div class="card">
-            <h1>Mentoria de Escrita Seta</h1>
-            <p style="color:#64748b; font-size: 14px; margin-bottom: 25px;">Foco em aptidão, leitura e rigor técnico.</p>
-
-            <label>Nível de Ensino</label>
-            <select id="serie">
+    <div class="container">
+        <div class="header">
+            <span class="seta-icon">➜</span>
+            <h1 style="margin:0; color: var(--blue);">Mentoria de Escrita Seta</h1>
+            <p style="color: #64748b; margin: 5px 0;">Inteligência para educar, rigor para crescer.</p>
+        </div>
+        
+        <div class="content">
+            <label>Nível Acadêmico (Rigor Escalonado)</label>
+            <select id="ano">
                 <option value="6">6º Ano Fundamental</option>
                 <option value="7">7º Ano Fundamental</option>
                 <option value="8">8º Ano Fundamental</option>
                 <option value="9">9º Ano Fundamental</option>
             </select>
 
-            <button class="btn-primary" onclick="sortearTema()">Sortear Desafio de Escrita</button>
-            <div id="temaBox" style="margin: 15px 0; font-weight: bold; color: var(--blue); display:none;"></div>
+            <button class="btn-main" style="width:100%" onclick="sortear()">🎲 Gerar Tema de Alto Nível</button>
+            <div id="temaDisplay" style="margin-top:15px; font-weight:bold; color: var(--blue); text-align:center;"></div>
 
-            <label style="margin-top:20px;">Registro do Caderno (Foto)</label>
-            <input type="file" id="foto" accept="image/*" onchange="lerCaderno(this)">
-            
-            <label>Texto Transcrito</label>
-            <textarea id="texto" style="height: 150px;" placeholder="Aguardando análise da imagem..."></textarea>
+            <label>Evidência do Trabalho (Foto do Caderno)</label>
+            <input type="file" accept="image/*" id="inputFoto" onchange="processar(this)">
 
-            <div id="avisoRigor" class="error-msg"></div>
+            <label>Texto Identificado</label>
+            <textarea id="textoRedacao" style="height: 120px;" placeholder="O mentor aguarda sua escrita..."></textarea>
 
-            <div class="btn-group">
-                <button class="btn-ia" onclick="avaliarSabiamente()">Análise do Mentor (IA)</button>
-                <button id="btnSalvar" class="btn-save" onclick="salvarLocal()">Validar e Salvar</button>
+            <div id="aviso" class="warning"></div>
+
+            <div class="btn-grid">
+                <button class="btn-mentor" onclick="analisar()">Ouvir o Mentor Sábio</button>
+                <button class="btn-save" onclick="salvarPDF()">Gerar PDF de Entrega</button>
+                <button id="btnZap" class="btn-share" style="display:none" onclick="mandarZap()">📲 Compartilhar com Comadres</button>
             </div>
 
-            <div id="feedbackArea">
-                <label>Parecer do Orientador:</label>
-                <div id="feedbackTexto" style="white-space: pre-wrap; font-size: 14px;"></div>
+            <div id="feedbackResult">
+                <h3 style="margin-top:0; color: var(--blue);">Parecer Técnico:</h3>
+                <div id="feedbackTexto" style="font-size: 14px; color: #334155; white-space: pre-wrap;"></div>
             </div>
-
-            <button id="btnZap" class="btn-share" onclick="compartilharComadres()">📲 Postar no Grupo das Comadres</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        const temasPorAno = {
-            "6": ["A importância da ética na convivência escolar", "Como a tecnologia muda nossa forma de aprender"],
-            "9": ["Impactos socioambientais da era digital", "O papel do jovem na construção da democracia"]
-        };
-
-        function sortearTema() {
-            const s = document.getElementById('serie').value;
-            const lista = temasPorAno[s] || temasPorAno["6"];
-            const tema = lista[Math.floor(Math.random() * lista.length)];
-            const box = document.getElementById('temaBox');
-            box.innerText = "TEMA: " + tema;
-            box.style.display = "block";
+        function sortear() {
+            const t = ["Ética na era da Inteligência Artificial", "O desafio da leitura crítica no século XXI", "Como o vocabulário define o futuro profissional"];
+            document.getElementById('temaDisplay').innerText = t[Math.floor(Math.random()*t.length)];
         }
 
-        function lerCaderno(input) {
-            const file = input.files[0];
+        async function processar(el) {
+            const file = el.files[0];
             Tesseract.recognize(file, 'por').then(({ data: { text } }) => {
-                document.getElementById('texto').value = text;
+                document.getElementById('textoRedacao').value = text;
             });
         }
 
-        function avaliarSabiamente() {
-            const texto = document.getElementById('texto').value;
-            const aviso = document.getElementById('avisoRigor');
-            const feedbackBox = document.getElementById('feedbackArea');
-            const feedbackTexto = document.getElementById('feedbackTexto');
+        function analisar() {
+            const txt = document.getElementById('textoRedacao').value;
+            const aviso = document.getElementById('aviso');
+            const fBox = document.getElementById('feedbackResult');
 
-            if (texto.length < 30) {
-                aviso.innerText = "Você tentou, mas leia isso. Teria coragem de entregar este rascunho para alguém? Escreva com seriedade.";
+            if(txt.length < 50) {
+                aviso.innerText = "Você tentou, mas leia isso. Teria coragem de entregar este rascunho para alguém? O mentor exige esforço real.";
                 aviso.style.display = "block";
-                feedbackBox.style.display = "none";
+                fBox.style.display = "none";
                 return;
             }
 
             aviso.style.display = "none";
-            feedbackBox.style.display = "block";
-            
-            // Feedback Estruturado: 3 parágrafos, sutil mas rígido
-            feedbackTexto.innerText = `Análise Técnica:\n\nSua escrita apresenta pontos que exigem atenção imediata. Notei erros de concordância que prejudicam a clareza do seu raciocínio. Um texto de nível escolar exige que as ideias sejam conectadas com preposições adequadas, o que faltou em alguns trechos.\n\nNo segundo parágrafo, sua argumentação carece de base. Não basta citar o tema, é preciso demonstrar que você domina o assunto através de fatos ou exemplos reais. A leitura constante é o único caminho para que você pare de repetir palavras e amplie seu vocabulário.\n\nPor fim, encorajo você a revisar este texto focando na pontuação. O uso correto de vírgulas e pontos finais não é opcional, é o que dá vida à sua voz no papel. Refaça a leitura em voz alta e corrija o que soou estranho. O aprendizado vem do esforço, não do conforto.`;
-            
+            fBox.style.display = "block";
+            document.getElementById('feedbackTexto').innerText = "Análise de Aptidão:\n\nSua escrita apresenta uma estrutura básica, mas carece de conectivos lógicos. Para um aluno do " + document.getElementById('ano').value + "º ano, é esperado que você não apenas cite o tema, mas o defenda com argumentos sólidos e vírgulas bem posicionadas. Erros de concordância foram detectados e devem ser revisados imediatamente.\n\nO segundo parágrafo demonstra potencial, porém o vocabulário é repetitivo. Um texto sagaz utiliza sinônimos para manter o leitor atento. Se você deseja que suas ideias sejam levadas a sério, precisa tratar a gramática como sua principal ferramenta de poder. Não aceite o rascunho como versão final.\n\nPor fim, sua conclusão foi abrupta. Um sábio encerra seu pensamento reforçando o que foi dito, convidando à reflexão. Sugiro que releia em voz alta: se você se cansar ao ler, o leitor também se cansará. Corrija a pontuação e busque a excelência que sabemos que você pode atingir.";
             document.getElementById('btnZap').style.display = "block";
         }
 
-        function salvarLocal() {
-            localStorage.setItem('ultima_redacao', document.getElementById('texto').value);
-            alert("Redação validada pelo sistema e salva no histórico.");
+        function salvarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Relatório de Redação - Seta Soluções", 10, 10);
+            doc.text(document.getElementById('textoRedacao').value, 10, 20, {maxWidth: 180});
+            doc.save("Redacao_Seta.pdf");
         }
 
-        function compartilharComadres() {
-            const resumo = "Avaliação Técnica de Redação: " + document.getElementById('texto').value.substring(0, 50) + "...";
-            window.open(`https://wa.me/?text=${encodeURIComponent(resumo)}`);
+        function mandarZap() {
+            window.open("https://wa.me/?text=Veja a evolução da nossa escrita no Portal Seta!");
         }
     </script>
 </body>
