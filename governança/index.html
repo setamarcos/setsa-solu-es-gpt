@@ -2,57 +2,57 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcos Governança</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    <title>MP Hub IA - Direto ao Ponto</title>
+    <style>
+        body { margin:0; font-family: Arial; background:#003366; color:#fff; text-align:center; }
+        .container { background:#fff; color:#000; max-width:600px; margin:50px auto; padding:30px; border-radius:15px; }
+        input { width:100%; padding:15px; font-size:18px; border:2px solid #ff6600; border-radius:8px; box-sizing:border-box; }
+        .campos-dinamicos { margin-top:20px; text-align:left; }
+        label { font-weight:bold; display:block; margin-top:10px; }
+        button { background:#ff6600; color:#fff; border:none; padding:15px; width:100%; border-radius:8px; margin-top:20px; cursor:pointer; font-size:16px; }
+        .resultado { background:#eef; padding:15px; margin-top:20px; border-radius:8px; white-space:pre-wrap; display:none; }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <header>
-            <h1>Marcos Governança</h1>
-            <p id="data-atual"></p>
-            <div id="timer-box">Janela de Foco: <span id="timer">03:00</span></div>
-        </header>
 
-        <section id="diario">
-            <div class="card">
-                <h3>🏠 Família & Essencial</h3>
-                <label>Horas com Família (Mínimo 2h):</label>
-                <input type="number" id="familia" step="0.5" placeholder="0.0">
-                <label>Qualidade do Sono (1-10):</label>
-                <input type="number" id="sono" min="1" max="10">
-            </div>
-
-            <div class="card">
-                <h3>📈 Performance</h3>
-                <label>Horas Produtivas:</label>
-                <input type="number" id="produtiva" step="0.5" placeholder="0.0">
-                <label>Horas Improdutivas:</label>
-                <input type="number" id="improdutiva" step="0.5" placeholder="0.0">
-            </div>
-
-            <div class="card">
-                <h3>💰 Financeiro (Entrou/Saiu)</h3>
-                <input type="number" id="financeiro_in" placeholder="Entrou R$">
-                <input type="number" id="financeiro_out" placeholder="Saiu R$" style="margin-top:10px">
-            </div>
-
-            <div class="card">
-                <h3>📝 Diário de Obra</h3>
-                <textarea id="diario_obra" rows="3" placeholder="Insights do dia..."></textarea>
-            </div>
-
-            <button id="btn-salvar" onclick="salvarDados()">SELAR CICLO DIÁRIO</button>
-        </section>
-
-        <section id="relatorio" class="card hidden">
-            <h2>Ciclo Selado com Sucesso</h2>
-            <div id="dados-visualizacao"></div>
-            <p style="font-size: 0.8em; color: #94a3b8; margin-top: 15px;">O histórico foi gravado e é imutável.</p>
-            <button onclick="window.location.reload()" style="margin-top:20px; background:#475569">NOVO LANÇAMENTO</button>
-        </section>
+    <h2>O que você quer resolver agora?</h2>
+    <div class="container">
+        <input type="text" id="comando" placeholder="Ex: recibo de 780, salvar casamento, cortar grama..." oninput="ajustarFluxo()">
+        
+        <div id="fluxo" class="campos-dinamicos"></div>
+        
+        <button onclick="executar()">Gerar Solução</button>
+        <div id="saida" class="resultado"></div>
     </div>
-    <script src="script.js"></script>
+
+<script>
+function ajustarFluxo() {
+    const cmd = document.getElementById('comando').value.toLowerCase();
+    const fluxo = document.getElementById('fluxo');
+    fluxo.innerHTML = ""; // Limpa
+
+    if (cmd.includes("recibo") || cmd.includes("valor")) {
+        fluxo.innerHTML = '<label>Nome do Pagador:</label><input id="d1"><label>Referente a:</label><input id="d2">';
+    } 
+    else if (cmd.includes("casamento") || cmd.includes("mulher") || cmd.includes("filha")) {
+        fluxo.innerHTML = '<label>O que aconteceu por último?</label><textarea id="d1" style="width:100%"></textarea><label>Qual seu maior medo agora?</label><input id="d2">';
+    }
+    else if (cmd.includes("grama") || cmd.includes("piscina") || cmd.includes("obra")) {
+        fluxo.innerHTML = '<label>Tamanho/Medida:</label><input id="d1"><label>Situação atual (Ex: suja, alta, torta):</label><input id="d2">';
+    }
+}
+
+function executar() {
+    const cmd = document.getElementById('comando').value;
+    const d1 = document.getElementById('d1')?.value || "";
+    const d2 = document.getElementById('d2')?.value || "";
+
+    const prompt = `INTENÇÃO: ${cmd}\nDADO 1: ${d1}\nDADO 2: ${d2}\n\nINSTRUÇÃO: Responda de forma prática e utilizável agora. Sem introduções.`;[cite: 3]
+    
+    const saida = document.getElementById('saida');
+    saida.innerText = prompt;
+    saida.style.display = 'block';
+}
+</script>
 </body>
 </html>
