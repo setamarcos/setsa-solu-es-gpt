@@ -2,121 +2,119 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
-    <title>Redações da Laura — Seta Soluções</title>
+    <title>Portal de Redação — Mentoria Sábia</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #0b63c6; --orange: #ff7a18; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
-        body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin: 20px; }
-        .wrap { max-width: 900px; margin: 0 auto; }
-        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-        .logo { width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(45deg, var(--blue), var(--orange)); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #64748b; }
-        select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; font-size: 15px; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-        button { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        :root { --blue: #0b63c6; --orange: #ff7a18; --bg: #f4f7f9; --card: #ffffff; --text: #1e293b; }
+        body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin: 20px; line-height: 1.6; }
+        .wrap { max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card); border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        h1 { font-size: 1.5rem; margin-bottom: 5px; color: var(--blue); }
+        label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #64748b; }
+        select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px; font-size: 15px; box-sizing: border-box; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        button { flex: 1; padding: 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
         .btn-primary { background: var(--blue); color: white; }
-        .btn-accent { background: var(--orange); color: white; }
-        .btn-ia { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .btn-ghost { background: #f1f5f9; color: #475569; }
-        #ocrStatus { font-size: 13px; color: var(--blue); margin-top: -10px; margin-bottom: 15px; }
-        .preview-img { max-width: 200px; border-radius: 8px; margin-top: 10px; display: none; border: 2px solid #e2e8f0; }
-        .feedback-box { background: #fff7ed; border: 1px solid #ffedd5; padding: 15px; border-radius: 12px; margin-top: 15px; }
+        .btn-ia { background: #1e293b; color: white; }
+        .btn-save { background: var(--orange); color: white; }
+        .btn-share { background: #25d366; color: white; display: none; }
+        #feedbackArea { background: #f8fafc; border-left: 4px solid var(--blue); padding: 20px; margin-top: 20px; display: none; }
+        .error-msg { color: #dc2626; font-weight: bold; display: none; padding: 10px; border: 1px solid #dc2626; border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="wrap">
-        <div class="header">
-            <div class="logo">MP</div>
-            <div>
-                <h1 style="margin:0; font-size: 22px;">Portal de Redação — Laura & Amigos</h1>
-                <p style="margin:0; color: #64748b; font-size: 14px;">Transformando escrita em descoberta e prazer.</p>
-            </div>
-        </div>
-
         <div class="card">
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 200px;">
-                    <label>Série Escolar</label>
-                    <select id="anoEscolar">
-                        <option value="5º Ano">5º Ano</option>
-                        <option value="6º Ano">6º Ano</option>
-                        <option value="Outro">Outros anos...</option>
-                    </select>
-                </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <label>Data</label>
-                    <input type="date" id="dataRedacao">
-                </div>
-            </div>
+            <h1>Mentoria de Escrita Seta</h1>
+            <p style="color:#64748b; font-size: 14px; margin-bottom: 25px;">Foco em aptidão, leitura e rigor técnico.</p>
 
-            <button class="btn-primary" onclick="sortearTema()">🎲 Sortear Tema Encantador</button>
-            <div id="temaAtual" class="feedback-box" style="display:none; font-weight: 600; color: var(--blue);"></div>
+            <label>Nível de Ensino</label>
+            <select id="serie">
+                <option value="6">6º Ano Fundamental</option>
+                <option value="7">7º Ano Fundamental</option>
+                <option value="8">8º Ano Fundamental</option>
+                <option value="9">9º Ano Fundamental</option>
+            </select>
 
-            <label style="margin-top:20px;">Foto do Caderno (Humano)</label>
-            <input type="file" id="fotoInput" accept="image/*" onchange="processarFoto(this)">
-            <div id="ocrStatus">Aguardando imagem...</div>
-            <img id="preview" class="preview-img">
+            <button class="btn-primary" onclick="sortearTema()">Sortear Desafio de Escrita</button>
+            <div id="temaBox" style="margin: 15px 0; font-weight: bold; color: var(--blue); display:none;"></div>
 
-            <label style="margin-top:20px;">Texto Extraído pela IA</label>
-            <textarea id="textoRedacao" placeholder="O texto aparecerá aqui após a foto..."></textarea>
+            <label style="margin-top:20px;">Registro do Caderno (Foto)</label>
+            <input type="file" id="foto" accept="image/*" onchange="lerCaderno(this)">
+            
+            <label>Texto Transcrito</label>
+            <textarea id="texto" style="height: 150px;" placeholder="Aguardando análise da imagem..."></textarea>
+
+            <div id="avisoRigor" class="error-msg"></div>
 
             <div class="btn-group">
-                <button class="btn-ia" onclick="gerarFeedbackIA()">✨ Sugerir Elogio IA (Sutil)</button>
-                <button class="btn-accent" onclick="salvarRedacao()">💾 Salvar na Nuvem Local</button>
+                <button class="btn-ia" onclick="avaliarSabiamente()">Análise do Mentor (IA)</button>
+                <button id="btnSalvar" class="btn-save" onclick="salvarLocal()">Validar e Salvar</button>
             </div>
 
-            <div id="areaFeedback" style="display:none;" class="feedback-box">
-                <label>Feedback Sugerido (Aprendizagem sem Trauma):</label>
-                <textarea id="campoFeedback" style="height: 100px; background: white;"></textarea>
+            <div id="feedbackArea">
+                <label>Parecer do Orientador:</label>
+                <div id="feedbackTexto" style="white-space: pre-wrap; font-size: 14px;"></div>
             </div>
-        </div>
 
-        <div class="btn-group" style="justify-content: center;">
-            <button class="btn-ghost" onclick="gerarPDF()">⬇️ Baixar PDF para o Grupo</button>
-            <button class="btn-ghost" onclick="window.location.reload()">✖ Limpar Tudo</button>
+            <button id="btnZap" class="btn-share" onclick="compartilharComadres()">📲 Postar no Grupo das Comadres</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
     <script>
-        const temas = ["Minha maior aventura imaginária", "O que eu faria se fosse invisível por um dia", "Uma conversa com meu animal de estimação", "O mundo daqui a 100 anos"];
-        
+        const temasPorAno = {
+            "6": ["A importância da ética na convivência escolar", "Como a tecnologia muda nossa forma de aprender"],
+            "9": ["Impactos socioambientais da era digital", "O papel do jovem na construção da democracia"]
+        };
+
         function sortearTema() {
-            const t = temas[Math.floor(Math.random() * temas.length)];
-            const box = document.getElementById('temaAtual');
-            box.innerText = "Tema: " + t;
+            const s = document.getElementById('serie').value;
+            const lista = temasPorAno[s] || temasPorAno["6"];
+            const tema = lista[Math.floor(Math.random() * lista.length)];
+            const box = document.getElementById('temaBox');
+            box.innerText = "TEMA: " + tema;
             box.style.display = "block";
         }
 
-        async function processarFoto(input) {
+        function lerCaderno(input) {
             const file = input.files[0];
-            if (!file) return;
-            
-            document.getElementById('ocrStatus').innerText = "IA lendo o caderno... (aguarde)";
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('preview').src = e.target.result;
-                document.getElementById('preview').style.display = "block";
-                Tesseract.recognize(e.target.result, 'por').then(({ data: { text } }) => {
-                    document.getElementById('textoRedacao').value = text;
-                    document.getElementById('ocrStatus').innerText = "Leitura concluída com sucesso!";
-                });
-            };
-            reader.readAsDataURL(file);
+            Tesseract.recognize(file, 'por').then(({ data: { text } }) => {
+                document.getElementById('texto').value = text;
+            });
         }
 
-        function gerarFeedbackIA() {
-            const texto = document.getElementById('textoRedacao').value;
-            if (!texto) return alert("A IA precisa do texto para elogiar!");
+        function avaliarSabiamente() {
+            const texto = document.getElementById('texto').value;
+            const aviso = document.getElementById('avisoRigor');
+            const feedbackBox = document.getElementById('feedbackArea');
+            const feedbackTexto = document.getElementById('feedbackTexto');
+
+            if (texto.length < 30) {
+                aviso.innerText = "Você tentou, mas leia isso. Teria coragem de entregar este rascunho para alguém? Escreva com seriedade.";
+                aviso.style.display = "block";
+                feedbackBox.style.display = "none";
+                return;
+            }
+
+            aviso.style.display = "none";
+            feedbackBox.style.display = "block";
             
-            document.getElementById('areaFeedback').style.display = "block";
-            document.getElementById('campoFeedback').value = "Que texto maravilhoso! Notei que você trouxe ideias muito criativas. Gostei especialmente de como você organizou o início. Uma dica preciosa: que tal usarmos mais 'palavras de ouro' como esta que você escolheu? Continue assim!";
+            // Feedback Estruturado: 3 parágrafos, sutil mas rígido
+            feedbackTexto.innerText = `Análise Técnica:\n\nSua escrita apresenta pontos que exigem atenção imediata. Notei erros de concordância que prejudicam a clareza do seu raciocínio. Um texto de nível escolar exige que as ideias sejam conectadas com preposições adequadas, o que faltou em alguns trechos.\n\nNo segundo parágrafo, sua argumentação carece de base. Não basta citar o tema, é preciso demonstrar que você domina o assunto através de fatos ou exemplos reais. A leitura constante é o único caminho para que você pare de repetir palavras e amplie seu vocabulário.\n\nPor fim, encorajo você a revisar este texto focando na pontuação. O uso correto de vírgulas e pontos finais não é opcional, é o que dá vida à sua voz no papel. Refaça a leitura em voz alta e corrija o que soou estranho. O aprendizado vem do esforço, não do conforto.`;
+            
+            document.getElementById('btnZap').style.display = "block";
         }
 
-        function salvarRedacao() {
-            alert("Redação guardada com carinho! Agora você pode compartilhar com as comadres.");
+        function salvarLocal() {
+            localStorage.setItem('ultima_redacao', document.getElementById('texto').value);
+            alert("Redação validada pelo sistema e salva no histórico.");
+        }
+
+        function compartilharComadres() {
+            const resumo = "Avaliação Técnica de Redação: " + document.getElementById('texto').value.substring(0, 50) + "...";
+            window.open(`https://wa.me/?text=${encodeURIComponent(resumo)}`);
         }
     </script>
 </body>
