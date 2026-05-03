@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>MP Hub IA v4 | Seta Soluções</title>
+<title>MP Hub IA | Seta Soluções</title>
 
 <style>
 body {
@@ -39,6 +39,7 @@ button {
   padding:12px;
   border-radius:6px;
   cursor:pointer;
+  margin-right:5px;
 }
 
 .result {
@@ -47,15 +48,14 @@ button {
   margin-top:15px;
   white-space:pre-wrap;
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>MP Hub IA v4</h2>
-<p>Controle inteligente de interação com IA</p>
+<h2>MP Hub IA</h2>
+<p>Organização e decisão com IA</p>
 </header>
 
 <div class="container">
@@ -87,20 +87,21 @@ button {
 <textarea id="naoQuero"></textarea>
 
 <button onclick="gerar()">Gerar Prompt</button>
-<button onclick="copiar()">Copiar</button>
+<button onclick="copiar()">Copiar Prompt</button>
+<button onclick="exportarXLS()">Exportar XLS</button>
 
 <div class="result" id="saida"></div>
 
 </div>
 
 <script>
-let textoFinal = "";
+
+let banco = [];
 
 function detectarTipoResposta(tipo) {
   if (tipo === "Técnica") return "Técnica";
   if (tipo === "Comercial") return "Comercial";
-  if (tipo === "Pessoal") return "Direta e prática";
-  return "Objetiva";
+  return "Direta e prática";
 }
 
 function gerar() {
@@ -113,11 +114,7 @@ if (problema.value.length < 10) {
   estado = "Problema mal definido";
 }
 
-if (contexto.value.length < 20) {
-  estado = "Contexto insuficiente";
-}
-
-textoFinal = `
+let textoFinal = `
 ASSUNTO:
 ${tipo.value} - ${subtipo.value}
 
@@ -139,195 +136,50 @@ ${contexto.value}
 TIPO DE RESPOSTA:
 ${tipoResp}
 
-FOCO PRINCIPAL:
-Resolver o problema principal descrito
-
 REGRAS:
 - Não fugir do problema principal
-- Não expandir para estratégia sem solicitação
-- Resposta deve ser direta e aplicável
+- Resposta direta e aplicável
 
 SOLICITAÇÃO:
-Gerar resposta objetiva, prática e utilizável.
-Se faltar informação, pedir de forma direta.
-
-ESTADO:
-${estado}
-`;
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>MP Hub IA v4 | Seta Soluções</title>
-
-<style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#003366;
-  color:#fff;
-}
-
-header {
-  text-align:center;
-  padding:2rem;
-}
-
-.container {
-  background:#fff;
-  color:#000;
-  max-width:900px;
-  margin:20px auto;
-  padding:20px;
-  border-radius:10px;
-}
-
-input, textarea, select {
-  width:100%;
-  padding:8px;
-  margin-bottom:10px;
-}
-
-button {
-  background:#ff6600;
-  color:#fff;
-  border:none;
-  padding:12px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.result {
-  background:#eef;
-  padding:10px;
-  margin-top:15px;
-  white-space:pre-wrap;
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-<h2>MP Hub IA v4</h2>
-<p>Controle inteligente de interação com IA</p>
-</header>
-
-<div class="container">
-
-<label>Tipo:</label>
-<select id="tipo">
-<option>Pessoal</option>
-<option>Técnica</option>
-<option>Comercial</option>
-<option>Casa</option>
-</select>
-
-<label>Subtipo:</label>
-<input id="subtipo">
-
-<label>Problema Principal:</label>
-<textarea id="problema"></textarea>
-
-<label>Contexto:</label>
-<textarea id="contexto"></textarea>
-
-<label>Objetivo:</label>
-<textarea id="objetivo"></textarea>
-
-<label>Resultado Esperado:</label>
-<textarea id="resultadoEsperado"></textarea>
-
-<label>O que NÃO quer:</label>
-<textarea id="naoQuero"></textarea>
-
-<button onclick="gerar()">Gerar Prompt</button>
-<button onclick="copiar()">Copiar</button>
-
-<div class="result" id="saida"></div>
-
-</div>
-
-<script>
-let textoFinal = "";
-
-function detectarTipoResposta(tipo) {
-  if (tipo === "Técnica") return "Técnica";
-  if (tipo === "Comercial") return "Comercial";
-  if (tipo === "Pessoal") return "Direta e prática";
-  return "Objetiva";
-}
-
-function gerar() {
-
-let tipoResp = detectarTipoResposta(tipo.value);
-
-let estado = "Em análise";
-
-if (problema.value.length < 10) {
-  estado = "Problema mal definido";
-}
-
-if (contexto.value.length < 20) {
-  estado = "Contexto insuficiente";
-}
-
-textoFinal = `
-ASSUNTO:
-${tipo.value} - ${subtipo.value}
-
-PROBLEMA PRINCIPAL:
-${problema.value}
-
-OBJETIVO:
-${objetivo.value}
-
-RESULTADO ESPERADO:
-${resultadoEsperado.value}
-
-RESTRIÇÕES:
-${naoQuero.value}
-
-CONTEXTO:
-${contexto.value}
-
-TIPO DE RESPOSTA:
-${tipoResp}
-
-FOCO PRINCIPAL:
-Resolver o problema principal descrito
-
-REGRAS:
-- Não fugir do problema principal
-- Não expandir para estratégia sem solicitação
-- Resposta deve ser direta e aplicável
-
-SOLICITAÇÃO:
-Gerar resposta objetiva, prática e utilizável.
-Se faltar informação, pedir de forma direta.
+Gerar resposta prática.
 
 ESTADO:
 ${estado}
 `;
 
 saida.innerText = textoFinal;
+
+banco.push({
+tipo: tipo.value,
+subtipo: subtipo.value,
+problema: problema.value,
+objetivo: objetivo.value,
+resultado: resultadoEsperado.value,
+data: new Date().toLocaleString()
+});
+
+window.textoFinal = textoFinal;
 }
 
 function copiar() {
-navigator.clipboard.writeText(textoFinal);
-alert("Copiado!");
-}
-</script>
-
-</body>
-</html>
-saida.innerText = textoFinal;
+navigator.clipboard.writeText(window.textoFinal);
+alert("Prompt copiado!");
 }
 
-function copiar() {
-navigator.clipboard.writeText(textoFinal);
-alert("Copiado!");
+function exportarXLS() {
+
+let tabela = "Tipo\tSubtipo\tProblema\tObjetivo\tResultado\tData\n";
+
+banco.forEach(item => {
+tabela += `${item.tipo}\t${item.subtipo}\t${item.problema}\t${item.objetivo}\t${item.resultado}\t${item.data}\n`;
+});
+
+let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+let link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = "mp_hub.xls";
+link.click();
 }
 </script>
 
