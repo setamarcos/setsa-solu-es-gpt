@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Redações - Laura (Teste)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue: #0b63c6;
+      --light-blue:#3b82f6;
+      --orange:#ff7a18;
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --radius:12px;
+      --gap:12px;
+    }
+    *{box-sizing:border-box}
+    body { font-family: "Inter", Arial, sans-serif; margin:16px; background:var(--bg); color:#111; -webkit-font-smoothing:antialiased}
+    .wrap{max-width:980px;margin:0 auto}
+    header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+    .logo {
+      width:68px;height:68px;border-radius:16px;background:linear-gradient(135deg,var(--light-blue),var(--orange));
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(11,99,198,0.12)
+    }
+    h1{font-size:20px;margin:0}
+    .subtitle{color:var(--muted);font-size:13px}
+    .card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1;min-width:220px}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+    .primary{background:var(--light-blue);color:white}
+    .accent{background:var(--orange);color:white}
+    .ghost{background:#eef2ff;color:var(--blue);border:1px solid #e6f0ff}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    select,input[type="date"],input[type="file"],textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;background:transparent}
+    textarea{min-height:180px;resize:vertical;font-size:15px;padding:12px;line-height:1.5}
+    .small{font-size:13px;color:var(--muted)}
+    .preview-img{max-width:180px;max-height:140px;border-radius:8px;object-fit:cover;border:1px solid #eee}
+    .meta{display:flex;gap:10px;align-items:center}
+    .disabled { opacity:0.6; pointer-events:none; }
+    .list-red{margin-top:12px}
+    .item{display:flex;gap:12px;padding:12px;border-radius:10px;border:1px solid #f0f2f7;background:#fff;margin-bottom:10px}
+    .item .txt{flex:1}
+    .tag{background:#eff6ff;color:var(--blue);padding:6px 8px;border-radius:8px;font-size:12px;font-weight:600}
+    .muted{color:var(--muted)}
+    .icon{width:22px;height:22px;display:inline-block;vertical-align:middle}
+    .note{font-size:13px;color:#374151;margin-top:8px}
+    .footer{font-size:13px;color:var(--muted);text-align:center;margin-top:18px}
+    @media (max-width:720px){ .row{flex-direction:column} .meta{flex-direction:column;align-items:flex-start} .preview-img{max-width:100%;max-height:220px} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">MP</div>
+      <div>
+        <h1>Redações da Laura — Versão Teste</h1>
+        <div class="subtitle">Tema obrigatório • Envie foto do caderno • OCR automático • Correções por você</div>
+      </div>
+    </header>
+
+    <!-- painel principal -->
+    <div class="card" id="painel">
+      <div class="row" style="align-items:center">
+        <div class="col" style="min-width:260px">
+          <label for="anoEscolar">Ano / Série</label>
+          <select id="anoEscolar" aria-label="Ano escolar">
+            <!-- preenchido pelo JS -->
+          </select>
+        </div>
+
+        <div style="width:220px">
+          <label>Data sugerida</label>
+          <input type="date" id="dataSugest" />
+        </div>
+
+        <div style="width:160px">
+          <label>&nbsp;</label>
+          <div class="controls">
+            <button class="primary" id="btnTema">🎲 Gerar Tema</button>
+            <button class="ghost" id="btnLimpar">✖ Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px;align-items:flex-start">
+        <div style="width:220px">
+          <label>Foto do caderno (obrigatório)</label>
+          <input type="file" id="imgInput" accept="image/*" />
+          <div style="margin-top:8px">
+            <img id="imgPreview" class="preview-img" alt="pré-visualização" style="display:none" />
+          </div>
+          <div class="note small" id="ocrStatus">Nenhuma imagem enviada.</div>
+        </div>
+
+        <div class="col">
+          <label>Tema atual</label>
+          <div class="card" style="padding:10px;">
+            <div id="temaText" class="muted">(gere um tema)</div>
+            <div class="small" style="margin-top:8px">O aluno só pode digitar depois de: 1) tema escolhido; 2) foto enviada.</div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label>Texto (somente após foto + tema)</label>
+            <textarea id="texto" placeholder="Depois de enviar a foto do caderno, o texto aqui será preenchido automaticamente pelo OCR."></textarea>
+          </div>
+
+          <div style="margin-top:8px">
+            <label>Correções / Comentários (seu feedback)</label>
+            <textarea id="correcao" placeholder="Escreva seus comentários ou correções para a criança — aparecerá no PDF."></textarea>
+          </div>
+
+          <div class="row" style="margin-top:10px;justify-content:flex-end">
+            <button class="accent" id="btnSalvar">💾 Salvar Redação</button>
+            <button class="sec" id="btnVer">📚 Ver Redações</button>
+            <button class="ghost" id="btnPdf">⬇️ Exportar PDF</button>
+            <button class="ghost" id="btnShare">📤 Compartilhar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- lista -->
+    <div class="card" id="listaCard">
+      <h3 style="margin-top:0">Redações salvas</h3>
+      <div id="lista" class="list-red">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="footer card small">
+      Use este arquivo como versão de teste. Quando aprovado, eu te passo o passo-a-passo para subir no site.
+    </div>
+  </div>
+
+  <!-- Bibliotecas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+
+  <script>
+    // --- Dados de temas por ano (pode editar / ampliar) ---
+    const temasPorAno = {
+      "1º Ano": [
+        "Meu brinquedo favorito e por que eu gosto dele.",
+        "A manhã em que eu ajudei alguém.",
+        "O dia que aprendi algo novo na escola."
+      ],
+      "2º Ano": [
+        "Uma aventura no parque com minha família.",
+        "Se eu fosse um animal por um dia, eu seria...",
+        "O que eu quero ser quando crescer e por quê."
+      ],
+      "3º Ano": [
+        "A importância de compartilhar com os colegas.",
+        "Uma invenção que facilitaria a vida dos alunos.",
+        "Como é um dia perfeito para mim."
+      ],
+      "4º Ano": [
+        "A cidade onde eu moro: lugares e histórias.",
+        "Um problema que eu vi na escola e uma solução.",
+        "Meu esporte preferido e o que ele me ensina."
+      ],
+      "5º Ano": [
+        "Como a tecnologia ajuda nossa rotina.",
+        "Um personagem histórico que eu gostaria de conhecer.",
+        "O que é coragem para mim."
+      ],
+      // Exemplo de evolução para anos posteriores
+      "6º Ano": [
+        "O papel da leitura na formação de opiniões.",
+        "O impacto das redes sociais na escola.",
+        "Meu projeto de ciência ideal."
+      ],
+      "7º Ano": [
+        "A importância da preservação ambiental na comunidade.",
+        "Se eu fosse prefeito da minha cidade, eu faria...",
+        "Como lidar com o fracasso e aprender com ele."
+      ],
+      "8º Ano": [
+        "O que é tolerância e por que ela importa?",
+        "Inovações tecnológicas que mudaram o mundo.",
+        "Meu plano para o futuro: estudos e carreira."
+      ],
+      "9º Ano": [
+        "A influência da cultura local na identidade.",
+        "Como o estudo da história nos ajuda hoje.",
+        "Um problema global que me preocupa e soluções possíveis."
+      ]
+    };
+
+    // --- Elementos ---
+    const anoSelect = document.getElementById('anoEscolar');
+    const temaText = document.getElementById('temaText');
+    const btnTema = document.getElementById('btnTema');
+    const imgInput = document.getElementById('imgInput');
+    const imgPreview = document.getElementById('imgPreview');
+    const ocrStatus = document.getElementById('ocrStatus');
+    const texto = document.getElementById('texto');
+    const correcao = document.getElementById('correcao');
+    const btnSalvar = document.getElementById('btnSalvar');
+    const btnVer = document.getElementById('btnVer');
+    const lista = document.getElementById('lista');
+    const btnLimpar = document.getElementById('btnLimpar');
+    const dataSugest = document.getElementById('dataSugest');
+    const btnPdf = document.getElementById('btnPdf');
+    const btnShare = document.getElementById('btnShare');
+
+    // estado
+    let temaAtual = "";
+    let imagemDataURL = "";
+    let ocrDone = false;
+    let ocrText = "";
+
+    // inicialização
+    function init(){
+      // preencher anos (usar ordem dos keys)
+      Object.keys(temasPorAno).forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.innerText = k;
+        anoSelect.appendChild(opt);
+      });
+
+      // data padrão = hoje
+      const hoje = new Date();
+      dataSugest.value = hoje.toISOString().slice(0,10);
+
+      updateUIState();
+      carregarLista();
+    }
+
+    // gerar tema
+    btnTema.addEventListener('click', () => {
+      const ano = anoSelect.value;
+      const temas = temasPorAno[ano] || ["Escreva sobre seu dia favorito."];
+      const t = temas[Math.floor(Math.random()*temas.length)];
+      temaAtual = t;
+      temaText.innerText = t;
+      updateUIState();
+    });
+
+    // limpar campos
+    btnLimpar.addEventListener('click', () => {
+      temaAtual = "";
+      temaText.innerText = "(gere um tema)";
+      imgInput.value = "";
+      imgPreview.style.display = "none";
+      imagemDataURL = "";
+      texto.value = "";
+      correcao.value = "";
+      ocrDone = false;
+      ocrText = "";
+      ocrStatus.innerText = "Nenhuma imagem enviada.";
+      updateUIState();
+    });
+
+    // quando imagem enviada
+    imgInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      // mostrar preview reduzido
+      const dataURL = await fileToDataURL(file, 1200);
+      imagemDataURL = dataURL;
+      imgPreview.src = dataURL;
+      imgPreview.style.display = "block";
+      ocrStatus.innerText = "OCR: processando... (isso pode demorar alguns segundos)";
+      updateUIState();
+
+      // executar OCR com Tesseract
+      try {
+        const worker = Tesseract.createWorker({
+          logger: m => { /* console.log(m) */ }
+        });
+        await worker.load();
+        await worker.loadLanguage('por');
+        await worker.initialize('por');
+        const { data: { text } } = await worker.recognize(dataURL);
+        await worker.terminate();
+        ocrText = text.trim();
+        if (ocrText.length === 0) {
+          ocrStatus.innerText = "OCR concluído: nenhum texto detectado. Corrija manualmente.";
+        } else {
+          ocrStatus.innerText = "OCR concluído: texto extraído (revise e edite se precisar).";
+        }
+        texto.value = ocrText;
+        ocrDone = true;
+        updateUIState();
+      } catch (err) {
+        console.error("OCR erro", err);
+        ocrStatus.innerText = "Erro no OCR. Você pode digitar manualmente (se tema + imagem presentes).";
+        ocrDone = false;
+        updateUIState();
+      }
+    });
+
+    // função util: converter file em dataURL e redimensionar para evitar blobs enormes
+    function fileToDataURL(file, maxDim=1200){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = () => {
+          img.onload = () => {
+            // redimensionar mantendo proporção
+            let { width:w, height:h } = img;
+            const ratio = w/h;
+            if (w > maxDim || h > maxDim) {
+              if (w >= h) { w = maxDim; h = Math.round(maxDim/ratio); } else { h = maxDim; w = Math.round(maxDim*ratio); }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img,0,0,w,h);
+            const quality = 0.8;
+            const dataURL = canvas.toDataURL('image/jpeg', quality);
+            resolve(dataURL);
+          };
+          img.onerror = reject;
+          img.src = reader.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // atualiza estado da UI (habilitar/desabilitar textarea)
+    function updateUIState(){
+      const canType = Boolean(temaAtual) && Boolean(imagemDataURL);
+      if (!temaAtual) {
+        temaText.classList.add('muted');
+      } else {
+        temaText.classList.remove('muted');
+      }
+      if (canType) {
+        texto.removeAttribute('disabled');
+        texto.placeholder = "O texto extraído aparece automaticamente quando a foto for processada. Edite se precisar.";
+      } else {
+        texto.setAttribute('disabled', 'true');
+        texto.placeholder = "Para liberar a digitação, gere um tema e envie a foto do caderno.";
+      }
+    }
+
+    // salvar redação (localStorage)
+    btnSalvar.addEventListener('click', () => {
+      if (!temaAtual) { alert("Gere um tema antes de salvar."); return; }
+      if (!imagemDataURL) { alert("Envie a foto do caderno antes de salvar."); return; }
+      const txt = texto.value.trim();
+      if (!txt) { if (!confirm("O texto está vazio. Deseja salvar mesmo assim?")) return; }
+
+      const item = {
+        id: Date.now(),
+        tema: temaAtual,
+        ano: anoSelect.value,
+        dataSugest: dataSugest.value,
+        texto: txt,
+        correcao: correcao.value.trim(),
+        imagem: imagemDataURL
+      };
+      const arr = JSON.parse(localStorage.getItem('redacoes_mp')||'[]');
+      arr.unshift(item);
+      localStorage.setItem('redacoes_mp', JSON.stringify(arr));
+      alert("Redação salva!");
+      // limpar campos práticos para novo uso (mantemos tema para continuidade)
+      // temaAtual = ""; temaText.innerText = "(gere um tema)"; 
+      imgInput.value = "";
+      imgPreview.style.display = "none";
+      imagemDataURL = "";
+      texto.value = "";
+      correcao.value = "";
+      ocrDone = false;
+      ocrText = "";
+      ocrStatus.innerText = "Nenhuma imagem enviada.";
+      updateUIState();
+      carregarLista();
+    });
+
+    // carregar lista
+    function carregarLista(){
+      const arr = JSON.parse(localStorage.getItem('redacoes_mp')||'[]');
+      lista.innerHTML = "";
+      if (!arr.length) {
+        lista.innerHTML = "<div class='small muted'>Nenhuma redação salva.</div>";
+        return;
+      }
+      arr.forEach(it => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div style="width:160px">
+            <img src="${it.imagem}" class="preview-img" alt="foto" />
+          </div>
+          <div class="txt">
+            <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+              <div>
+                <div class="tag">${escapeHtml(it.ano)}</div>
+                <div style="font-weight:700;margin-top:6px">${escapeHtml(it.tema)}</div>
+                <div class="small muted">${formatDateForDisplay(it.dataSugest)}</div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="ghost" onclick="baixarPDF(${it.id})">⬇ PDF</button>
+                <button class="ghost" onclick="compartilharRed(${it.id})">📤</button>
+                <button class="ghost" onclick="editar(${it.id})">✏️</button>
+                <button class="ghost" onclick="apagar(${it.id})">🗑️</button>
+              </div>
+            </div>
+            <div style="margin-top:8px;white-space:pre-wrap">${escapeHtml(truncate(it.texto,350))}</div>
+            ${it.correcao ? `<div style="margin-top:8px;padding:8px;border-radius:8px;background:#fff7ed;border:1px solid #ffe6c7"><strong>Correção:</strong><div style="margin-top:6px;white-space:pre-wrap">${escapeHtml(it.correcao)}</div></div>` : ''}
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // util: formatar data
+    function formatDateForDisplay(d) {
+      if (!d) return "";
+      try {
+        const parts = d.split('-');
+        return parts[2] + '/' + parts[1] + '/' + parts[0];
+      } catch(e){ return d; }
+    }
+
+    // util: truncar texto
+    function truncate(s, n){ return s.length>n ? s.slice(0,n)+'…' : s; }
+
+    // escape HTML
+    function escapeHtml(str){
+      if (!str) return "";
+      return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+    }
+
+    // apagar
+    function apagar(id){
+      if(!confirm("Apagar esta redação?")) return;
+      let arr = JSON.parse(localStorage.getItem('redacoes_mp')||'[]');
+      arr = arr.filter(x=> x.id !== id);
+      localStorage.setItem('redacoes_mp', JSON.stringify(arr));
+      carregarLista();
+    }
+
+    // editar: carrega no formulário para alterar e salvar (salvar cria novo item)
+    function editar(id){
+      let arr = JSON.parse(localStorage.getItem('redacoes_mp')||'[]');
+      const it = arr.find(x=> x.id === id);
+      if (!it) return alert("Redação não encontrada.");
+      // carregar no formulário
+      temaAtual = it.tema;
+      temaText.innerText = temaAtual;
+      anoSelect.value = it.ano || anoSelect.value;
+      dataSugest.value = it.dataSugest || dataSugest.value;
+      texto.value = it.texto || "";
+      correcao.value = it.correcao || "";
+      imagemDataURL = it.imagem || "";
+      imgPreview.src = imagemDataURL;
+      imgPreview.style.display = imagemDataURL ? 'block' : 'none';
+      ocrStatus.innerText = "Imagem recarregada para edição.";
+      updateUIState();
+      // obs: salvar irá criar novo registro; se quiser substituir o original é possível melhorar
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    // exportar PDF de um id
+    async function baixarPDF(id){
+      const item = getItemById(id);
+      if (!item) return alert("Registro não encontrado.");
+      await gerarPDF(item, 'download');
+    }
+
+    // compartilhar via Web Share (se possível)
+    async function compartilharRed(id){
+      const item = getItemById(id);
+      if (!item) return alert("Registro não encontrado.");
+      await gerarPDF(item, 'share');
+    }
+
+    // helper
+    function getItemById(id){
+      const arr = JSON.parse(localStorage.getItem('redacoes_mp')||'[]');
+      return arr.find(x=> x.id === id) || null;
+    }
+
+    // gerar PDF (inclui imagem e texto, correção, tema, data)
+    async function gerarPDF(item, modo='download'){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:'pt', format:'a4' });
+      const margem = 40;
+      const largura = doc.internal.pageSize.getWidth() - margem*2;
+      let y = 48;
+
+      // cabeçalho
+      doc.setFontSize(18);
+      doc.setFont(undefined, 'bold');
+      doc.text("Redação — " + (item.tema || ""), margem, y);
+      y += 22;
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'normal');
+      doc.text(`Série: ${item.ano}    Data sugerida: ${formatDateForDisplay(item.dataSugest)}`, margem, y);
+      y += 12;
+      doc.setLineWidth(0.5);
+      doc.line(margem, y, margem + largura, y);
+      y += 14;
+
+      // imagem (se houver) - ajustar tamanho mantendo proporção
+      if (item.imagem) {
+        try {
+          // calcular
