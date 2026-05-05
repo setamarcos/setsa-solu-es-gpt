@@ -15,17 +15,17 @@ body {
 /* HEADER */
 header {
   text-align:center;
-  padding:2rem 1rem;
+  padding:1.5rem 1rem;
 }
 
 header h2 {
-  font-size:26px;
-  margin-bottom:10px;
+  font-size:22px;
+  margin-bottom:8px;
 }
 
 header p {
-  font-size:16px;
-  line-height:1.5;
+  font-size:14px;
+  line-height:1.4;
   opacity:0.95;
 }
 
@@ -35,30 +35,30 @@ header p {
   color:#000;
   max-width:780px;
   margin:20px auto;
-  padding:24px;
+  padding:20px;
   border-radius:12px;
 }
 
 /* CAMPOS */
 label {
-  font-size:15px;
+  font-size:14px;
   font-weight:bold;
 }
 
 small {
   display:block;
-  font-size:13px;
+  font-size:12px;
   color:#555;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 input, textarea, select {
   width:100%;
-  padding:12px;
-  font-size:16px;
+  padding:10px;
+  font-size:14px;
   border-radius:6px;
   border:1px solid #ccc;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 
 /* BOTÕES */
@@ -66,13 +66,13 @@ button {
   background:#ff6600;
   color:#fff;
   border:none;
-  padding:14px;
-  font-size:16px;
+  padding:12px;
+  font-size:15px;
   border-radius:8px;
   cursor:pointer;
   margin-right:8px;
   margin-top:5px;
-  min-height:44px;
+  min-height:40px;
 }
 
 button:hover {
@@ -82,11 +82,11 @@ button:hover {
 /* RESULTADO */
 .result {
   background:#eef;
-  padding:14px;
-  margin-top:20px;
+  padding:12px;
+  margin-top:16px;
   border-radius:8px;
   white-space:pre-wrap;
-  font-size:14px;
+  font-size:13px;
 }
 
 /* FEEDBACK COPIADO */
@@ -97,18 +97,18 @@ button:hover {
   transform:translateX(-50%);
   background:#333;
   color:#fff;
-  padding:12px 20px;
+  padding:10px 16px;
   border-radius:20px;
-  font-size:14px;
+  font-size:13px;
   opacity:0;
   transition:0.3s;
 }
 
 /* CAMPO RETORNO IA */
 #retornoIA {
-  margin-top:20px;
+  margin-top:16px;
   background:#f9f9f9;
-  padding:15px;
+  padding:12px;
   border-radius:8px;
   display:none;
 }
@@ -183,11 +183,26 @@ Ela vai entender tudo e te responder direto ao ponto.)
 <div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
 
 <script>
-
 let banco = [];
 
 function gerar() {
-let textoFinal = `
+  // Correção ortográfica amigável
+  let erros = [];
+  if (problema.value.includes("pronpr")) erros.push("prompt");
+  if (problema.value.includes("bejevo")) erros.push("objetivo");
+
+  let mensagemCorrecao = "";
+  if (erros.length > 0) {
+    mensagemCorrecao =
+`Notei alguns erros de digitação:
+- ${erros.join(", ")}
+
+Quer que eu corrija o texto para você?
+Posso fazer a correção antes de executar.
+Se preferir, posso executar deste jeito mesmo.`;
+  }
+
+  let textoFinal = `
 ASSUNTO:
 ${tipo.value} - ${subtipo.value}
 
@@ -208,43 +223,45 @@ ${contexto.value}
 
 INSTRUÇÃO:
 Responder de forma direta, prática e sem excesso.
+
+${mensagemCorrecao}
 `;
 
-saida.innerText = textoFinal;
-window.textoFinal = textoFinal;
+  saida.innerText = textoFinal;
+  window.textoFinal = textoFinal;
 
-banco.push({
-tipo: tipo.value,
-problema: problema.value,
-data: new Date().toLocaleString()
-});
+  banco.push({
+    tipo: tipo.value,
+    problema: problema.value,
+    data: new Date().toLocaleString()
+  });
 
-// Mostrar campo de retorno da IA
-document.getElementById("retornoIA").style.display = "block";
+  // Mostrar campo de retorno da IA
+  document.getElementById("retornoIA").style.display = "block";
 }
 
 function copiar() {
-navigator.clipboard.writeText(window.textoFinal);
-let toast = document.getElementById("toast");
-toast.style.opacity = 1;
-setTimeout(() => { toast.style.opacity = 0; }, 2000);
+  navigator.clipboard.writeText(window.textoFinal);
+  let toast = document.getElementById("toast");
+  toast.style.opacity = 1;
+  setTimeout(() => { toast.style.opacity = 0; }, 2000);
 }
 
 function exportarXLS() {
-let tabela = "Tipo\tProblema\tData\n";
-banco.forEach(item => {
-tabela += `${item.tipo}\t${item.problema}\t${item.data}\n`;
-});
-let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
-let link = document.createElement("a");
-link.href = URL.createObjectURL(blob);
-link.download = "mp_hub.xls";
-link.click();
+  let tabela = "Data\tTipo\tProblema\n";
+  banco.forEach(item => {
+    tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`;
+  });
+  let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "mp_hub.xls";
+  link.click();
 }
 
 function continuar() {
-let resposta = document.getElementById("respostaIA").value;
-alert("Interação continuada com a resposta da IA:\n\n" + resposta);
+  let resposta = document.getElementById("respostaIA").value;
+  alert("Interação continuada com a resposta da IA:\n\n" + resposta);
 }
 </script>
 
