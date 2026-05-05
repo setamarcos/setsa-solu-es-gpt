@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>MP Hub IA</title>
-
 <style>
 body {
   margin:0;
@@ -11,118 +10,45 @@ body {
   background:#003366;
   color:#fff;
 }
-
-/* HEADER */
-header {
-  text-align:center;
-  padding:1.5rem 1rem;
-}
-
-header h2 {
-  font-size:22px;
-  margin-bottom:8px;
-}
-
-header p {
-  font-size:14px;
-  line-height:1.4;
-  opacity:0.95;
-}
-
-/* CONTAINER */
+header { text-align:center; padding:1.5rem 1rem; }
+header h2 { font-size:22px; margin-bottom:8px; }
+header p { font-size:14px; line-height:1.4; opacity:0.95; }
 .container {
-  background:#fff;
-  color:#000;
-  max-width:780px;
-  margin:20px auto;
-  padding:20px;
-  border-radius:12px;
+  background:#fff; color:#000; max-width:780px;
+  margin:20px auto; padding:20px; border-radius:12px;
 }
-
-/* CAMPOS */
-label {
-  font-size:14px;
-  font-weight:bold;
-}
-
-small {
-  display:block;
-  font-size:12px;
-  color:#555;
-  margin-bottom:8px;
-}
-
+label { font-size:14px; font-weight:bold; }
+small { display:block; font-size:12px; color:#555; margin-bottom:8px; }
 input, textarea, select {
-  width:100%;
-  padding:10px;
-  font-size:14px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  margin-bottom:14px;
+  width:100%; padding:10px; font-size:14px;
+  border-radius:6px; border:1px solid #ccc; margin-bottom:14px;
 }
-
-/* BOTÕES */
 button {
-  background:#ff6600;
-  color:#fff;
-  border:none;
-  padding:12px;
-  font-size:15px;
-  border-radius:8px;
-  cursor:pointer;
-  margin-right:8px;
-  margin-top:5px;
-  min-height:40px;
+  background:#ff6600; color:#fff; border:none;
+  padding:12px; font-size:15px; border-radius:8px;
+  cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px;
 }
-
-button:hover {
-  opacity:0.9;
-}
-
-/* RESULTADO */
+button:hover { opacity:0.9; }
 .result {
-  background:#eef;
-  padding:12px;
-  margin-top:16px;
-  border-radius:8px;
-  white-space:pre-wrap;
-  font-size:13px;
+  background:#eef; padding:12px; margin-top:16px;
+  border-radius:8px; white-space:pre-wrap; font-size:13px;
 }
-
-/* FEEDBACK COPIADO */
 .toast {
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#333;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:20px;
-  font-size:13px;
-  opacity:0;
-  transition:0.3s;
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  background:#333; color:#fff; padding:10px 16px;
+  border-radius:20px; font-size:13px; opacity:0; transition:0.3s;
 }
-
-/* CAMPO RETORNO IA */
 #retornoIA {
-  margin-top:16px;
-  background:#f9f9f9;
-  padding:12px;
-  border-radius:8px;
-  display:none;
+  margin-top:16px; background:#f9f9f9;
+  padding:12px; border-radius:8px; display:none;
 }
 </style>
 </head>
-
 <body>
 
 <header>
 <h2>Estamos juntos nisso.</h2>
-<p>
-Fala do seu jeito — eu organizo.<br>
-Simples ou mais a fundo, a gente resolve.
-</p>
+<p>Fala do seu jeito — eu organizo.<br>Simples ou mais a fundo, a gente resolve.</p>
 </header>
 
 <div class="container">
@@ -130,44 +56,32 @@ Simples ou mais a fundo, a gente resolve.
 <label>Pra que você precisa agora?</label>
 <small>(Escolha o tipo de ajuda mais próximo do que você precisa)</small>
 <select id="tipo">
-<option>Pessoal</option>
-<option>Técnica</option>
-<option>Comercial</option>
-<option>Casa</option>
+<option>Pessoal</option><option>Técnica</option><option>Comercial</option><option>Casa</option>
 </select>
 
 <label>Se quiser detalhar melhor</label>
-<small>(Opcional — ajuda a deixar mais específico)</small>
 <input id="subtipo">
 
 <label>O que tá pegando aí?</label>
-<small>(Explica do seu jeito, sem precisar organizar)</small>
 <textarea id="problema"></textarea>
 
 <label>O que já aconteceu até aqui?</label>
-<small>(O que você tentou ou percebeu)</small>
 <textarea id="contexto"></textarea>
 
 <label>O que você quer resolver?</label>
-<small>(Qual resultado você quer alcançar)</small>
 <textarea id="objetivo"></textarea>
 
 <label>Como você sabe que deu certo?</label>
-<small>(O que precisa acontecer pra considerar resolvido)</small>
 <textarea id="resultadoEsperado"></textarea>
 
 <label>O que você quer evitar?</label>
-<small>(Ex: perder tempo, gastar dinheiro, solução complicada)</small>
 <textarea id="naoQuero"></textarea>
 
 <button onclick="gerar()">Me ajuda com isso</button>
 <button onclick="copiar()">Copiar e usar na IA</button>
 <button onclick="exportarXLS()">Exportar XLS</button>
 
-<small>
-(Clique, copie e cole em uma IA como ChatGPT, Gemini ou Copilot.
-Ela vai entender tudo e te responder direto ao ponto.)
-</small>
+<small>(Clique, copie e cole em uma IA como ChatGPT, Gemini ou Copilot. Ela vai entender tudo e te responder direto ao ponto.)</small>
 
 <div class="result" id="saida"></div>
 
@@ -176,6 +90,7 @@ Ela vai entender tudo e te responder direto ao ponto.)
   <label>Cole aqui a resposta da IA:</label>
   <textarea id="respostaIA"></textarea>
   <button onclick="continuar()">Continuar interação</button>
+  <div id="botoesExtras"></div>
 </div>
 
 </div>
@@ -230,13 +145,8 @@ ${mensagemCorrecao}
   saida.innerText = textoFinal;
   window.textoFinal = textoFinal;
 
-  banco.push({
-    tipo: tipo.value,
-    problema: problema.value,
-    data: new Date().toLocaleString()
-  });
+  banco.push({ data: new Date().toLocaleString(), tipo: tipo.value, problema: problema.value });
 
-  // Mostrar campo de retorno da IA
   document.getElementById("retornoIA").style.display = "block";
 }
 
@@ -249,9 +159,7 @@ function copiar() {
 
 function exportarXLS() {
   let tabela = "Data\tTipo\tProblema\n";
-  banco.forEach(item => {
-    tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`;
-  });
+  banco.forEach(item => { tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`; });
   let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
   let link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -262,6 +170,28 @@ function exportarXLS() {
 function continuar() {
   let resposta = document.getElementById("respostaIA").value;
   alert("Interação continuada com a resposta da IA:\n\n" + resposta);
+
+  // Criar três botões extras
+  let div = document.getElementById("botoesExtras");
+  div.innerHTML = "";
+  let btn1 = document.createElement("button");
+  btn1.innerText = "Nova análise";
+  btn1.onclick = () => gerar();
+  let btn2 = document.createElement("button");
+  btn2.innerText = "Copiar retorno";
+  btn2.onclick = () => navigator.clipboard.writeText(resposta);
+  let btn3 = document.createElement("button");
+  btn3.innerText = "Exportar retorno";
+  btn3.onclick = () => {
+    let blob = new Blob([resposta], { type: "text/plain" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "retornoIA.txt";
+    link.click();
+  };
+  div.appendChild(btn1);
+  div.appendChild(btn2);
+  div.appendChild(btn3);
 }
 </script>
 
