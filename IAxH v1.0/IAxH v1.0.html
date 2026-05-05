@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>IAxH v1.0</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0d3b66;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+h1 {
+    text-align: center;
+    color: #0d3b66;
+}
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+button {
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    background: orange;
+    color: #fff;
+}
+.output {
+    background: #f4f4f4;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    white-space: pre-line;
+}
+.box-roxo {
+    background: #e6e0f8;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Estamos juntos nisso.</h1>
+    <p>Fale dos seus planos — da urgência. Simples ou não. É tudo a gente resolve.</p>
+
+    <label>Pra que você precisa agora?</label>
+    <select id="assunto">
+        <option value="Pessoal">Pessoal</option>
+        <option value="Técnico">Técnico</option>
+        <option value="Comercial">Comercial</option>
+    </select>
+
+    <label>O que está pegando aí?</label>
+    <textarea id="problema"></textarea>
+
+    <label>O que já aconteceu até aqui?</label>
+    <textarea id="causa"></textarea>
+
+    <label>O que você quer resolver?</label>
+    <textarea id="objetivo"></textarea>
+
+    <label>O que você quer evitar?</label>
+    <textarea id="pressao"></textarea>
+
+    <button onclick="gerar()">Me ajuda com isso</button>
+    <button onclick="exportarXLS()">Exportar XLS</button>
+
+    <div class="output" id="saida"></div>
+
+    <div id="retornoIA" class="hidden">
+        <label>Cole aqui a resposta da IA:</label>
+        <textarea id="respostaIA"></textarea>
+        <button onclick="continuar()">Continuar interação</button>
+    </div>
+</div>
+
+<script>
+let historico = [];
+
+function gerar() {
+    let problema = document.getElementById("problema").value;
+    let causa = document.getElementById("causa").value;
+    let objetivo = document.getElementById("objetivo").value;
+    let pressao = document.getElementById("pressao").value;
+
+    // Correção ortográfica amigável
+    let erros = [];
+    if (problema.includes("qaundo")) erros.push("quando");
+    if (problema.includes("isncerções")) erros.push("inserções");
+
+    let mensagemCorrecao = "";
+    if (erros.length > 0) {
+        mensagemCorrecao = 
+`Notei alguns erros de digitação:
+- ${erros.join(", ")}
+
+Quer que eu corrija o texto para você?
+Posso fazer a correção antes de executar.
+Se preferir, posso executar deste jeito mesmo.`;
+    }
+
+    let resultado =
+`DIAGNÓSTICO:
+${problema}
+
+CAUSA:
+${causa}
+
+OBJETIVO:
+${objetivo}
+
+PRESSÕES:
+${pressao}
+
+${mensagemCorrecao}`;
+
+    document.getElementById("saida").innerText = resultado;
+
+    historico.push({
+        data: new Date().toLocaleString(),
+        problema, causa, objetivo, pressao
+    });
+
+    // Mostrar campo de retorno da IA
+    document.getElementById("retornoIA").classList.remove("hidden");
+}
+
+function exportarXLS() {
+    let linhas = historico.map(h => 
+        `${h.data},${h.problema},${h.causa},${h.objetivo},${h.pressao}`
+    );
+    let conteudo = "Data,Problema,Causa,Objetivo,Pressões\n" + linhas.join("\n");
+    let blob = new Blob([conteudo], { type: "text/csv;charset=utf-8;" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "IAxH_diagnostico.csv";
+    link.click();
+}
+
+function continuar() {
+    let resposta = document.getElementById("respostaIA").value;
+    alert("Interação continuada com a resposta da IA:\n\n" + resposta);
+}
+</script>
+</body>
+</html>
