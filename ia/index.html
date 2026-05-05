@@ -103,6 +103,15 @@ button:hover {
   opacity:0;
   transition:0.3s;
 }
+
+/* CAMPO RETORNO IA */
+#retornoIA {
+  margin-top:20px;
+  background:#f9f9f9;
+  padding:15px;
+  border-radius:8px;
+  display:none;
+}
 </style>
 </head>
 
@@ -162,6 +171,13 @@ Ela vai entender tudo e te responder direto ao ponto.)
 
 <div class="result" id="saida"></div>
 
+<!-- CAMPO DE RETORNO DA IA -->
+<div id="retornoIA">
+  <label>Cole aqui a resposta da IA:</label>
+  <textarea id="respostaIA"></textarea>
+  <button onclick="continuar()">Continuar interação</button>
+</div>
+
 </div>
 
 <div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
@@ -171,7 +187,6 @@ Ela vai entender tudo e te responder direto ao ponto.)
 let banco = [];
 
 function gerar() {
-
 let textoFinal = `
 ASSUNTO:
 ${tipo.value} - ${subtipo.value}
@@ -196,7 +211,6 @@ Responder de forma direta, prática e sem excesso.
 `;
 
 saida.innerText = textoFinal;
-
 window.textoFinal = textoFinal;
 
 banco.push({
@@ -204,33 +218,33 @@ tipo: tipo.value,
 problema: problema.value,
 data: new Date().toLocaleString()
 });
+
+// Mostrar campo de retorno da IA
+document.getElementById("retornoIA").style.display = "block";
 }
 
 function copiar() {
 navigator.clipboard.writeText(window.textoFinal);
-
 let toast = document.getElementById("toast");
 toast.style.opacity = 1;
-
-setTimeout(() => {
-  toast.style.opacity = 0;
-}, 2000);
+setTimeout(() => { toast.style.opacity = 0; }, 2000);
 }
 
 function exportarXLS() {
-
 let tabela = "Tipo\tProblema\tData\n";
-
 banco.forEach(item => {
 tabela += `${item.tipo}\t${item.problema}\t${item.data}\n`;
 });
-
 let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
 let link = document.createElement("a");
-
 link.href = URL.createObjectURL(blob);
 link.download = "mp_hub.xls";
 link.click();
+}
+
+function continuar() {
+let resposta = document.getElementById("respostaIA").value;
+alert("Interação continuada com a resposta da IA:\n\n" + resposta);
 }
 </script>
 
