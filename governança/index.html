@@ -1,58 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>MP Hub IA - Direto ao Ponto</title>
-    <style>
-        body { margin:0; font-family: Arial; background:#003366; color:#fff; text-align:center; }
-        .container { background:#fff; color:#000; max-width:600px; margin:50px auto; padding:30px; border-radius:15px; }
-        input { width:100%; padding:15px; font-size:18px; border:2px solid #ff6600; border-radius:8px; box-sizing:border-box; }
-        .campos-dinamicos { margin-top:20px; text-align:left; }
-        label { font-weight:bold; display:block; margin-top:10px; }
-        button { background:#ff6600; color:#fff; border:none; padding:15px; width:100%; border-radius:8px; margin-top:20px; cursor:pointer; font-size:16px; }
-        .resultado { background:#eef; padding:15px; margin-top:20px; border-radius:8px; white-space:pre-wrap; display:none; }
-    </style>
+<meta charset="UTF-8">
+<title>Diagnóstico Direto 5.0 + MP Hub IA</title>
+<style>
+body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; }
+header { text-align:center; padding:1.5rem 1rem; }
+header h2 { font-size:22px; margin-bottom:8px; }
+header p { font-size:14px; line-height:1.4; opacity:0.95; }
+.container { background:#fff; color:#000; max-width:780px; margin:20px auto; padding:20px; border-radius:12px; }
+label { font-size:14px; font-weight:bold; }
+small { display:block; font-size:12px; color:#555; margin-bottom:8px; }
+input, textarea, select { width:100%; padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:14px; }
+button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:15px; border-radius:8px; cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px; }
+button:hover { opacity:0.9; }
+.result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; }
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:20px; font-size:13px; opacity:0; transition:0.3s; }
+#retornoIA { margin-top:16px; background:#f9f9f9; padding:12px; border-radius:8px; display:none; }
+</style>
 </head>
 <body>
 
-    <h2>O que você quer resolver agora?</h2>
-    <div class="container">
-        <input type="text" id="comando" placeholder="Ex: recibo de 780, salvar casamento, cortar grama..." oninput="ajustarFluxo()">
-        
-        <div id="fluxo" class="campos-dinamicos"></div>
-        
-        <button onclick="executar()">Gerar Solução</button>
-        <div id="saida" class="resultado"></div>
-    </div>
+<header>
+<h2>Estamos juntos nisso.</h2>
+<p>Fala do seu jeito — eu organizo.<br>Simples ou mais a fundo, a gente resolve.</p>
+</header>
+
+<div class="container">
+
+<label>Pra que você precisa agora?</label>
+<select id="tipo">
+<option>Pessoal</option><option>Técnica</option><option>Comercial</option><option>Casa</option>
+</select>
+
+<label>Se quiser detalhar melhor</label>
+<input id="subtipo">
+
+<label>O que tá pegando aí?</label>
+<textarea id="problema"></textarea>
+
+<label>O que já aconteceu até aqui?</label>
+<textarea id="contexto"></textarea>
+
+<label>O que você quer resolver?</label>
+<textarea id="objetivo"></textarea>
+
+<label>Como você sabe que deu certo?</label>
+<textarea id="resultadoEsperado"></textarea>
+
+<label>O que você quer evitar?</label>
+<textarea id="naoQuero"></textarea>
+
+<button onclick="gerar()">Me ajuda com isso</button>
+<button onclick="copiar()">Copiar e usar na IA</button>
+<button onclick="exportarXLS()">Exportar XLS</button>
+
+<div class="result" id="saida"></div>
+
+<!-- CAMPO DE RETORNO DA IA -->
+<div id="retornoIA">
+  <label>Cole aqui a resposta da IA:</label>
+  <textarea id="respostaIA"></textarea>
+  <button onclick="continuar()">Continuar interação</button>
+  <div id="botoesExtras"></div>
+</div>
+
+</div>
+
+<div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
 
 <script>
-function ajustarFluxo() {
-    const cmd = document.getElementById('comando').value.toLowerCase();
-    const fluxo = document.getElementById('fluxo');
-    fluxo.innerHTML = ""; // Limpa
+let banco = [];
 
-    if (cmd.includes("recibo") || cmd.includes("valor")) {
-        fluxo.innerHTML = '<label>Nome do Pagador:</label><input id="d1"><label>Referente a:</label><input id="d2">';
-    } 
-    else if (cmd.includes("casamento") || cmd.includes("mulher") || cmd.includes("filha")) {
-        fluxo.innerHTML = '<label>O que aconteceu por último?</label><textarea id="d1" style="width:100%"></textarea><label>Qual seu maior medo agora?</label><input id="d2">';
-    }
-    else if (cmd.includes("grama") || cmd.includes("piscina") || cmd.includes("obra")) {
-        fluxo.innerHTML = '<label>Tamanho/Medida:</label><input id="d1"><label>Situação atual (Ex: suja, alta, torta):</label><input id="d2">';
-    }
+function gerar() {
+  // Correção ortográfica amigável
+  let erros = [];
+  if (problema.value.includes("pronpr")) erros.push("prompt");
+  if (problema.value.includes("bejevo")) erros.push("objetivo");
+
+  let mensagemCorrecao = "";
+  if (erros.length > 0) {
+    mensagemCorrecao =
+`Notei alguns erros de digitação:
+- ${erros.join(", ")}
+
+Quer que eu corrija o texto para você?
+Posso fazer a correção antes de executar.
+Se preferir, posso executar deste jeito mesmo.`;
+  }
+
+  let textoFinal = `
+ASSUNTO:
+${tipo.value} - ${subtipo.value}
+
+PROBLEMA:
+${problema.value}
+
+OBJETIVO:
+${objetivo.value}
+
+RESULTADO:
+${resultadoEsperado.value}
+
+RESTRIÇÕES:
+${naoQuero.value}
+
+CONTEXTO:
+${contexto.value}
+
+INSTRUÇÃO:
+Responder de forma direta, prática e sem excesso.
+
+${mensagemCorrecao}
+`;
+
+  saida.innerText = textoFinal;
+  window.textoFinal = textoFinal;
+
+  banco.push({ data: new Date().toLocaleString(), tipo: tipo.value, problema: problema.value });
+
+  document.getElementById("retornoIA").style.display = "block";
 }
 
-function executar() {
-    const cmd = document.getElementById('comando').value;
-    const d1 = document.getElementById('d1')?.value || "";
-    const d2 = document.getElementById('d2')?.value || "";
+function copiar() {
+  navigator.clipboard.writeText(window.textoFinal);
+  let toast = document.getElementById("toast");
+  toast.style.opacity = 1;
+  setTimeout(() => { toast.style.opacity = 0; }, 2000);
+}
 
-    const prompt = `INTENÇÃO: ${cmd}\nDADO 1: ${d1}\nDADO 2: ${d2}\n\nINSTRUÇÃO: Responda de forma prática e utilizável agora. Sem introduções.`;[cite: 3]
-    
-    const saida = document.getElementById('saida');
-    saida.innerText = prompt;
-    saida.style.display = 'block';
+function exportarXLS() {
+  let tabela = "Data\tTipo\tProblema\n";
+  banco.forEach(item => { tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`; });
+  let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "diagnostico.xls";
+  link.click();
+}
+
+function continuar() {
+  let resposta = document.getElementById("respostaIA").value;
+
+  // Diagnóstico estruturado estilo 5.0
+  let diagnostico = `
+DIAGNÓSTICO:
+${problema.value}
+
+ERRO ATUAL:
+Manter esforço sem retorno claro
+
+DECISÃO NECESSÁRIA:
+Interromper padrão atual e focar em resultado direto
+
+PLANO DE AÇÃO (3 PASSOS):
+1. Eliminar atividades que não geram retorno
+2. Focar em uma fonte de resultado imediato
+3. Criar rotina mínima com meta diária
+
+RISCO SE NÃO AGIR:
+Continuidade do desgaste + perda de energia + estagnação
+
+CHANCE DE SUCESSO: 70%
+CHANCE DE DERROTA: 30%
+
+RETORNO DA IA:
+${resposta}
+`;
+
+  saida.innerText = diagnostico;
+
+  // Criar três botões extras
+  let div = document.getElementById("botoesExtras");
+  div.innerHTML = "";
+  let btn1 = document.createElement("button");
+  btn1.innerText = "Nova análise";
+  btn1.onclick = () => gerar();
+  let btn2 = document.createElement("button");
+  btn2.innerText = "Copiar retorno";
+  btn2.onclick = () => navigator.clipboard.writeText(diagnostico);
+  let btn3 = document.createElement("button");
+  btn3.innerText = "Exportar retorno";
+  btn3.onclick = () => {
+    let blob = new Blob([diagnostico], { type: "text/plain" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "retornoIA.txt";
+    link.click();
+  };
+  div.appendChild(btn1);
+  div.appendChild(btn2);
+  div.appendChild(btn3);
 }
 </script>
+
 </body>
 </html>
