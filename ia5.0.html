@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Diagnóstico Direto 5.0 + Google Drive</title>
+<style>
+body { font-family: Arial, sans-serif; background:#0d3b66; margin:0; padding:20px; color:#333; }
+.container { max-width:700px; margin:auto; background:#fff; padding:20px; border-radius:10px; }
+h1 { text-align:center; color:#0d3b66; }
+label { font-weight:bold; margin-top:10px; display:block; }
+textarea { width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc; font-size:16px; }
+button { padding:12px; margin-top:10px; border:none; border-radius:6px; cursor:pointer; font-size:16px; }
+.btn-main { background:#0077cc; color:white; width:100%; }
+.output { background:#f4f4f4; padding:15px; margin-top:15px; border-radius:8px; white-space:pre-line; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Diagnóstico Direto 5.0</h1>
+
+    <label>Situação atual</label>
+    <textarea id="situacao"></textarea>
+
+    <label>O que mais pesa</label>
+    <textarea id="peso"></textarea>
+
+    <label>Há quanto tempo</label>
+    <textarea id="tempo"></textarea>
+
+    <label>O que não pode perder</label>
+    <textarea id="limite"></textarea>
+
+    <label>O que você quer de verdade</label>
+    <textarea id="objetivo"></textarea>
+
+    <button class="btn-main" onclick="gerar()">Gerar Diagnóstico</button>
+    <button class="btn-main" onclick="executar()">Salvar no Google Drive</button>
+
+    <div class="output" id="saida"></div>
+</div>
+
+<script>
+// Função Diagnóstico Direto 5.0
+function gerar() {
+    let situacao = document.getElementById("situacao").value;
+    let peso = document.getElementById("peso").value;
+    let tempo = document.getElementById("tempo").value;
+    let limite = document.getElementById("limite").value;
+    let objetivo = document.getElementById("objetivo").value;
+
+    let diagnostico = peso || situacao;
+    let erro = "Manter esforço sem retorno claro";
+    let decisao = "Interromper padrão atual e focar em resultado direto";
+
+    let plano1 = "Eliminar atividades que não geram retorno";
+    let plano2 = "Focar em uma fonte de renda imediata";
+    let plano3 = "Criar rotina mínima com meta diária";
+
+    let risco = "Continuidade do desgaste + perda de energia + estagnação total";
+
+    let score = 50;
+    if (objetivo.trim() !== "") score += 20;
+    if (limite.trim() !== "") score += 10;
+    if (tempo.trim().length > 10) score -= 10;
+    if (peso.trim().length > 20) score -= 10;
+    score = Math.max(0, Math.min(100, score));
+
+    let sucesso = score;
+    let derrota = 100 - score;
+
+    let resultado =
+`DIAGNÓSTICO:
+${diagnostico}
+
+ERRO ATUAL:
+${erro}
+
+DECISÃO NECESSÁRIA:
+${decisao}
+
+PLANO DE AÇÃO (3 PASSOS):
+1. ${plano1}
+2. ${plano2}
+3. ${plano3}
+
+RISCO SE NÃO AGIR:
+${risco}
+
+CHANCE DE SUCESSO: ${sucesso}%
+CHANCE DE DERROTA: ${derrota}%`;
+
+    document.getElementById("saida").innerText = resultado;
+}
+
+// Função para chamar Google Apps Script
+function executar() {
+    var url = "https://script.google.com/macros/s/AKfycbyMGkOSKX5xBtAmrKvOO9BejOqoOoTSzOSDuNCIirQTOfTEBjj7GUuiUW7V-b7IkhmqqA/exec";
+    fetch(url)
+      .then(response => response.text())
+      .then(data => alert("Interação salva no Google Drive!\n\n" + data))
+      .catch(error => alert("Erro ao executar: " + error));
+}
+</script>
+</body>
+</html>
