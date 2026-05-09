@@ -2,16 +2,24 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neurociência - Exercícios Diários</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h1>Neurociência - Exercício do Dia</h1>
-  <div id="exercise"></div>
-  <canvas id="progressChart"></canvas>
-  <button onclick="addReminder()">Adicionar lembrete no Google Agenda</button>
+  <div class="container">
+    <h1>🧠 Neurociência - Exercício do Dia</h1>
+    
+    <div id="login" style="margin-bottom: 20px;"></div>
+    
+    <div id="exercise" style="min-height: 200px;"></div>
+    
+    <div style="margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+      <canvas id="progressChart"></canvas>
+    </div>
+  </div>
+
   <script src="script.js"></script>
-  <script src="google.js"></script>
 </body>
 </html>
