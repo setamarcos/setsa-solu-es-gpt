@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Remove a barra final se não for diretório
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$  $1 [L,R=301]
+
+# Se o arquivo/pasta não existe, redireciona para index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [QSA,L]
+</IfModule>
+
+# Permitir acesso a arquivos estáticos
+<FilesMatch "\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$">
+  Header set Cache-Control "public, max-age=3600"
+</FilesMatch>
