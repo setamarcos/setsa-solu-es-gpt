@@ -1,64 +1,75 @@
-# Neurociência - Exercício Diário
+/**
+ * SISTEMA NEUROCIÊNCIA - EXERCÍCIO DIÁRIO
+ * Backend: Gestão de Planilhas Individuais e Controle Mestre
+ */
 
-## 📋 Estrutura da Planilha Google Sheets
+const PASTA_USUARIOS_ID = "1mD3FiD5UfyZE2CPrcd9lKMMiW-bfPhgL"; 
+const PLANILHA_MESTRE_ID = "1-E2SdTqkXuaV4LBRwFnWTVtc-yS6B-e3LZiK7lMDvhs";
+const PLANILHA_MODELO_ID = "1lnpTsE38DSQT1giAtDZzC7ukGkFY3hHFxqFfkVlt4rQ";
 
-Crie/atualize a planilha `NeurocienciaApp` com essas colunas:
+function doGet(e) {
+  const email = e.parameter.email;
+  
+  // LOG de Debug para o Console do Apps Script
+  console.log("Tentativa de login: " + email);
 
-| Coluna | Nome | Tipo | Descrição |
-|--------|------|------|-----------|
-| A | Timestamp | Data/Hora | Quando foi registrado |
-| B | Email | Texto | Email do usuário |
-| C | Numero | Número | ID do exercício (1-20) |
-| D | Pergunta | Texto | Pergunta do exercício |
-| E | Resposta | Texto | Resposta sugerida |
-| F | Erro | Texto | Erro cometido pelo usuário |
-| G | Acerto | Texto | O que funcionou |
-| H | Sugestao | Texto | Sugestão de melhora |
-| I | Progresso | Número | Nível (1-9) |
-| **J** | **Nota** | **Fórmula** | **Nota automática (0-10)** |
-| **K** | **Ponto_Melhora** | **Texto** | **Ponto principal de melhora** |
-| **L** | **Analise_IA** | **Texto** | **Link para análise IA** |
+  if (!email || email.trim() === "") {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "erro",
+      mensagem: "Email não fornecido."
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
 
----
+  const resultado = processarUsuario(email.toLowerCase().trim());
+  
+  return ContentService.createTextOutput(JSON.stringify(resultado))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
-## 🔧 PASSO 1: Corrigi o LOGIN ✅
+function processarUsuario(email) {
+  const ssMestre = SpreadsheetApp.openById(PLANILHA_MESTRE_ID).getSheetByName("Página1");
+  const dados = ssMestre.getDataRange().getValues();
+  
+  // 1. Verificar se o usuário já existe na base mestre
+  for (let i = 1; i < dados.length; i++) {
+    if (dados[i][0].toString().toLowerCase() === email) {
+      return {
+        status: "sucesso",
+        novo: false,
+        url: dados[i][1],
+        mensagem: "Login realizado com sucesso!"
+      };
+    }
+  }
 
-**O que foi feito:**
-- ✅ Sistema sem `localStorage` frágil
-- ✅ Validação de email robusta
-- ✅ Feedback visual melhorado
-- ✅ Logs de debug para diagnosticar problemas
-- ✅ Enter para confirmar login
-- ✅ Tratamento de erros completo
+  try {
+    // 2. Se for novo, criar a planilha individual baseada no MODELO (Colunas A-L)
+    const pastaDestino = DriveApp.getFolderById(PASTA_USUARIOS_ID);
+    const arquivoModelo = DriveApp.getFileById(PLANILHA_MODELO_ID);
+    
+    // Cria a cópia e renomeia
+    const novaCopia = arquivoModelo.makeCopy("Neuro - " + email, pastaDestino);
+    
+    // Dá permissão ao usuário
+    novaCopia.addEditor(email);
+    
+    const urlIndividual = novaCopia.getUrl();
 
-**Como testar:**
-1. Abra o console (F12)
-2. Veja os logs ✅
-3. Digite seu email
-4. Clique "Entrar" ou pressione Enter
-5. Verá ✅ se funcionar!
+    // 3. Registrar na Planilha Mestre
+    ssMestre.appendRow([email, urlIndividual, new Date()]);
 
----
+    return {
+      status: "sucesso",
+      novo: true,
+      url: urlIndividual,
+      mensagem: "Perfil criado! Sua jornada em Neurociência começa agora."
+    };
 
-## 📊 PASSO 2: Estrutura da Planilha (PRÓXIMO)
-
-Vou criar fórmulas para:
-- **Coluna J (Nota):** Calcular nota automática baseado em progresso + respostas
-- **Coluna K (Ponto_Melhora):** Extrair principal ponto de melhora da sugestão
-- **Coluna L (Analise_IA):** Gerar link para análise por IA
-
----
-
-## 🤖 PASSO 3: Integração com IA (DEPOIS)
-
-Vou conectar com:
-- Claude API ou OpenAI
-- Para avaliar respostas
-- Gerar recomendações personalizadas
-- Criar plano de ação
-
----
-
-## 🚀 Próxima Ação:
-
-Teste o login agora e me avise se funciona! Depois partimos para o PASSO 2 (Planilha).
+  } catch (erro) {
+    console.error("Erro no processamento: " + erro.message);
+    return {
+      status: "erro",
+      mensagem: "Erro ao criar perfil: " + erro.message
+    };
+  }
+}
