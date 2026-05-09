@@ -1,0 +1,20 @@
+[
+  {
+    "numero": 1,
+    "pergunta": "Como começar tarefas difíceis sem travar?",
+    "resposta": "Celebrando pequenas vitórias para liberar dopamina.",
+    "progresso": 5,
+    "erro": "Negociar demais",
+    "acerto": "Recompensar cada micro-avanço",
+    "sugestao": "Use checklists curtos"
+  },
+  {
+    "numero": 2,
+    "pergunta": "O que fazer para reduzir dependência digital?",
+    "resposta": "Detox de dopamina fácil, diminuindo estímulos.",
+    "progresso": 4,
+    "erro": "Excesso de redes sociais",
+    "acerto": "Bloqueio de apps por tempo",
+    "sugestao": "Defina horários fixos"
+  }
+]
