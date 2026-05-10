@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prospecção e Governança MP</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topo">
+
+<h1>Prospecção e Governança MP</h1>
+
+<p>Seta Soluções</p>
+
+</div>
+
+<div class="card">
+
+<input type="text" id="cliente" placeholder="Nome Cliente">
+
+<input type="text" id="telefone" placeholder="Telefone">
+
+<select id="tipo">
+
+<option>CONSTRUTORA</option>
+<option>ESCOLA</option>
+<option>COMERCIAL</option>
+<option>OUTROS</option>
+
+</select>
+
+<textarea id="observacao" placeholder="Observação"></textarea>
+
+<input type="text" id="retorno" placeholder="Retorno / Data">
+
+<button onclick="salvarCliente()">
+SALVAR CLIENTE
+</button>
+
+<div id="status"></div>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

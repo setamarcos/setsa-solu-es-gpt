@@ -1,0 +1,50 @@
+function doGet() {
+
+  return HtmlService.createHtmlOutput("OK");
+
+}
+
+function doPost(e) {
+
+  const planilha =
+  SpreadsheetApp.openById(
+  "1yaDx044uZQqEPrL1dwYlBIdf_5vJtSpmhlpqoCU76r0"
+  );
+
+  const aba =
+  planilha.getSheetByName("CLIENTES");
+
+  const dados =
+  JSON.parse(e.postData.contents);
+
+  const data =
+  Utilities.formatDate(
+  new Date(),
+  "GMT-3",
+  "dd/MM/yyyy"
+  );
+
+  const hora =
+  Utilities.formatDate(
+  new Date(),
+  "GMT-3",
+  "HH:mm:ss"
+  );
+
+  aba.appendRow([
+
+    data,
+    hora,
+    dados.cliente,
+    dados.telefone,
+    dados.tipo,
+    dados.observacao,
+    dados.retorno
+
+  ]);
+
+  return ContentService
+  .createTextOutput("OK")
+  .setMimeType(ContentService.MimeType.TEXT);
+
+}
