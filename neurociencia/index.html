@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagnóstico Direto 5.0 - Seta Soluções</title>
+  <title>Diagnóstico Direto 5.5 - Seta Soluções</title>
   <style>
     body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; padding-bottom: 30px; }
     .container { background:#fff; color:#000; max-width:600px; margin:20px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     h1 { text-align:center; color:#003366; font-size:22px; margin-bottom:5px; }
     .subtitle { text-align:center; color:#ff6600; font-size:13px; font-weight:bold; margin-bottom:20px; }
     
-    /* Box do Login Verde herdado da interface anterior */
     #login { margin-bottom: 20px; }
     
     label { display: block; font-size:14px; font-weight:bold; margin-top: 15px; color: #003366; }
@@ -21,13 +20,14 @@
     .checkbox-btn { background:#e2e8f0; color:#334155; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:bold; cursor:pointer; user-select:none; }
     .checkbox-btn.active { background:#ff6600; color:#fff; }
     
-    .btn-audio { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; }
+    .btn-audio { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-audio.gravando { background:#cc0000; animation: piscar 1s infinite; }
     
     .button-row { display:flex; gap:8px; margin-top:15px; }
     button.action-btn { flex:1; background:#ff6600; color:#fff; border:none; padding:12px; font-size:14px; border-radius:6px; cursor:pointer; font-weight:bold; }
-    button.action-btn:hover { opacity:0.9; }
     
-    .prompt-output { background:#f1f5f9; padding:12px; margin-top:15px; border-radius:6px; font-size:13px; border-left:4px solid #ff6600; white-space:pre-wrap; display:none; }
+    .prompt-output { background:#f1f5f9; padding:12px; margin-top:15px; border-radius:6px; font-size:13px; border-left:4px solid #ff6600; white-space:pre-wrap; display:none; color:#000; }
+    .status-tag { display: inline-block; background: #ca8a04; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; }
     
     .ia-response-box { margin-top:20px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1; }
     .feedback-buttons { display:flex; gap:8px; margin-top:10px; }
@@ -37,6 +37,7 @@
     .fb-btn.missing { background:#ca8a04; }
     
     .footer-btn { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-top:10px; }
+    @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
   </style>
 </head>
 <body>
@@ -48,25 +49,26 @@
     <div id="login"></div>
     
     <label for="solicitacao">1. Sua Solicitação (O que você quer que a IA faça?)</label>
-    <button class="btn-audio" type="button" onclick="window.toggleGravacao?window.toggleGravacao():alert('Microfone ativo e integrado.')">🎤 Gravar Instrução por Áudio (Toque para Iniciar)</button>
+    <button id="mic-solicitacao" class="btn-audio" type="button" onclick="gerenciarAudio('solicitacao', this)">🎤 Gravar Solicitação por Áudio</button>
     <textarea id="solicitacao" placeholder="Ex: Escreva uma mensagem curta de incentivo para minha filha..."></textarea>
     
     <label for="detalhe">2. O que deseja detalhar? (Contexto ou Histórico adicional)</label>
+    <button id="mic-detalhe" class="btn-audio" type="button" onclick="gerenciarAudio('detalhe', this)">🎤 Gravar Detalhes por Áudio</button>
     <textarea id="detalhe" placeholder="Adicione fatos ou dados extras que ajudam a clarear o cenário atual..."></textarea>
     
     <label>3. O que você quer EVITAR? (Assim você evitará respostas sem sentido)</label>
     <div class="checkbox-group">
-      <div class="checkbox-btn" onclick="this.classList.toggle('active')">⬜ Sem enrolação</div>
-      <div class="checkbox-btn" onclick="this.classList.toggle('active')">⬜ Foco Prático</div>
-      <div class="checkbox-btn" onclick="this.classList.toggle('active')">⬜ Uso no Celular</div>
-      <div class="checkbox-btn" onclick="this.classList.toggle('active')">⬜ Linguagem Simples</div>
+      <div class="checkbox-btn" onclick="toggleFiltro(this, 'Não quero texto longo ou enrolação.')">⬜ Sem enrolação</div>
+      <div class="checkbox-btn" onclick="toggleFiltro(this, 'Evite teoria excessiva, foque em passos práticos.')">⬜ Foco Prático</div>
+      <div class="checkbox-btn" onclick="toggleFiltro(this, 'A solução não deve depender de computador, opero apenas via celular.')">⬜ Uso no Celular</div>
+      <div class="checkbox-btn" onclick="toggleFiltro(this, 'Não traga termos técnicos complexos, simplifique a linguagem.')">⬜ Linguagem Simples</div>
     </div>
     <textarea id="evitar" placeholder="Escreva o que está fora de cogitação..."></textarea>
     
     <label for="imagem">4. Se quiser inserir imagem (Print de tela ou Notícia):</label>
-    <input type="file" id="imagem" accept="image/*" style="display:none;" onchange="document.getElementById('img-status').innerText='Imagem carregada para o ecossistema'">
+    <input type="file" id="imagem" accept="image/*" style="display:none;" onchange="processarEClassificarImagem(this)">
     <button class="btn-audio" type="button" style="background:#e2e8f0; color:#000; border:2px dashed #cbd5e1;" onclick="document.getElementById('imagem').click()">Toque aqui para selecionar uma imagem do seu Android</button>
-    <small id="img-status" style="display:block; color:#64748b; margin-top:-5px; margin-bottom:10px; font-weight:bold;"></small>
+    <div id="img-status"></div>
     
     <label for="objetivo_imagem">Qual o objetivo desse print/imagem?</label>
     <select id="objetivo_imagem">
@@ -88,9 +90,9 @@
       <textarea id="resposta_ia" placeholder="Cole a resposta gerada pelo ChatGPT, Gemini ou Copilot para registrar o feedback..."></textarea>
       
       <div class="feedback-buttons">
-        <button class="fb-btn yes" type="button" onclick="registrarFeedback('Acertou')">👍 Acertou o Escopo</button>
-        <button class="fb-btn no" type="button" onclick="registrarFeedback('Errou')">👎 Errou (Enrolou/Alucinou)</button>
-        <button class="fb-btn missing" type="button" onclick="registrarFeedback('Faltou Contexto')">⚠️ Faltou Contexto</button>
+        <button class="fb-btn yes" type="button" onclick="executarFeedback('Acertou')">👍 Acertou o Escopo</button>
+        <button class="fb-btn no" type="button" onclick="executarFeedback('Errou')">👎 Errou (Enrolou/Alucinou)</button>
+        <button class="fb-btn missing" type="button" onclick="executarFeedback('Faltou Contexto')">⚠️ Faltou Contexto</button>
       </div>
       
       <button class="footer-btn" type="button" onclick="copiarRelatorioFeedback()">Copiar Relatório de Feedback</button>
@@ -103,21 +105,96 @@
   <script src="script.js"></script>
   
   <script>
-    function gerarPromptEstruturado() {
-      let solicitacao = document.getElementById('solicitacao').value;
-      let detalhe = document.getElementById('detalhe').value;
-      let evitar = document.getElementById('evitar').value;
-      
-      let filtros = [];
-      document.querySelectorAll('.checkbox-btn.active').forEach(b => {
-        filtros.push(b.innerText.replace('⬜ ', ''));
+    let reconhecimentoAudio;
+    let campoGravandoId = null;
+    let imagemBase64 = "";
+    let classificacaoAuto = "Geral (Sem imagem anexada)";
+
+    // Mecanismo nativo de reconhecimento de fala por campo
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
+      reconhecimentoAudio = new SpeechGen();
+      reconhecimentoAudio.continuous = false;
+      reconhecimentoAudio.lang = 'pt-BR';
+
+      reconhecimentoAudio.onresult = function(event) {
+        if (campoGravandoId) {
+          const resultadoTexto = event.results[0][0].transcript;
+          const campoTarget = document.getElementById(campoGravandoId);
+          campoTarget.value += (campoTarget.value ? " " : "") + resultadoTexto;
+        }
+      };
+      reconhecimentoAudio.onend = pararGravacaoUI;
+      reconhecimentoAudio.onerror = pararGravacaoUI;
+    }
+
+    function gerenciarAudio(idCampo, botao) {
+      if (!reconhecimentoAudio) {
+        alert("O reconhecimento de voz não é suportado ou precisa de permissão neste navegador.");
+        return;
+      }
+      if (campoGravandoId === idCampo) {
+        reconhecimentoAudio.stop();
+      } else {
+        pararGravacaoUI();
+        campoGravandoId = idCampo;
+        botao.classList.add('gravando');
+        botao.innerText = "🛑 Gravando áudio... Toque para fechar";
+        reconhecimentoAudio.start();
+      }
+    }
+
+    function pararGravacaoUI() {
+      document.querySelectorAll('.btn-audio').forEach(btn => {
+        btn.classList.remove('gravando');
+        if(btn.id === 'mic-solicitacao') btn.innerText = "🎤 Gravar Solicitação por Áudio";
+        if(btn.id === 'mic-detalhe') btn.innerText = "🎤 Gravar Detalhes por Áudio";
       });
-      
-      let prompt = `ASSUNTO: Diagnóstico / Solicitação Directa\\n`;
-      prompt += `ENTRADA 1 (SOLICITAÇÃO): ${solicitacao}\\n`;
-      prompt += `ENTRADA 2 (O QUE DESEJA): ${detalhe}\\n`;
-      prompt += `ENTRADA 3 (O QUE NÃO QUER / EVITAR): ${evitar} [Restrições: ${filtros.join(', ')}]\\n`;
-      prompt += `INSTRUÇÃO: Responder de forma direta, prática e sem excesso.\\n`;
+      campoGravandoId = null;
+    }
+
+    function toggleFiltro(elemento, texto) {
+      elemento.classList.toggle('active');
+      const campoEvitar = document.getElementById('evitar');
+      if (elemento.classList.contains('active')) {
+        campoEvitar.value += (campoEvitar.value ? "\n" : "") + texto;
+        elemento.innerText = elemento.innerText.replace('⬜', '✅');
+      } else {
+        campoEvitar.value = campoEvitar.value.replace(texto, "").replace(/^\s*[\r\n]/gm, "").trim();
+        elemento.innerText = elemento.innerText.replace('✅', '⬜');
+      }
+    }
+
+    // Inteligência de triagem automática de imagem e metadados
+    function processarEClassificarImagem(input) {
+      const indicador = document.getElementById('img-status');
+      if (input.files && input.files[0]) {
+        const arquivo = input.files[0];
+        const nomeLimpo = arquivo.name.toLowerCase();
+        
+        if (nomeLimpo.includes('screenshot') || nomeLimpo.includes('wa') || /^\d+/.test(nomeLimpo)) {
+          classificacaoAuto = "Conversa / Mensagem de Texto Recortada";
+          document.getElementById('objetivo_imagem').value = 'conversar';
+          indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Autodetectado: Print de Conversa</span>`;
+        } else {
+          classificacaoAuto = "Evidência de Sistema / Dados Técnicos";
+          document.getElementById('objetivo_imagem').value = 'erro';
+          indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📊 Autodetectado: Print de Tela ou Erro</span>`;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) { imagemBase64 = "Injetada (Base64)"; };
+        reader.readAsDataURL(arquivo);
+      }
+    }
+
+    function gerarPromptEstruturado() {
+      let prompt = `CONTEXTO E DIRETRIZ DE ENTRADA:\\n`;
+      prompt += `Solicitação Principal: ${document.getElementById('solicitacao').value}\\n`;
+      prompt += `Contexto Adicional: ${document.getElementById('detalhe').value}\\n\\n`;
+      prompt += `RESTRIÇÕES DA INTERAÇÃO (O QUE EVITAR):\\n${document.getElementById('evitar').value || "Nenhuma restrição informada."}\\n\\n`;
+      prompt += `TRATAMENTO DE MÍDIA INTEGRADO:\\nIntenção do Print/Imagem: Classificado como [${classificacaoAuto}].\\n\\n`;
+      prompt += `DIRETRIZ DE SAÍDA EXECUTIVA:\\nResponder de forma coesa, direta, aplicando o método de resolução limpa, sem fragmentação ou respostas em pedaços.`;
       
       let painel = document.getElementById('prompt-final');
       painel.innerText = prompt;
@@ -126,17 +203,17 @@
 
     function copiarPromptGerado() {
       let texto = document.getElementById('prompt-final').innerText;
-      if(!texto) { alert('Clique em Me ajuda com isso primeiro!'); return; }
+      if(!texto) { alert('Clique em "Me ajuda com isso" primeiro!'); return; }
       navigator.clipboard.writeText(texto);
-      alert('Prompt estruturado copiado!');
+      alert('Prompt estruturado copiado para a área de transferência!');
     }
 
     function exportarDadosPlanilha() {
       if(window.salvarNoGoogleSheets) {
         window.salvarNoGoogleSheets();
       } else {
-        let csvContent = "data:text/csv;charset=utf-8,Data,Solicitacao,Tipo Midia\\n";
-        csvContent += `"${new Date().toLocaleString()}", "${document.getElementById('solicitacao').value.substring(0,50)}", "Interface Web"\\n`;
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFFData,Solicitacao,Classificacao\\n";
+        csvContent += `"${new Date().toLocaleString()}","${document.getElementById('solicitacao').value.replace(/\n/g, ' ')}","${classificacaoAuto}"\\n`;
         let encodedUri = encodeURI(csvContent);
         let link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -147,18 +224,25 @@
       }
     }
 
-    function registrarFeedback(status) {
+    function executarFeedback(status) {
+      let respostaTexto = document.getElementById('resposta_ia').value;
+      let relatorioFeedback = `ANÁLISE DE FEEDBACK E CAUSA RAIZ (NÍVEL ALTO):\\nStatus da Interação: [${status.toUpperCase()}]\\n\\nCONTEÚDO ANALISADO DA IA:\\n${respostaTexto || "Nenhum texto colado."}`;
+      
+      document.getElementById('prompt-final').innerText = relatorioFeedback;
+      document.getElementById('prompt-final').style.display = 'block';
+      window.ultimoFeedbackGerado = relatorioFeedback;
+
       if(window.enviarFeedbackPlanilha) {
         window.enviarFeedbackPlanilha(status);
       } else {
-        alert('Feedback "' + status + '" processado localmente no histórico.');
+        alert('Feedback processado e exibido no painel de saída.');
       }
     }
 
     function copiarRelatorioFeedback() {
-      let resp = document.getElementById('resposta_ia').value;
-      navigator.clipboard.writeText("Relatório de Feedback: " + resp);
-      alert('Feedback copiado!');
+      if(!window.ultimoFeedbackGerado) { alert('Gere um feedback clicando em um dos botões de avaliação primeiro.'); return; }
+      navigator.clipboard.writeText(window.ultimoFeedbackGerado);
+      alert('Relatório de causa raiz copiado!');
     }
   </script>
 </body>
