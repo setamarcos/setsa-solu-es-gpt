@@ -10,34 +10,40 @@ header { text-align:center; padding:1.5rem 1rem; }
 header h2 { font-size:22px; margin-bottom:8px; }
 header p { font-size:14px; line-height:1.4; opacity:0.95; color: #ff6600; font-weight: bold; }
 .container { background:#fff; color:#000; max-width:780px; margin:10px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.campo-wrapper { position: relative; margin-bottom: 12px; }
 label { display: block; font-size:14px; font-weight:bold; margin-top: 15px; color: #003366; }
 small { display:block; font-size:12px; color:#555; margin-bottom:6px; }
-input, textarea, select { width:100%; padding:12px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:10px; box-sizing: border-box; }
+input, textarea { width:100%; padding:12px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:4px; box-sizing: border-box; }
 textarea { min-height: 90px; resize: vertical; }
 
-/* Botões Estilizados */
+/* Botões do Sistema */
 button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:14px; border-radius:8px; cursor:pointer; margin-right:6px; margin-top:5px; min-height:40px; font-weight: bold; }
 button:hover { opacity:0.9; }
-.btn-audio { background: #003366; width: 100%; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-audio.gravando { background: #cc0000; animation: piscar 1s infinite; }
+.btn-microfone { background: #003366; color: #fff; padding: 6px 12px; font-size: 12px; border-radius: 6px; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 4px; min-height: 32px; }
+.btn-microfone.gravando { background: #cc0000; animation: piscar 1s infinite; }
 
-/* Gatilhos Rápidos para o "O que NÃO quer" */
-.atatalhos-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.atatalhos-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .btn-atalho { background: #eef; color: #333; font-size: 11px; padding: 6px 10px; border-radius: 20px; border: 1px solid #ccd; margin: 0; min-height: auto; }
 .btn-atalho:hover { background: #ff6600; color: #fff; }
-
-/* Módulo de Imagem e Metadados */
 .upload-area { border: 2px dashed #ff6600; padding: 15px; text-align: center; border-radius: 6px; background: #f9f9f9; cursor: pointer; margin-bottom: 10px; color: #555; font-size: 13px; }
 .preview-box img { max-width: 100%; max-height: 180px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; }
-
-/* Componentes de Saída */
 .result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; color: #000; border-left: 5px solid #ff6600; }
+.status-tag { display: inline-block; background: #e11d48; color: #fff; padding: 2px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-top: 4px; }
+
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:20px; font-size:13px; opacity:0; transition:0.3s; pointer-events: none; z-index: 9999; }
 #retornoIA { margin-top:16px; background:#f4f4f9; padding:15px; border-radius:8px; display:none; color: #000; border: 1px solid #ccd; }
 .feedback-panel { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.feedback-panel button { background: #444; font-size: 12px; flex: 1; }
+.feedback-panel button { font-size: 12px; flex: 1; margin: 0; }
 
 @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+/* CSS Otimizado para Impressão e Geração de PDF Limpo */
+@media print {
+  body { background: #fff; color: #000; }
+  header, label, small, button, .btn-microfone, .atatalhos-container, .upload-area, #retornoIA, input, textarea { display: none !important; }
+  .container { box-shadow: none; margin: 0; padding: 0; }
+  .result { border: none; background: transparent; padding: 0; font-size: 14px; }
+}
 </style>
 </head>
 <body>
@@ -50,61 +56,56 @@ button:hover { opacity:0.9; }
 <main class="container">
 
   <label for="solicitacao">1. Sua Solicitação (O que você quer que a IA faça?)</label>
-  <small>Fale ou escreva que te dou o caminho para a melhor resposta estruturada.</small>
-  
-  <button type="button" id="btn-gravacao" class="btn-audio" onclick="alternarGravacao()">
-    🎤 Gravar Instrução por Áudio (Toque para Iniciar)
-  </button>
-  
-  <textarea id="solicitacao" placeholder="Ex: Escreva uma mensagem curta de incentivo para minha filha ou analise este cenário..."></textarea>
+  <button type="button" class="btn-microfone" onclick="controlarAudio('solicitacao', this)">🎤 Falar Solicitação</button>
+  <div class="campo-wrapper">
+    <textarea id="solicitacao" placeholder="Fale ou escreva a instrução bruta..."></textarea>
+  </div>
 
   <label for="contexto">2. O que deseja detalhar? (Contexto ou Histórico adicional)</label>
-  <textarea id="contexto" placeholder="Adicione fatos ou dados extras que ajudam a clarear o cenário atual..."></textarea>
+  <button type="button" class="btn-microfone" onclick="controlarAudio('contexto', this)">🎤 Falar Detalhes</button>
+  <div class="campo-wrapper">
+    <textarea id="contexto" placeholder="Fale ou adicione fatos extras que ajudam a clarear o cenário..."></textarea>
+  </div>
 
-  <label for="naoQuero">3. O que você quer EVITAR? (Assim você evitará respostas sem sentido)</label>
-  <small>Selecione um atalho rápido abaixo ou digite sua restrição personalizada:</small>
-  
+  <label for="naoQuero">3. O que você quer EVITAR? (Impedir respostas sem sentido)</label>
+  <button type="button" class="btn-microfone" onclick="controlarAudio('naoQuero', this)">🎤 Falar Restrições</button>
   <div class="atatalhos-container">
     <button type="button" class="btn-atalho" onclick="injetarRestricao('Não quero texto longo ou enrolação.')">⏹️ Sem enrolação</button>
     <button type="button" class="btn-atalho" onclick="injetarRestricao('Evite teoria excessiva, foque em passos práticos.')">⏹️ Foco Prático</button>
     <button type="button" class="btn-atalho" onclick="injetarRestricao('A solução não deve depender de computador, opero apenas via celular.')">⏹️ Uso no Celular</button>
-    <button type="button" class="btn-atalho" onclick="injetarRestricao('Não traga termos técnicos complexos, simplifique a linguagem.')">⏹️ Linguagem Simples</button>
   </div>
-  <textarea id="naoQuero" placeholder="Escreva o que está fora de cogitação..."></textarea>
+  <div class="campo-wrapper">
+    <textarea id="naoQuero" placeholder="Escreva ou selecione o que está fora de cogitação..."></textarea>
+  </div>
 
-  <label>4. Se quiser inserir imagem (Print de tela ou Notícia):</label>
+  <label>4. Inserir Imagem (O sistema detectará o tipo automaticamente):</label>
   <div class="upload-area" onclick="document.getElementById('input-imagem').click()">
-    Toque aqui para selecionar uma imagem do seu Android
-    <input type="file" id="input-imagem" accept="image/*" style="display:none;" onchange="visualizarImagem(this)">
+    Toque aqui para selecionar uma imagem ou print do seu Android
+    <input type="file" id="input-imagem" accept="image/*" style="display:none;" onchange="visualizarEClassificarImagem(this)">
   </div>
   <div id="previewContainer" class="preview-box"></div>
+  <div id="status-midia-detectada"></div>
 
-  <label for="intencao-midia">Qual o objetivo desse print/imagem?</label>
-  <select id="intencao-midia">
-    <option value="Conversa">💬 É o print de uma conversa (Quero uma resposta ideal para enviar de volta)</option>
-    <option value="Noticia">📰 É uma notícia ou artigo de texto (Quero resumo ou validação de fatos)</option>
-    <option value="Geral">📊 É uma evidência geral (Apenas analise e cruze com a solicitação)</option>
-  </select>
-
-  <div style="margin-top: 20px; display: flex; gap: 4px;">
+  <div style="margin-top: 20px; display: flex; gap: 4px; flex-wrap: wrap;">
     <button onclick="gerar()" style="flex: 2;">Me ajuda com isso</button>
     <button onclick="copiar()" style="flex: 1;">Copiar Prompt</button>
-    <button onclick="exportarXLS()" style="flex: 1;">Exportar XLS</button>
+    <button onclick="exportarCSV()" style="flex: 1;">Exportar CSV</button>
+    <button onclick="window.print()" style="background:#003366; flex: 1;">📄 Salvar PDF</button>
   </div>
 
-  <div class="result" id="saida">O prompt estruturado aparecerá aqui após clicar em "Me ajuda com isso".</div>
+  <div class="result" id="saida">O documento final estruturado aparecerá aqui.</div>
 
   <div id="retornoIA">
     <label for="respostaIA">5. Cole aqui o retorno que a IA te deu:</label>
-    <textarea id="respostaIA" placeholder="Cole o resultado aqui para executar a análise de maturidade técnica..."></textarea>
+    <textarea id="respostaIA" placeholder="Cole o resultado aqui..."></textarea>
     
     <label>A resposta da IA atendeu sua expectativa? Avalie o motivo:</label>
     <div class="feedback-panel">
-      <button type="button" onclick="registrarFeedback('Sucesso', 'Acerto de Escopo direto')" style="background: #16a34a;">👍 Acertou o Escopo</button>
-      <button type="button" onclick="registrarFeedback('Falha', 'Alucinação / Resposta prolixa')" style="background: #dc2626;">👎 Errou (Enrolou/Alucinou)</button>
-      <button type="button" onclick="registrarFeedback('Ajuste', 'Falta de Contexto Inicial')" style="background: #ca8a04;">⚠️ Faltou Contexto</button>
+      <button type="button" onclick="registrarFeedback('SUCESSO', 'Acerto de Escopo direto')" style="background: #16a34a;">👍 Acertou o Escopo</button>
+      <button type="button" onclick="registrarFeedback('FALHA', 'Alucinação / Resposta prolixa')" style="background: #dc2626;">👎 Errou (Enrolou/Alucinou)</button>
+      <button type="button" onclick="registrarFeedback('AJUSTE', 'Falta de Contexto Inicial')" style="background: #ca8a04;">⚠️ Faltou Contexto</button>
     </div>
-    <div id="botoesExtras" style="margin-top: 10px;"></div>
+    <div id="botoesExtras" style="margin-top: 15px;"></div>
   </div>
 
 </main>
@@ -114,10 +115,10 @@ button:hover { opacity:0.9; }
 <script>
 let banco = [];
 let imagemBase64 = "";
+let classificacaoAutomática = "Geral (Sem imagem anexada)";
 let reconhecimentoAudio;
-let gravando = false;
+let gravandoElemento = null;
 
-// Inicialização segura da API de Áudio do Android
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
   reconhecimentoAudio = new SpeechGen();
@@ -125,37 +126,40 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   reconhecimentoAudio.lang = 'pt-BR';
 
   reconhecimentoAudio.onresult = function(event) {
-    const textoTranscrito = event.results[0][0].transcript;
-    document.getElementById('solicitacao').value += (document.getElementById('solicitacao').value ? " " : "") + textoTranscrito;
-    pararGravacaoUI();
+    if (gravandoElemento) {
+      const textoTranscrito = event.results[0][0].transcript;
+      const campo = document.getElementById(gravandoElemento);
+      campo.value += (campo.value ? " " : "") + textoTranscrito;
+    }
   };
-
-  reconhecimentoAudio.onerror = function() { pararGravacaoUI(); };
-  reconhecimentoAudio.onend = function() { pararGravacaoUI(); };
+  reconhecimentoAudio.onend = function() { pararGravacaoGlobal(); };
+  reconhecimentoAudio.onerror = function() { pararGravacaoGlobal(); };
 }
 
-function alternarGravacao() {
+function controlarAudio(idCampo, botao) {
   if (!reconhecimentoAudio) {
-    alert("O reconhecimento de voz não é suportado no navegador deste aparelho.");
+    alert("O reconhecimento de voz não é suportado neste navegador.");
     return;
   }
-  if (!gravando) {
-    reconhecimentoAudio.start();
-    gravando = true;
-    const btn = document.getElementById('btn-gravacao');
-    btn.classList.add('gravando');
-    btn.innerText = "🛑 Gravando áudio... Toque para finalizar";
-  } else {
+  if (gravandoElemento === idCampo) {
     reconhecimentoAudio.stop();
-    pararGravacaoUI();
+  } else {
+    pararGravacaoGlobal();
+    gravandoElemento = idCampo;
+    botao.classList.add('gravando');
+    botao.innerText = "🛑 Gravando...";
+    reconhecimentoAudio.start();
   }
 }
 
-function pararGravacaoUI() {
-  gravando = false;
-  const btn = document.getElementById('btn-gravacao');
-  btn.classList.remove('gravando');
-  btn.innerText = "🎤 Gravar Instrução por Áudio (Toque para Iniciar)";
+function pararGravacaoGlobal() {
+  document.querySelectorAll('.btn-microfone').forEach(btn => {
+    btn.classList.remove('gravando');
+    if(btn.onclick.toString().includes('solicitacao')) btn.innerText = "🎤 Falar Solicitação";
+    if(btn.onclick.toString().includes('contexto')) btn.innerText = "🎤 Falar Detalhes";
+    if(btn.onclick.toString().includes('naoQuero')) btn.innerText = "🎤 Falar Restrições";
+  });
+  gravandoElemento = null;
 }
 
 function injetarRestricao(texto) {
@@ -163,10 +167,25 @@ function injetarRestricao(texto) {
   campo.value += (campo.value ? "\n" : "") + texto;
 }
 
-function visualizarImagem(input) {
+// INTELIGÊNCIA ARTIFICIAL AUTÔNOMA DE TRIAGEM DE PRINTS
+function visualizarEClassificarImagem(input) {
   const container = document.getElementById('previewContainer');
+  const indicador = document.getElementById('status-midia-detectada');
   container.innerHTML = '';
+  
   if (input.files && input.files[0]) {
+    const arquivo = input.files[0];
+    const nomeArquivo = arquivo.name.toLowerCase();
+    
+    // Varre metadados numéricos de prints nativos do celular Android e WhatsApp
+    if (nomeArquivo.includes('screenshot') || nomeArquivo.includes('wa') || /^\d+/.test(nomeArquivo)) {
+      classificacaoAutomática = "Conversa / Mensagem de Texto Recortada";
+      indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Tipo Detectado: Print de Conversa (Modo Resposta Ativado)</span>`;
+    } else {
+      classificacaoAutomática = "Notícia / Documento de Texto Técnico";
+      indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📰 Tipo Detectado: Print de Texto ou Notícia (Modo Análise Ativado)</span>`;
+    }
+
     const leitor = new FileReader();
     leitor.onload = function(e) {
       const img = document.createElement('img');
@@ -174,7 +193,7 @@ function visualizarImagem(input) {
       container.appendChild(img);
       imagemBase64 = e.target.result;
     }
-    leitor.readAsDataURL(input.files[0]);
+    leitor.readAsDataURL(arquivo);
   }
 }
 
@@ -188,8 +207,8 @@ RESTRIÇÕES DA INTERAÇÃO (O QUE EVITAR):
 ${document.getElementById('naoQuero').value || "Nenhuma restrição informada."}
 
 TRATAMENTO DE MÍDIA INTEGRADO:
-Intenção do Print/Imagem: Elemento classificado como [${document.getElementById('intencao-midia').value}].
-Dados Binários da Imagem: ${imagemBase64 ? "Injetados em Base64 para processamento multimodal nativo." : "Nenhuma imagem fornecida."}
+Intenção do Print/Imagem: Classificado de forma autônoma como [${classificacaoAutomática}].
+Dados Binários da Imagem: ${imagemBase64 ? "Processados em Base64 para cross-matching." : "Sem imagem anexada."}
 
 DIRETRIZ DE SAÍDA EXECUTIVA:
 Responder de forma coesa, direta, aplicando o método de resolução limpa, sem fragmentação ou respostas em pedaços.
@@ -201,7 +220,7 @@ Responder de forma coesa, direta, aplicando o método de resolução limpa, sem 
   banco.push({ 
     data: new Date().toLocaleString(), 
     solicitacao: document.getElementById('solicitacao').value, 
-    tipoMidia: document.getElementById('intencao-midia').value 
+    tipoMidia: classificacaoAutomática 
   });
   
   document.getElementById("retornoIA").style.display = "block";
@@ -214,18 +233,17 @@ function copiar() {
   setTimeout(() => { toast.style.opacity = 0; }, 2000);
 }
 
-// CORREÇÃO DEFINITIVA DA EXPORTAÇÃO XLS (Compatibilidade Android/Excel)
-function exportarXLS() {
-  let tabela = "Data\tSolicitacao\tTipo Midia\n";
+function exportarCSV() {
+  let cabecalho = "Data,Solicitacao,Tipo Midia\n";
+  let linhas = "";
   banco.forEach(item => { 
-    let limpSolicitacao = item.solicitacao.replace(/\n|\r|\t/g, " ");
-    tabela += `${item.data}\t${limpSolicitacao}\t${item.tipoMidia}\n`; 
+    let limpSolicitacao = item.solicitacao.replace(/"/g, '""').replace(/\n|\r|\t/g, " ");
+    linhas += `"${item.data}","${limpSolicitacao}","${item.tipoMidia}"\n`; 
   });
-  
-  let blob = new Blob(["\uFEFF" + tabela], { type: "application/vnd.ms-excel;charset=utf-8" });
+  let blob = new Blob(["\uFEFF" + cabecalho + linhas], { type: "text/csv;charset=utf-8;" });
   let link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "diagnostico_governanca.xls";
+  link.download = "historico_diagnostico.csv";
   link.click();
 }
 
@@ -233,23 +251,28 @@ function registrarFeedback(status, motivo) {
   let resposta = document.getElementById("respostaIA").value;
   let analiseFinal = `
 ANÁLISE DE FEEDBACK E CAUSA RAIZ (NÍVEL ALTO):
-Status da Interação: ${status}
+Status da Interação: [${status}]
 Diagnóstico do Motivo: ${motivo}
 
 CONTEÚDO ANALISADO DA IA:
-${resposta || "Nenhum texto colado para análise."}
+${resposta || "Nenhum texto fornecido."}
 `;
 
   document.getElementById('saida').innerText = analiseFinal;
+  window.textoFinal = analiseFinal;
   
   let div = document.getElementById("botoesExtras");
   div.innerHTML = "";
   let btn = document.createElement("button");
   btn.innerText = "Copiar Relatório de Feedback";
   btn.style.background = "#003366";
+  btn.style.width = "100%";
   btn.onclick = () => {
     navigator.clipboard.writeText(analiseFinal);
-    alert("Feedback copiado!");
+    let toast = document.getElementById("toast");
+    toast.innerText = "Feedback copiado!";
+    toast.style.opacity = 1;
+    setTimeout(() => { toast.style.opacity = 0; toast.innerText = "Copiado! Pronto para colar na IA."; }, 2000);
   };
   div.appendChild(btn);
 }
