@@ -23,8 +23,8 @@
     .btn-audio { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-audio.gravando { background:#cc0000; animation: piscar 1s infinite; }
     
-    .button-row { display:flex; gap:8px; margin-top:15px; }
-    button.action-btn { flex:1; background:#ff6600; color:#fff; border:none; padding:12px; font-size:14px; border-radius:6px; cursor:pointer; font-weight:bold; }
+    .button-row { display:flex; gap:6px; margin-top:15px; flex-wrap: wrap; }
+    button.action-btn { flex:1; min-width: 120px; background:#ff6600; color:#fff; border:none; padding:12px; font-size:13px; border-radius:6px; cursor:pointer; font-weight:bold; }
     
     .prompt-output { background:#f1f5f9; padding:12px; margin-top:15px; border-radius:6px; font-size:13px; border-left:4px solid #ff6600; white-space:pre-wrap; display:none; color:#000; }
     .status-tag { display: inline-block; background: #ca8a04; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; }
@@ -37,6 +37,15 @@
     .fb-btn.missing { background:#ca8a04; }
     
     .footer-btn { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-top:10px; }
+    
+    /* Configuração limpa para impressão e geração de PDF perfeito no Android */
+    @media print {
+      body { background: #fff; color: #000; }
+      .container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; }
+      .btn-audio, .button-row, input[type="file"], .feedback-buttons, .footer-btn { display: none !important; }
+      textarea, select { border: none; background: transparent; padding: 0; }
+      .prompt-output { display: block !important; border: 1px solid #ccc; }
+    }
     @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
   </style>
 </head>
@@ -81,6 +90,7 @@
       <button class="action-btn" type="button" onclick="gerarPromptEstruturado()">Me ajuda com isso</button>
       <button class="action-btn" type="button" onclick="copiarPromptGerado()">Copiar Prompt</button>
       <button class="action-btn" type="button" onclick="exportarDadosPlanilha()">Exportar CSV</button>
+      <button class="action-btn" type="button" style="background:#0284c7;" onclick="gerarRelatorioPDF()">Gerar PDF</button>
     </div>
     
     <div class="prompt-output" id="prompt-final"></div>
@@ -110,7 +120,6 @@
     let imagemBase64 = "";
     let classificacaoAuto = "Geral (Sem imagem anexada)";
 
-    // Mecanismo nativo de reconhecimento de fala por campo
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
       reconhecimentoAudio = new SpeechGen();
@@ -165,7 +174,6 @@
       }
     }
 
-    // Inteligência de triagem automática de imagem e metadados
     function processarEClassificarImagem(input) {
       const indicador = document.getElementById('img-status');
       if (input.files && input.files[0]) {
@@ -243,6 +251,11 @@
       if(!window.ultimoFeedbackGerado) { alert('Gere um feedback clicando em um dos botões de avaliação primeiro.'); return; }
       navigator.clipboard.writeText(window.ultimoFeedbackGerado);
       alert('Relatório de causa raiz copiado!');
+    }
+
+    // Função nativa e estável que chama o motor do Android para salvar o relatório formatado em PDF
+    function gerarRelatorioPDF() {
+      window.print();
     }
   </script>
 </body>
