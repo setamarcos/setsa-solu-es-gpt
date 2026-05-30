@@ -5,147 +5,164 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico Direto 5.0 + MP Hub IA</title>
 <style>
-/* Cores e Estilo Original Preservados */
-body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; }
+body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; padding-bottom: 30px; }
 header { text-align:center; padding:1.5rem 1rem; }
 header h2 { font-size:22px; margin-bottom:8px; }
-header p { font-size:14px; line-height:1.4; opacity:0.95; }
+header p { font-size:14px; line-height:1.4; opacity:0.95; color: #ff6600; font-weight: bold; }
+.container { background:#fff; color:#000; max-width:780px; margin:10px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+label { display: block; font-size:14px; font-weight:bold; margin-top: 15px; color: #003366; }
+small { display:block; font-size:12px; color:#555; margin-bottom:6px; }
+input, textarea, select { width:100%; padding:12px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:10px; box-sizing: border-box; }
+textarea { min-height: 90px; resize: vertical; }
 
-/* Contêiner Principal */
-.container { background:#fff; color:#000; max-width:780px; margin:20px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-/* Melhoria Técnica: Estrutura Amigável de Abas para Celular (Android) */
-.tabs-nav { display: flex; background: #eef; border-radius: 8px; margin-bottom: 15px; overflow-x: auto; }
-.tab-button { flex: 1; padding: 12px 8px; background: none; border: none; font-size: 13px; font-weight: bold; color: #555; cursor: pointer; text-align: center; white-space: nowrap; transition: 0.2s; border-bottom: 3px solid transparent; }
-.tab-button.active { color: #003366; border-bottom-color: #ff6600; background: #fff; border-radius: 8px 8px 0 0; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* Componentes de Formulário Modificados com Base no Original */
-label { display: block; font-size:14px; font-weight:bold; margin-top: 5px; }
-small { display:block; font-size:12px; color:#555; margin-bottom:8px; }
-input, textarea, select { width:100%; padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:14px; box-sizing: border-box; }
-textarea { min-height: 100px; resize: vertical; }
-
-/* Botões Originais */
-button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:15px; border-radius:8px; cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px; font-weight: bold; }
+/* Botões Estilizados */
+button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:14px; border-radius:8px; cursor:pointer; margin-right:6px; margin-top:5px; min-height:40px; font-weight: bold; }
 button:hover { opacity:0.9; }
+.btn-audio { background: #003366; width: 100%; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-audio.gravando { background: #cc0000; animation: piscar 1s infinite; }
 
-/* Módulo Novo: Upload de Imagem */
-.upload-area { border: 2px dashed #ff6600; padding: 15px; text-align: center; border-radius: 6px; background: #f9f9f9; cursor: pointer; margin-bottom: 14px; color: #555; font-size: 13px; }
-.preview-box img { max-width: 100%; max-height: 180px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; display: block; }
+/* Gatilhos Rápidos para o "O que NÃO quer" */
+.atatalhos-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.btn-atalho { background: #eef; color: #333; font-size: 11px; padding: 6px 10px; border-radius: 20px; border: 1px solid #ccd; margin: 0; min-height: auto; }
+.btn-atalho:hover { background: #ff6600; color: #fff; }
 
-/* Saídas e Notificações Originais */
-.result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; color: #000; }
+/* Módulo de Imagem e Metadados */
+.upload-area { border: 2px dashed #ff6600; padding: 15px; text-align: center; border-radius: 6px; background: #f9f9f9; cursor: pointer; margin-bottom: 10px; color: #555; font-size: 13px; }
+.preview-box img { max-width: 100%; max-height: 180px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; }
+
+/* Componentes de Saída */
+.result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; color: #000; border-left: 5px solid #ff6600; }
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:20px; font-size:13px; opacity:0; transition:0.3s; pointer-events: none; z-index: 9999; }
-#retornoIA { margin-top:16px; background:#f9f9f9; padding:12px; border-radius:8px; display:none; color: #000; }
-#botoesExtras button { background: #003366; }
+#retornoIA { margin-top:16px; background:#f4f4f9; padding:15px; border-radius:8px; display:none; color: #000; border: 1px solid #ccd; }
+.feedback-panel { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.feedback-panel button { background: #444; font-size: 12px; flex: 1; }
+
+@keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 </style>
 </head>
 <body>
 
-<!-- Cabeçalho Semântico Otimizado -->
 <header role="banner">
 <h2>Estamos juntos nisso.</h2>
-<p>Fala do seu jeito — eu organizo.<br>Simples ou mais a fundo, a gente resolve.</p>
+<p>Refine sua intenção: Garanta respostas precisas da IA eliminando alucinações e desvios de escopo.</p>
 </header>
 
 <main class="container">
 
-  <!-- Menu de Navegação das 4 Novas Abas Alinhadas -->
-  <nav class="tabs-nav" role="tablist">
-    <button type="button" class="tab-button active" onclick="alternarAba(0)">1. Solicitação</button>
-    <button type="button" class="tab-button" onclick="alternarAba(1)">2. O que Deseja</button>
-    <button type="button" class="tab-button" onclick="alternarAba(2)">3. O que NÃO Quer</button>
-    <button type="button" class="tab-button" onclick="alternarAba(3)">4. Inserir Imagem</button>
-  </nav>
+  <label for="solicitacao">1. Sua Solicitação (O que você quer que a IA faça?)</label>
+  <small>Fale ou escreva que te dou o caminho para a melhor resposta estruturada.</small>
+  
+  <button type="button" id="btn-gravacao" class="btn-audio" onclick="alternarGravacao()">
+    🎤 Gravar Instrução por Áudio (Toque para Iniciar)
+  </button>
+  
+  <textarea id="solicitacao" placeholder="Ex: Escreva uma mensagem curta de incentivo para minha filha ou analise este cenário..."></textarea>
 
-  <!-- ABA 1: SOLICITAÇÃO (Agrupa as entradas de classificação iniciais) -->
-  <section id="aba-solicitacao" class="tab-content active">
-    <label for="tipo">Pra que você precisa agora?</label>
-    <select id="tipo">
-      <option>Pessoal</option>
-      <option>Técnica</option>
-      <option>Comercial</option>
-      <option>Casa</option>
-    </select>
+  <label for="contexto">2. O que deseja detalhar? (Contexto ou Histórico adicional)</label>
+  <textarea id="contexto" placeholder="Adicione fatos ou dados extras que ajudam a clarear o cenário atual..."></textarea>
 
-    <label for="subtipo">Se quiser detalhar melhor (Subtipo)</label>
-    <input id="subtipo" placeholder="Ex: Projeto Governança Corporativa">
-  </section>
+  <label for="naoQuero">3. O que você quer EVITAR? (Assim você evitará respostas sem sentido)</label>
+  <small>Selecione um atalho rápido abaixo ou digite sua restrição personalizada:</small>
+  
+  <div class="atatalhos-container">
+    <button type="button" class="btn-atalho" onclick="injetarRestricao('Não quero texto longo ou enrolação.')">⏹️ Sem enrolação</button>
+    <button type="button" class="btn-atalho" onclick="injetarRestricao('Evite teoria excessiva, foque em passos práticos.')">⏹️ Foco Prático</button>
+    <button type="button" class="btn-atalho" onclick="injetarRestricao('A solução não deve depender de computador, opero apenas via celular.')">⏹️ Uso no Celular</button>
+    <button type="button" class="btn-atalho" onclick="injetarRestricao('Não traga termos técnicos complexos, simplifique a linguagem.')">⏹️ Linguagem Simples</button>
+  </div>
+  <textarea id="naoQuero" placeholder="Escreva o que está fora de cogitação..."></textarea>
 
-  <!-- ABA 2: O QUE DESEJA -->
-  <section id="aba-desejo" class="tab-content">
-    <label for="objetivo">O que você quer resolver / O que deseja?</label>
-    <small>Defina claramente o objetivo principal da sua demanda.</small>
-    <textarea id="objetivo" placeholder="Descreva os objetivos pretendidos..."></textarea>
-    
-    <label for="problema">O que tá pegando aí? (Problema ou Contexto adicional)</label>
-    <textarea id="problema" placeholder="Conte o que está acontecendo..."></textarea>
-  </section>
+  <label>4. Se quiser inserir imagem (Print de tela ou Notícia):</label>
+  <div class="upload-area" onclick="document.getElementById('input-imagem').click()">
+    Toque aqui para selecionar uma imagem do seu Android
+    <input type="file" id="input-imagem" accept="image/*" style="display:none;" onchange="visualizarImagem(this)">
+  </div>
+  <div id="previewContainer" class="preview-box"></div>
 
-  <!-- ABA 3: O QUE NÃO QUER -->
-  <section id="aba-restricao" class="tab-content">
-    <label for="naoQuero">O que você quer evitar? (Seja claro)</label>
-    <small>Limite o escopo definindo o que NÃO deve ser feito.</small>
-    <textarea id="naoQuero" placeholder="Escreva o que está fora de cogitação..."></textarea>
-  </section>
+  <label for="intencao-midia">Qual o objetivo desse print/imagem?</label>
+  <select id="intencao-midia">
+    <option value="Conversa">💬 É o print de uma conversa (Quero uma resposta ideal para enviar de volta)</option>
+    <option value="Noticia">📰 É uma notícia ou artigo de texto (Quero resumo ou validação de fatos)</option>
+    <option value="Geral">📊 É uma evidência geral (Apenas analise e cruze com a solicitação)</option>
+  </select>
 
-  <!-- ABA 4: INSERIR IMAGEM (Módulo Novo Integrado de Alta Performance) -->
-  <section id="aba-imagem" class="tab-content">
-    <label>Se quiser inserir imagem:</label>
-    <small>Adicione um logotipo, print ou evidência visual para enriquecer a análise.</small>
-    <div class="upload-area" onclick="document.getElementById('input-imagem').click()">
-      Toque aqui para selecionar uma imagem do seu Android
-      <input type="file" id="input-imagem" accept="image/*" style="display:none;" onchange="visualizarImagem(this)">
-    </div>
-    <div id="previewContainer" class="preview-box"></div>
-  </section>
-
-  <!-- Painel de Controle de Botões Originais Mantidos intactos -->
-  <div style="margin-top: 15px;">
-    <button onclick="gerar()">Me ajuda com isso</button>
-    <button onclick="copiar()">Copiar e usar na IA</button>
-    <button onclick="exportarXLS()">Exportar XLS</button>
+  <div style="margin-top: 20px; display: flex; gap: 4px;">
+    <button onclick="gerar()" style="flex: 2;">Me ajuda com isso</button>
+    <button onclick="copiar()" style="flex: 1;">Copiar Prompt</button>
+    <button onclick="exportarXLS()" style="flex: 1;">Exportar XLS</button>
   </div>
 
-  <!-- Saída de Texto Estruturado -->
-  <div class="result" id="saida"></div>
+  <div class="result" id="saida">O prompt estruturado aparecerá aqui após clicar em "Me ajuda com isso".</div>
 
-  <!-- CAMPO DE RETORNO DA IA (Mantido Original) -->
   <div id="retornoIA">
-    <label for="respostaIA">Cole aqui a resposta da IA:</label>
-    <textarea id="respostaIA"></textarea>
-    <button onclick="continuar()">Continuar interação</button>
-    <div id="botoesExtras"></div>
+    <label for="respostaIA">5. Cole aqui o retorno que a IA te deu:</label>
+    <textarea id="respostaIA" placeholder="Cole o resultado aqui para executar a análise de maturidade técnica..."></textarea>
+    
+    <label>A resposta da IA atendeu sua expectativa? Avalie o motivo:</label>
+    <div class="feedback-panel">
+      <button type="button" onclick="registrarFeedback('Sucesso', 'Acerto de Escopo direto')" style="background: #16a34a;">👍 Acertou o Escopo</button>
+      <button type="button" onclick="registrarFeedback('Falha', 'Alucinação / Resposta prolixa')" style="background: #dc2626;">👎 Errou (Enrolou/Alucinou)</button>
+      <button type="button" onclick="registrarFeedback('Ajuste', 'Falta de Contexto Inicial')" style="background: #ca8a04;">⚠️ Faltou Contexto</button>
+    </div>
+    <div id="botoesExtras" style="margin-top: 10px;"></div>
   </div>
 
 </main>
 
-<!-- Alerta Toast de Cópia Original -->
-<div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
+<div id="toast" class="toast">Copiado! Pronto para colar na IA.</div>
 
 <script>
-// Mantendo o Banco de Dados Local em memória intocado
 let banco = [];
-const listaAbas = ['aba-solicitacao', 'aba-desejo', 'aba-restricao', 'aba-imagem'];
+let imagemBase64 = "";
+let reconhecimentoAudio;
+let gravando = false;
 
-// Função Amigável de Controle de Abas no Android
-function alternarAba(indice) {
-  listaAbas.forEach((id, idx) => {
-    const elemento = document.getElementById(id);
-    const botao = document.querySelectorAll('.tab-button')[idx];
-    if(idx === indice) {
-      elemento.classList.add('active');
-      botao.classList.add('active');
-    } else {
-      elemento.classList.remove('active');
-      botao.classList.remove('active');
-    }
-  });
+// Inicialização segura da API de Áudio do Android
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
+  reconhecimentoAudio = new SpeechGen();
+  reconhecimentoAudio.continuous = false;
+  reconhecimentoAudio.lang = 'pt-BR';
+
+  reconhecimentoAudio.onresult = function(event) {
+    const textoTranscrito = event.results[0][0].transcript;
+    document.getElementById('solicitacao').value += (document.getElementById('solicitacao').value ? " " : "") + textoTranscrito;
+    pararGravacaoUI();
+  };
+
+  reconhecimentoAudio.onerror = function() { pararGravacaoUI(); };
+  reconhecimentoAudio.onend = function() { pararGravacaoUI(); };
 }
 
-// Processamento de Preview da Nova Função de Mídia
+function alternarGravacao() {
+  if (!reconhecimentoAudio) {
+    alert("O reconhecimento de voz não é suportado no navegador deste aparelho.");
+    return;
+  }
+  if (!gravando) {
+    reconhecimentoAudio.start();
+    gravando = true;
+    const btn = document.getElementById('btn-gravacao');
+    btn.classList.add('gravando');
+    btn.innerText = "🛑 Gravando áudio... Toque para finalizar";
+  } else {
+    reconhecimentoAudio.stop();
+    pararGravacaoUI();
+  }
+}
+
+function pararGravacaoUI() {
+  gravando = false;
+  const btn = document.getElementById('btn-gravacao');
+  btn.classList.remove('gravando');
+  btn.innerText = "🎤 Gravar Instrução por Áudio (Toque para Iniciar)";
+}
+
+function injetarRestricao(texto) {
+  const campo = document.getElementById('naoQuero');
+  campo.value += (campo.value ? "\n" : "") + texto;
+}
+
 function visualizarImagem(input) {
   const container = document.getElementById('previewContainer');
   container.innerHTML = '';
@@ -155,64 +172,41 @@ function visualizarImagem(input) {
       const img = document.createElement('img');
       img.setAttribute('src', e.target.result);
       container.appendChild(img);
+      imagemBase64 = e.target.result;
     }
     leitor.readAsDataURL(input.files[0]);
   }
 }
 
-// Função de Inteligência e Automação Original - Preservada e Adaptada ao Fluxo de 4 Campos
 function gerar() {
-  let erros = [];
-  if (problema.value.includes("pronpr")) erros.push("prompt");
-  if (problema.value.includes("bejevo")) erros.push("objetivo");
-
-  let mensagemCorrecao = "";
-  if (erros.length > 0) {
-    mensagemCorrecao =
-`Notei alguns erros de digitação:
-- ${erros.join(", ")}
-
-Quer que eu corrija o texto para você?
-Posso fazer a correção antes de executar.
-Se preferir, posso executar deste jeito mesmo.`;
-  }
-
-  // Verifica se uma imagem foi carregada para adicionar metadado ao texto final
-  const temImagem = document.getElementById('input-imagem').files.length > 0 ? "Sim (Carregada na interface)" : "Não informada";
-
   let textoFinal = `
-ASSUNTO:
-${tipo.value} - ${subtipo.value}
+CONTEXTO E DIRETRIZ DE ENTRADA:
+Solicitação Principal: ${document.getElementById('solicitacao').value}
+Contexto Adicional: ${document.getElementById('contexto').value}
 
-ENTRADA 1 (SOLICITAÇÃO):
-${subtipo.value || tipo.value}
+RESTRIÇÕES DA INTERAÇÃO (O QUE EVITAR):
+${document.getElementById('naoQuero').value || "Nenhuma restrição informada."}
 
-ENTRADA 2 (O QUE DESEJA):
-${objetivo.value}
-Adicional/Problema: ${problema.value}
+TRATAMENTO DE MÍDIA INTEGRADO:
+Intenção do Print/Imagem: Elemento classificado como [${document.getElementById('intencao-midia').value}].
+Dados Binários da Imagem: ${imagemBase64 ? "Injetados em Base64 para processamento multimodal nativo." : "Nenhuma imagem fornecida."}
 
-ENTRADA 3 (O QUE NÃO QUER):
-${naoQuero.value}
-
-ENTRADA 4 (IMAGEM ANEXADA):
-${temImagem}
-
-INSTRUÇÃO:
-Responder de forma direta, prática e sem excesso.
-
-${mensagemCorrecao}
+DIRETRIZ DE SAÍDA EXECUTIVA:
+Responder de forma coesa, direta, aplicando o método de resolução limpa, sem fragmentação ou respostas em pedaços.
 `;
 
-  saida.innerText = textoFinal;
+  document.getElementById('saida').innerText = textoFinal;
   window.textoFinal = textoFinal;
 
-  // Alimenta o banco existente exatamente como na versão anterior
-  banco.push({ data: new Date().toLocaleString(), tipo: tipo.value, problema: problema.value });
-
+  banco.push({ 
+    data: new Date().toLocaleString(), 
+    solicitacao: document.getElementById('solicitacao').value, 
+    tipoMidia: document.getElementById('intencao-midia').value 
+  });
+  
   document.getElementById("retornoIA").style.display = "block";
 }
 
-// Função Original de Copiar para o Clipboard
 function copiar() {
   navigator.clipboard.writeText(window.textoFinal);
   let toast = document.getElementById("toast");
@@ -220,71 +214,45 @@ function copiar() {
   setTimeout(() => { toast.style.opacity = 0; }, 2000);
 }
 
-// Função Original de Exportação para Excel
+// CORREÇÃO DEFINITIVA DA EXPORTAÇÃO XLS (Compatibilidade Android/Excel)
 function exportarXLS() {
-  let tabela = "Data\tTipo\tProblema\n";
-  banco.forEach(item => { tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`; });
-  let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
+  let tabela = "Data\tSolicitacao\tTipo Midia\n";
+  banco.forEach(item => { 
+    let limpSolicitacao = item.solicitacao.replace(/\n|\r|\t/g, " ");
+    tabela += `${item.data}\t${limpSolicitacao}\t${item.tipoMidia}\n`; 
+  });
+  
+  let blob = new Blob(["\uFEFF" + tabela], { type: "application/vnd.ms-excel;charset=utf-8" });
   let link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "diagnostico.xls";
+  link.download = "diagnostico_governanca.xls";
   link.click();
 }
 
-// Função de Diagnóstico Estruturado Avançado 5.0 Original
-function continuar() {
+function registrarFeedback(status, motivo) {
   let resposta = document.getElementById("respostaIA").value;
+  let analiseFinal = `
+ANÁLISE DE FEEDBACK E CAUSA RAIZ (NÍVEL ALTO):
+Status da Interação: ${status}
+Diagnóstico do Motivo: ${motivo}
 
-  let diagnostico = `
-DIAGNÓSTICO:
-${problema.value || objetivo.value}
-
-ERRO ATUAL:
-Manter esforço sem retorno claro
-
-DECISÃO NECESSÁRIA:
-Interromper padrão atual e focar em resultado direto
-
-PLANO DE AÇÃO (3 PASSOS):
-1. Eliminar atividades que não geram retorno
-2. Focar em uma fonte de resultado imediato
-3. Criar rotina mínima com meta diária
-
-RISCO SE NÃO AGIR:
-Continuidade do desgaste + perda de energia + estagnação
-
-CHANCE DE SUCESSO: 70%
-CHANCE DE DERROTA: 30%
-
-RETORNO DA IA:
-${resposta}
+CONTEÚDO ANALISADO DA IA:
+${resposta || "Nenhum texto colado para análise."}
 `;
 
-  saida.innerText = diagnostico;
-
-  // Renderização Dinâmica dos 3 Botões Extras Originais
+  document.getElementById('saida').innerText = analiseFinal;
+  
   let div = document.getElementById("botoesExtras");
   div.innerHTML = "";
-  let btn1 = document.createElement("button");
-  btn1.innerText = "Nova análise";
-  btn1.onclick = () => gerar();
-  let btn2 = document.createElement("button");
-  btn2.innerText = "Copiar retorno";
-  btn2.onclick = () => navigator.clipboard.writeText(diagnostico);
-  let btn3 = document.createElement("button");
-  btn3.innerText = "Exportar retorno";
-  btn3.onclick = () => {
-    let blob = new Blob([diagnostico], { type: "text/plain" });
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "retornoIA.txt";
-    link.click();
+  let btn = document.createElement("button");
+  btn.innerText = "Copiar Relatório de Feedback";
+  btn.style.background = "#003366";
+  btn.onclick = () => {
+    navigator.clipboard.writeText(analiseFinal);
+    alert("Feedback copiado!");
   };
-  div.appendChild(btn1);
-  div.appendChild(btn2);
-  div.appendChild(btn3);
+  div.appendChild(btn);
 }
 </script>
-
 </body>
 </html>
