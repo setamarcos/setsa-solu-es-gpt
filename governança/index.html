@@ -2,78 +2,166 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico Direto 5.0 + MP Hub IA</title>
 <style>
+/* Cores e Estilo Original Preservados */
 body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; }
 header { text-align:center; padding:1.5rem 1rem; }
 header h2 { font-size:22px; margin-bottom:8px; }
 header p { font-size:14px; line-height:1.4; opacity:0.95; }
-.container { background:#fff; color:#000; max-width:780px; margin:20px auto; padding:20px; border-radius:12px; }
-label { font-size:14px; font-weight:bold; }
+
+/* Contêiner Principal */
+.container { background:#fff; color:#000; max-width:780px; margin:20px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+/* Melhoria Técnica: Estrutura Amigável de Abas para Celular (Android) */
+.tabs-nav { display: flex; background: #eef; border-radius: 8px; margin-bottom: 15px; overflow-x: auto; }
+.tab-button { flex: 1; padding: 12px 8px; background: none; border: none; font-size: 13px; font-weight: bold; color: #555; cursor: pointer; text-align: center; white-space: nowrap; transition: 0.2s; border-bottom: 3px solid transparent; }
+.tab-button.active { color: #003366; border-bottom-color: #ff6600; background: #fff; border-radius: 8px 8px 0 0; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Componentes de Formulário Modificados com Base no Original */
+label { display: block; font-size:14px; font-weight:bold; margin-top: 5px; }
 small { display:block; font-size:12px; color:#555; margin-bottom:8px; }
-input, textarea, select { width:100%; padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:14px; }
-button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:15px; border-radius:8px; cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px; }
+input, textarea, select { width:100%; padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:14px; box-sizing: border-box; }
+textarea { min-height: 100px; resize: vertical; }
+
+/* Botões Originais */
+button { background:#ff6600; color:#fff; border:none; padding:12px; font-size:15px; border-radius:8px; cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px; font-weight: bold; }
 button:hover { opacity:0.9; }
-.result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; }
-.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:20px; font-size:13px; opacity:0; transition:0.3s; }
-#retornoIA { margin-top:16px; background:#f9f9f9; padding:12px; border-radius:8px; display:none; }
+
+/* Módulo Novo: Upload de Imagem */
+.upload-area { border: 2px dashed #ff6600; padding: 15px; text-align: center; border-radius: 6px; background: #f9f9f9; cursor: pointer; margin-bottom: 14px; color: #555; font-size: 13px; }
+.preview-box img { max-width: 100%; max-height: 180px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; display: block; }
+
+/* Saídas e Notificações Originais */
+.result { background:#eef; padding:12px; margin-top:16px; border-radius:8px; white-space:pre-wrap; font-size:13px; color: #000; }
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:20px; font-size:13px; opacity:0; transition:0.3s; pointer-events: none; z-index: 9999; }
+#retornoIA { margin-top:16px; background:#f9f9f9; padding:12px; border-radius:8px; display:none; color: #000; }
+#botoesExtras button { background: #003366; }
 </style>
 </head>
 <body>
 
-<header>
+<!-- Cabeçalho Semântico Otimizado -->
+<header role="banner">
 <h2>Estamos juntos nisso.</h2>
 <p>Fala do seu jeito — eu organizo.<br>Simples ou mais a fundo, a gente resolve.</p>
 </header>
 
-<div class="container">
+<main class="container">
 
-<label>Pra que você precisa agora?</label>
-<select id="tipo">
-<option>Pessoal</option><option>Técnica</option><option>Comercial</option><option>Casa</option>
-</select>
+  <!-- Menu de Navegação das 4 Novas Abas Alinhadas -->
+  <nav class="tabs-nav" role="tablist">
+    <button type="button" class="tab-button active" onclick="alternarAba(0)">1. Solicitação</button>
+    <button type="button" class="tab-button" onclick="alternarAba(1)">2. O que Deseja</button>
+    <button type="button" class="tab-button" onclick="alternarAba(2)">3. O que NÃO Quer</button>
+    <button type="button" class="tab-button" onclick="alternarAba(3)">4. Inserir Imagem</button>
+  </nav>
 
-<label>Se quiser detalhar melhor</label>
-<input id="subtipo">
+  <!-- ABA 1: SOLICITAÇÃO (Agrupa as entradas de classificação iniciais) -->
+  <section id="aba-solicitacao" class="tab-content active">
+    <label for="tipo">Pra que você precisa agora?</label>
+    <select id="tipo">
+      <option>Pessoal</option>
+      <option>Técnica</option>
+      <option>Comercial</option>
+      <option>Casa</option>
+    </select>
 
-<label>O que tá pegando aí?</label>
-<textarea id="problema"></textarea>
+    <label for="subtipo">Se quiser detalhar melhor (Subtipo)</label>
+    <input id="subtipo" placeholder="Ex: Projeto Governança Corporativa">
+  </section>
 
-<label>O que já aconteceu até aqui?</label>
-<textarea id="contexto"></textarea>
+  <!-- ABA 2: O QUE DESEJA -->
+  <section id="aba-desejo" class="tab-content">
+    <label for="objetivo">O que você quer resolver / O que deseja?</label>
+    <small>Defina claramente o objetivo principal da sua demanda.</small>
+    <textarea id="objetivo" placeholder="Descreva os objetivos pretendidos..."></textarea>
+    
+    <label for="problema">O que tá pegando aí? (Problema ou Contexto adicional)</label>
+    <textarea id="problema" placeholder="Conte o que está acontecendo..."></textarea>
+  </section>
 
-<label>O que você quer resolver?</label>
-<textarea id="objetivo"></textarea>
+  <!-- ABA 3: O QUE NÃO QUER -->
+  <section id="aba-restricao" class="tab-content">
+    <label for="naoQuero">O que você quer evitar? (Seja claro)</label>
+    <small>Limite o escopo definindo o que NÃO deve ser feito.</small>
+    <textarea id="naoQuero" placeholder="Escreva o que está fora de cogitação..."></textarea>
+  </section>
 
-<label>Como você sabe que deu certo?</label>
-<textarea id="resultadoEsperado"></textarea>
+  <!-- ABA 4: INSERIR IMAGEM (Módulo Novo Integrado de Alta Performance) -->
+  <section id="aba-imagem" class="tab-content">
+    <label>Se quiser inserir imagem:</label>
+    <small>Adicione um logotipo, print ou evidência visual para enriquecer a análise.</small>
+    <div class="upload-area" onclick="document.getElementById('input-imagem').click()">
+      Toque aqui para selecionar uma imagem do seu Android
+      <input type="file" id="input-imagem" accept="image/*" style="display:none;" onchange="visualizarImagem(this)">
+    </div>
+    <div id="previewContainer" class="preview-box"></div>
+  </section>
 
-<label>O que você quer evitar?</label>
-<textarea id="naoQuero"></textarea>
+  <!-- Painel de Controle de Botões Originais Mantidos intactos -->
+  <div style="margin-top: 15px;">
+    <button onclick="gerar()">Me ajuda com isso</button>
+    <button onclick="copiar()">Copiar e usar na IA</button>
+    <button onclick="exportarXLS()">Exportar XLS</button>
+  </div>
 
-<button onclick="gerar()">Me ajuda com isso</button>
-<button onclick="copiar()">Copiar e usar na IA</button>
-<button onclick="exportarXLS()">Exportar XLS</button>
+  <!-- Saída de Texto Estruturado -->
+  <div class="result" id="saida"></div>
 
-<div class="result" id="saida"></div>
+  <!-- CAMPO DE RETORNO DA IA (Mantido Original) -->
+  <div id="retornoIA">
+    <label for="respostaIA">Cole aqui a resposta da IA:</label>
+    <textarea id="respostaIA"></textarea>
+    <button onclick="continuar()">Continuar interação</button>
+    <div id="botoesExtras"></div>
+  </div>
 
-<!-- CAMPO DE RETORNO DA IA -->
-<div id="retornoIA">
-  <label>Cole aqui a resposta da IA:</label>
-  <textarea id="respostaIA"></textarea>
-  <button onclick="continuar()">Continuar interação</button>
-  <div id="botoesExtras"></div>
-</div>
+</main>
 
-</div>
-
+<!-- Alerta Toast de Cópia Original -->
 <div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
 
 <script>
+// Mantendo o Banco de Dados Local em memória intocado
 let banco = [];
+const listaAbas = ['aba-solicitacao', 'aba-desejo', 'aba-restricao', 'aba-imagem'];
 
+// Função Amigável de Controle de Abas no Android
+function alternarAba(indice) {
+  listaAbas.forEach((id, idx) => {
+    const elemento = document.getElementById(id);
+    const botao = document.querySelectorAll('.tab-button')[idx];
+    if(idx === indice) {
+      elemento.classList.add('active');
+      botao.classList.add('active');
+    } else {
+      elemento.classList.remove('active');
+      botao.classList.remove('active');
+    }
+  });
+}
+
+// Processamento de Preview da Nova Função de Mídia
+function visualizarImagem(input) {
+  const container = document.getElementById('previewContainer');
+  container.innerHTML = '';
+  if (input.files && input.files[0]) {
+    const leitor = new FileReader();
+    leitor.onload = function(e) {
+      const img = document.createElement('img');
+      img.setAttribute('src', e.target.result);
+      container.appendChild(img);
+    }
+    leitor.readAsDataURL(input.files[0]);
+  }
+}
+
+// Função de Inteligência e Automação Original - Preservada e Adaptada ao Fluxo de 4 Campos
 function gerar() {
-  // Correção ortográfica amigável
   let erros = [];
   if (problema.value.includes("pronpr")) erros.push("prompt");
   if (problema.value.includes("bejevo")) erros.push("objetivo");
@@ -89,24 +177,25 @@ Posso fazer a correção antes de executar.
 Se preferir, posso executar deste jeito mesmo.`;
   }
 
+  // Verifica se uma imagem foi carregada para adicionar metadado ao texto final
+  const temImagem = document.getElementById('input-imagem').files.length > 0 ? "Sim (Carregada na interface)" : "Não informada";
+
   let textoFinal = `
 ASSUNTO:
 ${tipo.value} - ${subtipo.value}
 
-PROBLEMA:
-${problema.value}
+ENTRADA 1 (SOLICITAÇÃO):
+${subtipo.value || tipo.value}
 
-OBJETIVO:
+ENTRADA 2 (O QUE DESEJA):
 ${objetivo.value}
+Adicional/Problema: ${problema.value}
 
-RESULTADO:
-${resultadoEsperado.value}
-
-RESTRIÇÕES:
+ENTRADA 3 (O QUE NÃO QUER):
 ${naoQuero.value}
 
-CONTEXTO:
-${contexto.value}
+ENTRADA 4 (IMAGEM ANEXADA):
+${temImagem}
 
 INSTRUÇÃO:
 Responder de forma direta, prática e sem excesso.
@@ -117,11 +206,13 @@ ${mensagemCorrecao}
   saida.innerText = textoFinal;
   window.textoFinal = textoFinal;
 
+  // Alimenta o banco existente exatamente como na versão anterior
   banco.push({ data: new Date().toLocaleString(), tipo: tipo.value, problema: problema.value });
 
   document.getElementById("retornoIA").style.display = "block";
 }
 
+// Função Original de Copiar para o Clipboard
 function copiar() {
   navigator.clipboard.writeText(window.textoFinal);
   let toast = document.getElementById("toast");
@@ -129,6 +220,7 @@ function copiar() {
   setTimeout(() => { toast.style.opacity = 0; }, 2000);
 }
 
+// Função Original de Exportação para Excel
 function exportarXLS() {
   let tabela = "Data\tTipo\tProblema\n";
   banco.forEach(item => { tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`; });
@@ -139,13 +231,13 @@ function exportarXLS() {
   link.click();
 }
 
+// Função de Diagnóstico Estruturado Avançado 5.0 Original
 function continuar() {
   let resposta = document.getElementById("respostaIA").value;
 
-  // Diagnóstico estruturado estilo 5.0
   let diagnostico = `
 DIAGNÓSTICO:
-${problema.value}
+${problema.value || objetivo.value}
 
 ERRO ATUAL:
 Manter esforço sem retorno claro
@@ -170,7 +262,7 @@ ${resposta}
 
   saida.innerText = diagnostico;
 
-  // Criar três botões extras
+  // Renderização Dinâmica dos 3 Botões Extras Originais
   let div = document.getElementById("botoesExtras");
   div.innerHTML = "";
   let btn1 = document.createElement("button");
