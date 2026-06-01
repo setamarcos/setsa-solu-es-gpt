@@ -1,0 +1,47 @@
+{
+  "config": {
+    "empresa": "Seta Soluções",
+    "razaoSocial": "Marcos Paulo de Oliveira Souza Ltda",
+    "responsavel": "Marcos Paulo",
+    "cidade": "Contagem",
+    "estado": "MG",
+    "fonte": "Arial",
+    "tamanhoFonte": "12",
+    "garantia": "12 meses",
+    "validade": "15 dias"
+  },
+  "clientes": [
+    { "id": 1, "nome": "CEFAD", "contato": "Filipe", "cidade": "Belo Horizonte" },
+    { "id": 2, "nome": "Hospital da Baleia", "contato": "Carlos", "cidade": "Belo Horizonte" },
+    { "id": 3, "nome": "Bertolini", "contato": "João", "cidade": "Contagem" }
+  ],
+  "proposta": {
+    "numero": "",
+    "data": "",
+    "cliente": "",
+    "destinatario": "",
+    "referencia": "",
+    "objetivo": "",
+    "escopo": "",
+    "valorMaoObra": "",
+    "valorMaterial": "",
+    "prazo": "",
+    "formaPagamento": ""
+  },
+  "materiais": [
+    { "item": 1, "descricao": "Cabo 10mm²", "quantidade": 50, "unidade": "m", "valor": 0 },
+    { "item": 2, "descricao": "Disjuntor 10A", "quantidade": 2, "unidade": "un", "valor": 0 }
+  ],
+  "normas": [
+    "ANSI/TIA/EIA 568-B",
+    "ABNT NBR 5410",
+    "ABNT NBR 5419",
+    "NR10"
+  ],
+  "textosFixos": {
+    "introducao": "Estamos apresentando a proposta...",
+    "garantia": "12 meses",
+    "validade": "15 dias",
+    "aceite": "Com a autorização..."
+  }
+}
