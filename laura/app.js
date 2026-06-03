@@ -8,7 +8,11 @@ let tokenGoogle = null;
 // ========== INICIALIZAÇÃO ==========
 document.addEventListener('DOMContentLoaded', () => {
     recuperarUsuario();
-    document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
+
+   // Linha de teste - apaga depois
+setTimeout(() => {
+  document.getElementById('mainContent').style.display = 'block';
+}, 2000); document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
 });
 
 // ========== GOOGLE LOGIN ==========
