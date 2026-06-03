@@ -11,33 +11,48 @@
 <div class="container">
     <div class="topo">
         <h1>Prospecção e Governança MP</h1>
-        <p>Seta Soluções</p>
+        <p>Seta Soluções - Agenda Inteligente</p>
+        <div class="status-online" id="statusOnline">✅ Online</div>
     </div>
 
     <div class="card">
-        <input type="text" id="cliente" placeholder="Nome Cliente">
-        <input type="text" id="telefone" placeholder="Telefone">
+        <h2>Novo Cliente</h2>
+        
+        <input type="text" id="cliente" placeholder="Nome Cliente" required>
+        <input type="tel" id="telefone" placeholder="Telefone (11) 99999-9999">
 
         <select id="tipo">
-            <option value="CONSTRUTORA">CONSTRUTORA</option>
-            <option value="ESCOLA">ESCOLA</option>
-            <option value="COMERCIAL">COMERCIAL</option>
-            <option value="OUTROS">OUTROS</option>
+            <option value="CONSTRUTORA">🏗️ CONSTRUTORA</option>
+            <option value="ESCOLA">🏫 ESCOLA</option>
+            <option value="COMERCIAL">🏪 COMERCIAL</option>
+            <option value="OUTROS">📋 OUTROS</option>
         </select>
 
-        <textarea id="observacao" placeholder="Observação"></textarea>
-        <input type="text" id="retorno" placeholder="Retorno / Data">
+        <textarea id="observacao" placeholder="Observação (opcional)"></textarea>
+        
+        <input type="date" id="retorno" placeholder="Data de Retorno" required>
 
         <button onclick="salvarCliente()" id="btnSalvar">
-            SALVAR CLIENTE
+            💾 SALVAR CLIENTE
         </button>
 
-        <button onclick="abrirWhatsapp()" class="btn-whatsapp" style="background-color: #25d366; margin-top: 10px;">
-            FALAR NO WHATSAPP
+        <button onclick="abrirWhatsapp()" class="btn-whatsapp">
+            📱 FALAR NO WHATSAPP
+        </button>
+
+        <button onclick="exportarParaExcel()" class="btn-export">
+            📊 EXPORTAR XLS
+        </button>
+
+        <button onclick="sincronizarPendentes()" class="btn-sync" id="btnSync">
+            🔄 SINCRONIZAR
         </button>
 
         <div id="status"></div>
     </div>
+
+    <!-- Histórico de Clientes -->
+    <div id="historico" class="historico-card"></div>
 </div>
 
 <script src="app.js"></script>
