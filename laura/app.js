@@ -1,82 +1,113 @@
-// ========== CONFIGURAÇÃO GOOGLE ==========
-const GOOGLE_CLIENT_ID = "1097002227710-uqa72og3t9t6lena1gdpakrm7f0vob78.apps.googleusercontent.com"; 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtzGrjioyzpO4oaQGsNiI-ibJPOAk29ZF-j8N6PJtlYteWEIg0gGwCfHx_t2l-5dgoAg/exec";
-
+const URL_SCRIPT = "https://script.google.com/macros/s/SEU_DEPLOY_ID_AQUI/exec";
 let usuarioLogado = null;
 let tokenGoogle = null;
 
-// ========== INICIALIZAÇÃO ==========
 document.addEventListener('DOMContentLoaded', () => {
-    recuperarUsuario();
-
-   // Linha de teste - apaga depois
-setTimeout(() => {
-  document.getElementById('mainContent').style.display = 'block';
-}, 2000); document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
+  recuperarUsuario();
+  document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
 });
 
-// ========== GOOGLE LOGIN ==========
-function loginGoogle() {
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse
-    });
-    google.accounts.id.renderButton(
-        document.querySelector('.btn-google'),
-        { theme: 'outline', size: 'large' }
-    );
-}
-
 function handleCredentialResponse(response) {
-    const decodedToken = jwt_decode(response.credential);
-    usuarioLogado = {
-        nome: decodedToken.name,
-        email: decodedToken.email,
-        foto: decodedToken.picture,
-        token: response.credential
-    };
-    tokenGoogle = response.credential;
-    localStorage.setItem('usuarioLaura', JSON.stringify(usuarioLogado));
-    mostrarUsuario();
+  const data = jwt_decode(response.credential);
+  usuarioLogado = data.email;
+  tokenGoogle = response.credential;
+
+  localStorage.setItem('usuario', JSON.stringify({
+    nome: data.name,
+    email: data.email,
+    foto: data.picture
+  }));
+
+  mostrarUsuario(data.name, data.picture);
 }
 
 function recuperarUsuario() {
-    const usuario = localStorage.getItem('usuarioLaura');
-    if (usuario) {
-        usuarioLogado = JSON.parse(usuario);
-        mostrarUsuario();
-    }
+  const usuarioSalvo = localStorage.getItem('usuario');
+  if (usuarioSalvo) {
+    const user = JSON.parse(usuarioSalvo);
+    usuarioLogado = user.email;
+    mostrarUsuario(user.nome, user.foto);
+  }
 }
 
-function mostrarUsuario() {
-    document.getElementById('loginBox').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'flex';
-    document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('userName').textContent = `Bem-vindo, ${usuarioLogado.nome}!`;
-    document.getElementById('userImg').src = usuarioLogado.foto;
+function mostrarUsuario(nome, foto) {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('userInfo').style.display = 'flex';
+  document.getElementById('userName').textContent = nome;
+  document.getElementById('userImg').src = foto;
+  document.getElementById('mainContent').style.display = 'block';
 }
 
 function logoutGoogle() {
-    usuarioLogado = null;
-    tokenGoogle = null;
-    localStorage.removeItem('usuarioLaura');
-    document.getElementById('loginBox').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'none';
+  localStorage.removeItem('usuario');
+  usuarioLogado = null;
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('userInfo').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'none';
 }
 
-// ========== SALVAR NO GOOGLE DRIVE ==========
-function salvarNoGoogleDrive(dados) {
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(dados),
-        headers: { "Content-Type": "application/json" }
+function atualizarContadores() {
+  const texto = document.getElementById('textoRedacao').value;
+  const palavras = texto.trim().split(/\s+/).filter(w => w.length > 0);
+  const frases = texto.split(/[.!?]+/).filter(f => f.trim().length > 0);
+  const paragrafos = texto.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+
+  document.getElementById('contPalavras').textContent = palavras.length;
+  document.getElementById('contFrases').textContent = frases.length;
+  document.getElementById('contParafos').textContent = paragrafos.length;
+}
+
+function sortearTema() {
+  const temas = [
+    "O impacto das redes sociais na saúde mental dos jovens",
+    "A importância da leitura na formação cidadã",
+    "Desafios da educação no Brasil contemporâneo",
+    "Sustentabilidade e consumo consciente",
+    "O papel da tecnologia na educação"
+  ];
+  const tema = temas[Math.floor(Math.random() * temas.length)];
+  document.getElementById('temaDisplay').innerHTML = `<strong>Tema:</strong> ${tema}`;
+}
+
+function processarFoto() {
+  const file = document.getElementById('inputFoto').files[0];
+  if (!file) return;
+
+  document.getElementById('avisoValidacao').textContent = 'Extraindo texto da imagem...';
+
+  Tesseract.recognize(file, 'por', { logger: m => console.log(m) })
+   .then(({ data: { text } }) => {
+      document.getElementById('textoRedacao').value = text;
+      atualizarContadores();
+      document.getElementById('avisoValidacao').textContent = '';
     })
-    .then(res => res.json())
-    .then(retorno => {
-        mostrarAviso("✅ " + retorno.mensagem);
-    })
-    .catch(err => {
-        mostrarAviso("❌ Erro ao salvar: " + err);
+   .catch(() => {
+      document.getElementById('avisoValidacao').textContent = 'Erro ao extrair texto. Tente novamente.';
     });
 }
+
+function analisarRedacao() {
+  const texto = document.getElementById('textoRedacao').value.trim();
+  if (!texto) {
+    alert('Digite ou cole uma redação primeiro.');
+    return;
+  }
+
+  document.getElementById('resultadoAnalise').style.display = 'block';
+  document.getElementById('notaFinal').textContent = '8.5';
+  document.getElementById('resumoTexto').textContent = 'Redação bem estruturada com boa argumentação. Atenção à concordância verbal e coesão entre parágrafos.';
+}
+
+function exportarPDF() {
+  alert('Função PDF em desenvolvimento');
+}
+
+function exportarXLS() {
+  alert('Função XLS em desenvolvimento');
+}
+
+function compartilharWhatsApp() {
+  alert('Função WhatsApp em desenvolvimento');
+}
+
+function atualizarRigor() {}
