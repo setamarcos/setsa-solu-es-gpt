@@ -7,14 +7,16 @@
     <title>Laura - Mentoria de Redação Seta Soluções</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="header">
             <span class="seta-icon">➜</span>
             <h1>Laura - Mentoria de Redação</h1>
             <p>Inteligência para educar, rigor para crescer.</p>
+
             <div id="userInfo" class="user-info" style="display:none;">
                 <img id="userImg" class="user-avatar" src="" alt="User">
                 <div>
@@ -22,14 +24,19 @@
                     <button onclick="logoutGoogle()" class="btn-logout">Sair</button>
                 </div>
             </div>
+
             <div id="loginBox" class="login-box">
-                <button onclick="loginGoogle()" class="btn-google">🔐 Entrar com Google</button>
+                <div id="g_id_onload"
+                     data-client_id="SEU_CLIENT_ID_AQUI"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signin_with"></div>
             </div>
         </div>
-        
-        <!-- CONTENT -->
+
         <div class="content" id="mainContent" style="display:none;">
-            <!-- SELEÇÃO DE SÉRIE -->
             <div class="section">
                 <label>📚 Nível Acadêmico</label>
                 <select id="ano" onchange="atualizarRigor()">
@@ -41,34 +48,29 @@
                 </select>
             </div>
 
-            <!-- GERAR TEMA -->
             <div class="section">
                 <button class="btn-main" onclick="sortearTema()">🎲 Gerar Tema de Redação</button>
                 <div id="temaDisplay" class="tema-box"></div>
             </div>
 
-            <!-- CAPTURA DE FOTO/TEXTO -->
             <div class="section">
                 <label>📷 Foto do Caderno ou Cole o Texto</label>
                 <input type="file" accept="image/*" id="inputFoto" onchange="processarFoto()" class="file-input">
                 <p class="hint">Tire uma foto clara do seu caderno. O sistema extrairá o texto automaticamente.</p>
             </div>
 
-            <!-- TEXTAREA -->
             <div class="section">
                 <label>✍️ Texto da Redação</label>
                 <textarea id="textoRedacao" placeholder="Cole ou edite seu texto aqui..." class="textarea-redacao"></textarea>
                 <div class="contador">
-                    <span id="contPalavras">0</span> palavras | 
-                    <span id="contFrases">0</span> frases | 
+                    <span id="contPalavras">0</span> palavras |
+                    <span id="contFrases">0</span> frases |
                     <span id="contParafos">0</span> parágrafos
                 </div>
             </div>
 
-            <!-- AVISO DE VALIDAÇÃO -->
             <div id="avisoValidacao" class="warning"></div>
 
-            <!-- BOTÕES DE AÇÃO -->
             <div class="btn-grid">
                 <button class="btn-mentor" onclick="analisarRedacao()">🧠 Análise Completa</button>
                 <button class="btn-save" onclick="exportarPDF()">📄 Gerar PDF</button>
@@ -76,50 +78,35 @@
                 <button id="btnZap" class="btn-share" style="display:none" onclick="compartilharWhatsApp()">📱 Compartilhar via WhatsApp</button>
             </div>
 
-            <!-- RESULTADO DA ANÁLISE -->
             <div id="resultadoAnalise" class="resultado-box" style="display:none;">
                 <div class="resultado-header">
                     <h2>📊 Parecer Técnico do Mentor</h2>
                     <span id="notaFinal" class="nota-badge"></span>
                 </div>
-
-                <!-- VALIDAÇÕES -->
                 <div class="validacoes">
                     <h3>✅ Validações</h3>
                     <div id="validacoesTexto"></div>
                 </div>
-
-                <!-- ANÁLISE ESTRUTURAL -->
                 <div class="analise">
                     <h3>📐 Análise Estrutural</h3>
                     <div id="analisaEstrutura"></div>
                 </div>
-
-                <!-- ERROS ENCONTRADOS -->
                 <div class="erros">
                     <h3>❌ Erros Detectados</h3>
                     <div id="errosTexto"></div>
                 </div>
-
-                <!-- ORIENTAÇÕES VESTIBULAR -->
                 <div class="orientacoes">
                     <h3>🎯 Orientações Vestibulares</h3>
                     <div id="orientacoesTexto"></div>
                 </div>
-
-                <!-- COMENTÁRIOS -->
                 <div class="comentarios">
                     <h3>💬 Comentários do Mentor</h3>
                     <div id="comentariosTexto"></div>
                 </div>
-
-                <!-- GRÁFICO -->
                 <div class="grafico-container">
                     <h3>📈 Evolução da Redação</h3>
                     <canvas id="graficoProgresso"></canvas>
                 </div>
-
-                <!-- RESUMO -->
                 <div class="resumo">
                     <h3>📝 Resumo da Avaliação</h3>
                     <div id="resumoTexto"></div>
@@ -128,8 +115,6 @@
         </div>
     </div>
 
-    <!-- SCRIPTS -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
