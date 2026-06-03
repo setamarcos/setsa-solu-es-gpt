@@ -2,113 +2,138 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
-    <title>Seta Soluções — Mentoria de Escrita</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <style>
-        :root { --blue: #0b63c6; --orange: #ff7a18; --bg: #f0f4f8; --card: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; padding: 20px; }
-        .container { max-width: 850px; width: 100%; background: var(--card); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; border-top: 8px solid var(--blue); }
-        .header { background: white; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }
-        .seta-icon { font-size: 40px; color: var(--orange); margin-bottom: 10px; display: block; }
-        .content { padding: 30px; }
-        label { font-weight: bold; color: var(--blue); display: block; margin: 15px 0 5px; text-transform: uppercase; font-size: 12px; }
-        select, textarea, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e1e8ed; font-size: 15px; margin-bottom: 10px; transition: 0.3s; }
-        select:focus, textarea:focus { border-color: var(--blue); outline: none; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        button { padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-main { background: var(--blue); color: white; }
-        .btn-mentor { background: #1e293b; color: white; }
-        .btn-save { background: var(--orange); color: white; }
-        .btn-share { background: #25d366; color: white; grid-column: span 2; }
-        #feedbackResult { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 15px; padding: 20px; margin-top: 25px; display: none; }
-        .warning { color: #dc2626; background: #fee2e2; padding: 15px; border-radius: 10px; display: none; font-weight: bold; margin-bottom: 20px; }
-    </style>
+    <meta name="theme-color" content="#0b63c6" />
+    <title>Laura - Mentoria de Redação Seta Soluções</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <div class="header">
             <span class="seta-icon">➜</span>
-            <h1 style="margin:0; color: var(--blue);">Mentoria de Escrita Seta</h1>
-            <p style="color: #64748b; margin: 5px 0;">Inteligência para educar, rigor para crescer.</p>
+            <h1>Laura - Mentoria de Redação</h1>
+            <p>Inteligência para educar, rigor para crescer.</p>
+            <div id="userInfo" class="user-info" style="display:none;">
+                <img id="userImg" class="user-avatar" src="" alt="User">
+                <div>
+                    <span id="userName"></span>
+                    <button onclick="logoutGoogle()" class="btn-logout">Sair</button>
+                </div>
+            </div>
+            <div id="loginBox" class="login-box">
+                <button onclick="loginGoogle()" class="btn-google">🔐 Entrar com Google</button>
+            </div>
         </div>
         
-        <div class="content">
-            <label>Nível Acadêmico (Rigor Escalonado)</label>
-            <select id="ano">
-                <option value="6">6º Ano Fundamental</option>
-                <option value="7">7º Ano Fundamental</option>
-                <option value="8">8º Ano Fundamental</option>
-                <option value="9">9º Ano Fundamental</option>
-            </select>
-
-            <button class="btn-main" style="width:100%" onclick="sortear()">🎲 Gerar Tema de Alto Nível</button>
-            <div id="temaDisplay" style="margin-top:15px; font-weight:bold; color: var(--blue); text-align:center;"></div>
-
-            <label>Evidência do Trabalho (Foto do Caderno)</label>
-            <input type="file" accept="image/*" id="inputFoto" onchange="processar(this)">
-
-            <label>Texto Identificado</label>
-            <textarea id="textoRedacao" style="height: 120px;" placeholder="O mentor aguarda sua escrita..."></textarea>
-
-            <div id="aviso" class="warning"></div>
-
-            <div class="btn-grid">
-                <button class="btn-mentor" onclick="analisar()">Ouvir o Mentor Sábio</button>
-                <button class="btn-save" onclick="salvarPDF()">Gerar PDF de Entrega</button>
-                <button id="btnZap" class="btn-share" style="display:none" onclick="mandarZap()">📲 Compartilhar com Comadres</button>
+        <!-- CONTENT -->
+        <div class="content" id="mainContent" style="display:none;">
+            <!-- SELEÇÃO DE SÉRIE -->
+            <div class="section">
+                <label>📚 Nível Acadêmico</label>
+                <select id="ano" onchange="atualizarRigor()">
+                    <option value="5">5º Ano Fundamental</option>
+                    <option value="6">6º Ano Fundamental</option>
+                    <option value="7">7º Ano Fundamental</option>
+                    <option value="8">8º Ano Fundamental</option>
+                    <option value="9">9º Ano Fundamental</option>
+                </select>
             </div>
 
-            <div id="feedbackResult">
-                <h3 style="margin-top:0; color: var(--blue);">Parecer Técnico:</h3>
-                <div id="feedbackTexto" style="font-size: 14px; color: #334155; white-space: pre-wrap;"></div>
+            <!-- GERAR TEMA -->
+            <div class="section">
+                <button class="btn-main" onclick="sortearTema()">🎲 Gerar Tema de Redação</button>
+                <div id="temaDisplay" class="tema-box"></div>
+            </div>
+
+            <!-- CAPTURA DE FOTO/TEXTO -->
+            <div class="section">
+                <label>📷 Foto do Caderno ou Cole o Texto</label>
+                <input type="file" accept="image/*" id="inputFoto" onchange="processarFoto()" class="file-input">
+                <p class="hint">Tire uma foto clara do seu caderno. O sistema extrairá o texto automaticamente.</p>
+            </div>
+
+            <!-- TEXTAREA -->
+            <div class="section">
+                <label>✍️ Texto da Redação</label>
+                <textarea id="textoRedacao" placeholder="Cole ou edite seu texto aqui..." class="textarea-redacao"></textarea>
+                <div class="contador">
+                    <span id="contPalavras">0</span> palavras | 
+                    <span id="contFrases">0</span> frases | 
+                    <span id="contParafos">0</span> parágrafos
+                </div>
+            </div>
+
+            <!-- AVISO DE VALIDAÇÃO -->
+            <div id="avisoValidacao" class="warning"></div>
+
+            <!-- BOTÕES DE AÇÃO -->
+            <div class="btn-grid">
+                <button class="btn-mentor" onclick="analisarRedacao()">🧠 Análise Completa</button>
+                <button class="btn-save" onclick="exportarPDF()">📄 Gerar PDF</button>
+                <button class="btn-export" onclick="exportarXLS()">📊 Exportar XLS</button>
+                <button id="btnZap" class="btn-share" style="display:none" onclick="compartilharWhatsApp()">📱 Compartilhar via WhatsApp</button>
+            </div>
+
+            <!-- RESULTADO DA ANÁLISE -->
+            <div id="resultadoAnalise" class="resultado-box" style="display:none;">
+                <div class="resultado-header">
+                    <h2>📊 Parecer Técnico do Mentor</h2>
+                    <span id="notaFinal" class="nota-badge"></span>
+                </div>
+
+                <!-- VALIDAÇÕES -->
+                <div class="validacoes">
+                    <h3>✅ Validações</h3>
+                    <div id="validacoesTexto"></div>
+                </div>
+
+                <!-- ANÁLISE ESTRUTURAL -->
+                <div class="analise">
+                    <h3>📐 Análise Estrutural</h3>
+                    <div id="analisaEstrutura"></div>
+                </div>
+
+                <!-- ERROS ENCONTRADOS -->
+                <div class="erros">
+                    <h3>❌ Erros Detectados</h3>
+                    <div id="errosTexto"></div>
+                </div>
+
+                <!-- ORIENTAÇÕES VESTIBULAR -->
+                <div class="orientacoes">
+                    <h3>🎯 Orientações Vestibulares</h3>
+                    <div id="orientacoesTexto"></div>
+                </div>
+
+                <!-- COMENTÁRIOS -->
+                <div class="comentarios">
+                    <h3>💬 Comentários do Mentor</h3>
+                    <div id="comentariosTexto"></div>
+                </div>
+
+                <!-- GRÁFICO -->
+                <div class="grafico-container">
+                    <h3>📈 Evolução da Redação</h3>
+                    <canvas id="graficoProgresso"></canvas>
+                </div>
+
+                <!-- RESUMO -->
+                <div class="resumo">
+                    <h3>📝 Resumo da Avaliação</h3>
+                    <div id="resumoTexto"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+    <!-- SCRIPTS -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        function sortear() {
-            const t = ["Ética na era da Inteligência Artificial", "O desafio da leitura crítica no século XXI", "Como o vocabulário define o futuro profissional"];
-            document.getElementById('temaDisplay').innerText = t[Math.floor(Math.random()*t.length)];
-        }
-
-        async function processar(el) {
-            const file = el.files[0];
-            Tesseract.recognize(file, 'por').then(({ data: { text } }) => {
-                document.getElementById('textoRedacao').value = text;
-            });
-        }
-
-        function analisar() {
-            const txt = document.getElementById('textoRedacao').value;
-            const aviso = document.getElementById('aviso');
-            const fBox = document.getElementById('feedbackResult');
-
-            if(txt.length < 50) {
-                aviso.innerText = "Você tentou, mas leia isso. Teria coragem de entregar este rascunho para alguém? O mentor exige esforço real.";
-                aviso.style.display = "block";
-                fBox.style.display = "none";
-                return;
-            }
-
-            aviso.style.display = "none";
-            fBox.style.display = "block";
-            document.getElementById('feedbackTexto').innerText = "Análise de Aptidão:\n\nSua escrita apresenta uma estrutura básica, mas carece de conectivos lógicos. Para um aluno do " + document.getElementById('ano').value + "º ano, é esperado que você não apenas cite o tema, mas o defenda com argumentos sólidos e vírgulas bem posicionadas. Erros de concordância foram detectados e devem ser revisados imediatamente.\n\nO segundo parágrafo demonstra potencial, porém o vocabulário é repetitivo. Um texto sagaz utiliza sinônimos para manter o leitor atento. Se você deseja que suas ideias sejam levadas a sério, precisa tratar a gramática como sua principal ferramenta de poder. Não aceite o rascunho como versão final.\n\nPor fim, sua conclusão foi abrupta. Um sábio encerra seu pensamento reforçando o que foi dito, convidando à reflexão. Sugiro que releia em voz alta: se você se cansar ao ler, o leitor também se cansará. Corrija a pontuação e busque a excelência que sabemos que você pode atingir.";
-            document.getElementById('btnZap').style.display = "block";
-        }
-
-        function salvarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Relatório de Redação - Seta Soluções", 10, 10);
-            doc.text(document.getElementById('textoRedacao').value, 10, 20, {maxWidth: 180});
-            doc.save("Redacao_Seta.pdf");
-        }
-
-        function mandarZap() {
-            window.open("https://wa.me/?text=Veja a evolução da nossa escrita no Portal Seta!");
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

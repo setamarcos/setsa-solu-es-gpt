@@ -1,0 +1,28 @@
+{
+  "name": "Laura - Mentoria de Redação Seta Soluções",
+  "short_name": "Laura",
+  "description": "Sistema inteligente de avaliação e mentoria de redação com OCR, análise de estrutura, correção de erros e geração de relatórios",
+  "start_url": "/laura/",
+  "scope": "/laura/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b63c6",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230b63c6' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' text-anchor='middle' dominant-baseline='central' fill='white'>L</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230b63c6' width='540' height='720'/></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "orientation": "portrait-primary"
+}
