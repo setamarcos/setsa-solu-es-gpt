@@ -76,10 +76,6 @@
 
             <div id="avisoValidacao" class="warning"></div>
 
-            <div class="section">
-                <button class="btn-main" onclick="novaRedacao()">🗑️ Nova Redação</button>
-            </div>
-
             <div class="btn-grid">
                 <button class="btn-mentor" onclick="analisarRedacao()">🧠 Análise Completa</button>
                 <button class="btn-save" onclick="exportarPDF()">📄 Gerar PDF</button>
@@ -112,9 +108,9 @@
                     <h3>💬 Comentários do Mentor</h3>
                     <div id="comentariosTexto"></div>
                 </div>
-                <div class="grafico-container" style="max-height:200px;margin-top:15px">
+                <div class="grafico-container">
                     <h3>📈 Evolução da Redação</h3>
-                    <canvas id="graficoProgresso" style="max-height:160px"></canvas>
+                    <canvas id="graficoProgresso"></canvas>
                 </div>
                 <div class="resumo">
                     <h3>📝 Resumo da Avaliação</h3>
