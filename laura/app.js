@@ -13,7 +13,14 @@ const TEMAS_POR_SERIE = {
 
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
-  document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
+  const textarea = document.getElementById('textoRedacao');
+  // Recupera texto salvo
+  const textoSalvo = localStorage.getItem('laura_texto');
+  if (textoSalvo) textarea.value = textoSalvo;
+  textarea.addEventListener('input', () => {
+    atualizarContadores();
+    localStorage.setItem('laura_texto', textarea.value);
+  });
   iniciarControlesVoz();
 });
 
@@ -69,6 +76,16 @@ function sortearTema() {
   el.style.display = 'block';
 }
 
+function novaRedacao() {
+  if (!confirm('Deseja limpar tudo e começar uma nova redação?')) return;
+  document.getElementById('textoRedacao').value = '';
+  localStorage.removeItem('laura_texto');
+  document.getElementById('resultadoAnalise').style.display = 'none';
+  atualizarContadores();
+  document.getElementById('statusVoz').textContent = '';
+  document.getElementById('avisoValidacao').textContent = '';
+}
+
 function processarFoto() {
   const file = document.getElementById('inputFoto').files[0];
   if (!file) return;
@@ -82,6 +99,7 @@ function processarFoto() {
 .then(({ data: { text } }) => {
       const textoLimpo = text.replace(/[^\wÀ-ÿ\s.,;:!?()\n-]/g, '').trim();
       document.getElementById('textoRedacao').value = textoLimpo;
+      localStorage.setItem('laura_texto', textoLimpo);
       atualizarContadores();
       document.getElementById('avisoValidacao').textContent = textoLimpo.length < 20?
         'Texto muito curto. Tente foto mais nítida e com boa luz.' :
@@ -173,6 +191,13 @@ function exportarPDF() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
+  // Nome do arquivo = Título + Data
+  let titulo = texto.split('\n')[0].trim();
+  if (!titulo) titulo = 'Redacao';
+  titulo = titulo.substring(0, 40).replace(/[\\/:*?"<>|]/g, '').trim();
+  const data = new Date().toISOString().split('T')[0];
+  const nomeArquivo = `${titulo}_${data}.pdf`;
+
   doc.setFontSize(16);
   doc.text('Laura - Parecer Técnico de Redação', 10, 15);
   doc.setFontSize(12);
@@ -182,7 +207,7 @@ function exportarPDF() {
   doc.text(doc.splitTextToSize(texto, 180), 10, 55);
   doc.text('Resumo:', 10, 200);
   doc.text(doc.splitTextToSize(resumo, 180), 10, 210);
-  doc.save('parecer-laura.pdf');
+  doc.save(nomeArquivo);
 }
 
 function exportarXLS() {
@@ -233,14 +258,17 @@ function iniciarControlesVoz() {
     recognition.onresult = (event) => {
       let texto = event.results[event.results.length - 1][0].transcript.trim();
       if (modoVoz === 'titulo') {
-        textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
+        // CORREÇÃO: não forçar maiúscula
+        textarea.value += (textarea.value? '\n\n' : '') + texto;
       } else if (modoVoz === 'paragrafo') {
+        texto = texto.charAt(0).toUpperCase() + texto.slice(1);
         textarea.value += (textarea.value? '\n\n' : '') + texto;
       }
       modoVoz = null;
       recognition.stop();
       statusVoz.textContent = 'Texto inserido.';
       textarea.dispatchEvent(new Event('input'));
+      localStorage.setItem('laura_texto', textarea.value);
     };
 
     recognition.onend = () => {
