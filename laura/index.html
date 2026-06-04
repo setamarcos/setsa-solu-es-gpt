@@ -61,7 +61,6 @@
 
             <div class="section">
                 <label>✍️ Texto da Redação</label>
-                <!-- Botões de voz adicionados -->
                 <div style="margin-bottom:8px; display:flex; gap:8px;">
                     <button type="button" id="btnVozTitulo" class="btn-mentor" style="flex:1;">🎤 Título</button>
                     <button type="button" id="btnVozParagrafo" class="btn-mentor" style="flex:1;">🎤 Parágrafo</button>
@@ -76,6 +75,10 @@
             </div>
 
             <div id="avisoValidacao" class="warning"></div>
+
+            <div class="section">
+                <button class="btn-main" onclick="novaRedacao()">🗑️ Nova Redação</button>
+            </div>
 
             <div class="btn-grid">
                 <button class="btn-mentor" onclick="analisarRedacao()">🧠 Análise Completa</button>
@@ -125,64 +128,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
-
-    <!-- Script de Voz adicionado -->
-    <script>
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const statusVoz = document.getElementById('statusVoz');
-        const textarea = document.getElementById('textoRedacao');
-        let modoVoz = null; // 'titulo' ou 'paragrafo'
-        let paragrafoContador = 1;
-        let silenceTimer = null;
-
-        function iniciarVoz(modo) {
-            if (!SpeechRecognition) {
-                statusVoz.textContent = "Reconhecimento de voz não suportado neste navegador.";
-                return;
-            }
-            modoVoz = modo;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'pt-BR';
-            recognition.continuous = true;
-            recognition.interimResults = false;
-
-            statusVoz.textContent = `Escutando ${modo}... Faça pausa de 2s para finalizar.`;
-
-            recognition.onresult = (event) => {
-                const texto = event.results[event.results.length - 1][0].transcript.trim();
-                if (modoVoz === 'titulo') {
-                    textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
-                    modoVoz = null;
-                    recognition.stop();
-                } else if (modoVoz === 'paragrafo') {
-                    textarea.value += (textarea.value? '\n\n' : '') + texto;
-                    paragrafoContador++;
-                    modoVoz = null;
-                    recognition.stop();
-                }
-                statusVoz.textContent = 'Texto inserido.';
-                textarea.dispatchEvent(new Event('input')); // atualiza contador
-            };
-
-            recognition.onend = () => {
-                if (modoVoz) {
-                    statusVoz.textContent = 'Aguardando pausa...';
-                    // reinicia se ainda estiver no modo
-                    silenceTimer = setTimeout(() => recognition.start(), 200);
-                }
-            };
-
-            recognition.onerror = () => {
-                statusVoz.textContent = 'Erro no microfone.';
-                modoVoz = null;
-            };
-
-            recognition.start();
-        }
-
-        document.getElementById('btnVozTitulo').onclick = () => iniciarVoz('titulo');
-        document.getElementById('btnVozParagrafo').onclick = () => iniciarVoz('paragrafo');
-    </script>
 
     <script src="app.js"></script>
 </body>
