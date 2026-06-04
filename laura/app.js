@@ -4,41 +4,17 @@ let tokenGoogle = null;
 let temaAtual = "";
 
 const TEMAS_POR_SERIE = {
-  "5": [
-    "A importância de cuidar da natureza",
-    "Meu animal de estimação ideal",
-    "Como usar a internet com responsabilidade",
-    "O valor da amizade na escola"
-  ],
-  "6": [
-    "O impacto das redes sociais nos jovens",
-    "A importância da leitura na formação cidadã",
-    "Bullying nas escolas: como combater",
-    "Esporte e disciplina na vida escolar"
-  ],
-  "7": [
-    "Desafios da educação no Brasil contemporâneo",
-    "O papel da tecnologia na sala de aula",
-    "Consumo consciente e meio ambiente",
-    "A valorização dos professores"
-  ],
-  "8": [
-    "Desigualdade social no Brasil",
-    "Sustentabilidade e responsabilidade individual",
-    "O uso excessivo do celular entre adolescentes",
-    "Cultura brasileira e identidade nacional"
-  ],
-  "9": [
-    "Os impactos da inteligência artificial na sociedade",
-    "Saúde mental na adolescência",
-    "Democracia e participação cidadã",
-    "Fake news e responsabilidade na internet"
-  ]
+  "5": ["A importância de cuidar da natureza","Meu animal de estimação ideal","Como usar a internet com responsabilidade","O valor da amizade na escola"],
+  "6": ["O impacto das redes sociais nos jovens","A importância da leitura na formação cidadã","Bullying nas escolas: como combater","Esporte e disciplina na vida escolar"],
+  "7": ["Desafios da educação no Brasil contemporâneo","O papel da tecnologia na sala de aula","Consumo consciente e meio ambiente","A valorização dos professores"],
+  "8": ["Desigualdade social no Brasil","Sustentabilidade e responsabilidade individual","O uso excessivo do celular entre adolescentes","Cultura brasileira e identidade nacional"],
+  "9": ["Os impactos da inteligência artificial na sociedade","Saúde mental na adolescência","Democracia e participação cidadã","Fake news e responsabilidade na internet"]
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
   document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
+  iniciarControlesVoz(); // AJUSTE 2
 });
 
 function handleCredentialResponse(response) {
@@ -93,6 +69,7 @@ function sortearTema() {
   el.style.display = 'block';
 }
 
+// AJUSTE 1: Transcritor joga no.value
 function processarFoto() {
   const file = document.getElementById('inputFoto').files[0];
   if (!file) return;
@@ -103,15 +80,15 @@ function processarFoto() {
     tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ0123456789.,;:!?()-\'" \n',
     tessedit_pageseg_mode: 6
   })
- .then(({ data: { text } }) => {
+.then(({ data: { text } }) => {
       const textoLimpo = text.replace(/[^\wÀ-ÿ\s.,;:!?()\n-]/g, '').trim();
-      document.getElementById('textoRedacao').value = textoLimpo;
+      document.getElementById('textoRedacao').value = textoLimpo; // usa.value
       atualizarContadores();
       document.getElementById('avisoValidacao').textContent = textoLimpo.length < 20?
         'Texto muito curto. Tente foto mais nítida e com boa luz.' :
         'Texto extraído. Revise antes de analisar.';
     })
- .catch(() => {
+.catch(() => {
       document.getElementById('avisoValidacao').textContent = 'Erro ao extrair. Foto precisa estar legível e sem reflexo.';
     });
 }
@@ -131,7 +108,6 @@ function analisarRedacao() {
   let validacoes = [];
   let nota = 10;
 
-  // Rigor por série
   const minPalavras = ano <= 6? 80 : 120;
   const maxPalavras = ano <= 6? 200 : 300;
 
@@ -194,7 +170,7 @@ function exportarPDF() {
   if (typeof window.jspdf === 'undefined') { alert('Aguarde carregar o PDF.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const texto = document.getElementById('textoRedacao').value;
+  const texto = document.getElementById('textoRedacao').value; // usa.value
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
@@ -212,7 +188,7 @@ function exportarPDF() {
 
 function exportarXLS() {
   if (typeof window.XLSX === 'undefined') { alert('Aguarde carregar o XLS.'); return; }
-  const texto = document.getElementById('textoRedacao').value;
+  const texto = document.getElementById('textoRedacao').value; // usa.value
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
 
   const dados = [
@@ -235,3 +211,56 @@ function compartilharWhatsApp() {
 }
 
 function atualizarRigor() {}
+
+// AJUSTE 2: Voz com pausa
+function iniciarControlesVoz() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const statusVoz = document.getElementById('statusVoz');
+  const textarea = document.getElementById('textoRedacao');
+  let modoVoz = null;
+  let paragrafoContador = 1;
+
+  function iniciarVoz(modo) {
+    if (!SpeechRecognition) {
+      statusVoz.textContent = "Reconhecimento de voz não suportado.";
+      return;
+    }
+    modoVoz = modo;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    statusVoz.textContent = `Escutando ${modo}... Pause 2s para finalizar.`;
+
+    recognition.onresult = (event) => {
+      const texto = event.results[event.results.length - 1][0].transcript.trim();
+      if (modoVoz === 'titulo') {
+        textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
+      } else if (modoVoz === 'paragrafo') {
+        textarea.value += (textarea.value? '\n\n' : '') + texto;
+        paragrafoContador++;
+      }
+      modoVoz = null;
+      recognition.stop();
+      statusVoz.textContent = 'Texto inserido.';
+      textarea.dispatchEvent(new Event('input'));
+    };
+
+    recognition.onend = () => {
+      if (modoVoz) {
+        setTimeout(() => recognition.start(), 200);
+      }
+    };
+
+    recognition.onerror = () => {
+      statusVoz.textContent = 'Erro no microfone.';
+      modoVoz = null;
+    };
+
+    recognition.start();
+  }
+
+  document.getElementById('btnVozTitulo').onclick = () => iniciarVoz('titulo');
+  document.getElementById('btnVozParagrafo').onclick = () => iniciarVoz('paragrafo');
+}
