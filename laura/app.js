@@ -14,7 +14,7 @@ const TEMAS_POR_SERIE = {
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
   document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
-  iniciarControlesVoz(); // AJUSTE 2
+  iniciarControlesVoz();
 });
 
 function handleCredentialResponse(response) {
@@ -69,7 +69,16 @@ function sortearTema() {
   el.style.display = 'block';
 }
 
-// AJUSTE 1: Transcritor joga no.value
+// AJUSTE 1: Botão Nova Redação
+function novaRedacao() {
+  if (!confirm('Deseja limpar tudo e começar uma nova redação?')) return;
+  document.getElementById('textoRedacao').value = '';
+  document.getElementById('resultadoAnalise').style.display = 'none';
+  atualizarContadores();
+  document.getElementById('statusVoz').textContent = '';
+  document.getElementById('avisoValidacao').textContent = '';
+}
+
 function processarFoto() {
   const file = document.getElementById('inputFoto').files[0];
   if (!file) return;
@@ -82,7 +91,7 @@ function processarFoto() {
   })
 .then(({ data: { text } }) => {
       const textoLimpo = text.replace(/[^\wÀ-ÿ\s.,;:!?()\n-]/g, '').trim();
-      document.getElementById('textoRedacao').value = textoLimpo; // usa.value
+      document.getElementById('textoRedacao').value = textoLimpo;
       atualizarContadores();
       document.getElementById('avisoValidacao').textContent = textoLimpo.length < 20?
         'Texto muito curto. Tente foto mais nítida e com boa luz.' :
@@ -166,13 +175,22 @@ function analisarRedacao() {
   document.getElementById('resumoTexto').innerHTML = `<p>Nota final: ${nota}. ${erros.length === 0? 'Sem erros graves.' : `${erros.length} pontos a melhorar.`}</p>`;
 }
 
+// AJUSTE 2: Nome do PDF = Título + Data
 function exportarPDF() {
   if (typeof window.jspdf === 'undefined') { alert('Aguarde carregar o PDF.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const texto = document.getElementById('textoRedacao').value; // usa.value
+  const texto = document.getElementById('textoRedacao').value;
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
+
+  // Pega primeira linha como título
+  let titulo = texto.split('\n')[0].trim();
+  if (!titulo) titulo = 'Redacao';
+  // Sanitiza nome do arquivo
+  titulo = titulo.substring(0, 40).replace(/[\\/:*?"<>|]/g, '').trim();
+  const data = new Date().toISOString().split('T')[0];
+  const nomeArquivo = `${titulo}_${data}.pdf`;
 
   doc.setFontSize(16);
   doc.text('Laura - Parecer Técnico de Redação', 10, 15);
@@ -183,12 +201,12 @@ function exportarPDF() {
   doc.text(doc.splitTextToSize(texto, 180), 10, 55);
   doc.text('Resumo:', 10, 200);
   doc.text(doc.splitTextToSize(resumo, 180), 10, 210);
-  doc.save('parecer-laura.pdf');
+  doc.save(nomeArquivo);
 }
 
 function exportarXLS() {
   if (typeof window.XLSX === 'undefined') { alert('Aguarde carregar o XLS.'); return; }
-  const texto = document.getElementById('textoRedacao').value; // usa.value
+  const texto = document.getElementById('textoRedacao').value;
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
 
   const dados = [
@@ -212,7 +230,7 @@ function compartilharWhatsApp() {
 
 function atualizarRigor() {}
 
-// AJUSTE 2: Voz com pausa
+// AJUSTE 3: Capitalizar parágrafo
 function iniciarControlesVoz() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const statusVoz = document.getElementById('statusVoz');
@@ -234,10 +252,12 @@ function iniciarControlesVoz() {
     statusVoz.textContent = `Escutando ${modo}... Pause 2s para finalizar.`;
 
     recognition.onresult = (event) => {
-      const texto = event.results[event.results.length - 1][0].transcript.trim();
+      let texto = event.results[event.results.length - 1][0].transcript.trim();
       if (modoVoz === 'titulo') {
         textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
       } else if (modoVoz === 'paragrafo') {
+        // Capitaliza primeira letra do parágrafo
+        texto = texto.charAt(0).toUpperCase() + texto.slice(1);
         textarea.value += (textarea.value? '\n\n' : '') + texto;
         paragrafoContador++;
       }
