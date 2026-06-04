@@ -184,10 +184,8 @@ function exportarPDF() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
-  // Pega primeira linha como título
   let titulo = texto.split('\n')[0].trim();
   if (!titulo) titulo = 'Redacao';
-  // Sanitiza nome do arquivo
   titulo = titulo.substring(0, 40).replace(/[\\/:*?"<>|]/g, '').trim();
   const data = new Date().toISOString().split('T')[0];
   const nomeArquivo = `${titulo}_${data}.pdf`;
@@ -230,13 +228,12 @@ function compartilharWhatsApp() {
 
 function atualizarRigor() {}
 
-// AJUSTE 3: Capitalizar parágrafo
+// AJUSTE 3: Capitalizar parágrafo + voz centralizada no app.js
 function iniciarControlesVoz() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const statusVoz = document.getElementById('statusVoz');
   const textarea = document.getElementById('textoRedacao');
   let modoVoz = null;
-  let paragrafoContador = 1;
 
   function iniciarVoz(modo) {
     if (!SpeechRecognition) {
@@ -256,10 +253,8 @@ function iniciarControlesVoz() {
       if (modoVoz === 'titulo') {
         textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
       } else if (modoVoz === 'paragrafo') {
-        // Capitaliza primeira letra do parágrafo
         texto = texto.charAt(0).toUpperCase() + texto.slice(1);
         textarea.value += (textarea.value? '\n\n' : '') + texto;
-        paragrafoContador++;
       }
       modoVoz = null;
       recognition.stop();
