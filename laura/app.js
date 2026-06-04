@@ -2,7 +2,6 @@ const URL_SCRIPT = "https://script.google.com/macros/s/SEU_DEPLOY_ID_AQUI/exec";
 let usuarioLogado = null;
 let tokenGoogle = null;
 let temaAtual = "";
-let grafico = null;
 
 const TEMAS_POR_SERIE = {
   "5": ["A importância de cuidar da natureza","Meu animal de estimação ideal","Como usar a internet com responsabilidade","O valor da amizade na escola"],
@@ -14,14 +13,7 @@ const TEMAS_POR_SERIE = {
 
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
-  const textarea = document.getElementById('textoRedacao');
-  // AJUSTE 5: Recuperar texto salvo
-  const textoSalvo = localStorage.getItem('laura_texto');
-  if (textoSalvo) textarea.value = textoSalvo;
-  textarea.addEventListener('input', () => {
-    atualizarContadores();
-    localStorage.setItem('laura_texto', textarea.value);
-  });
+  document.getElementById('textoRedacao').addEventListener('input', atualizarContadores);
   iniciarControlesVoz();
 });
 
@@ -77,16 +69,6 @@ function sortearTema() {
   el.style.display = 'block';
 }
 
-function novaRedacao() {
-  if (!confirm('Deseja limpar tudo e começar uma nova redação?')) return;
-  document.getElementById('textoRedacao').value = '';
-  localStorage.removeItem('laura_texto');
-  document.getElementById('resultadoAnalise').style.display = 'none';
-  atualizarContadores();
-  document.getElementById('statusVoz').textContent = '';
-  document.getElementById('avisoValidacao').textContent = '';
-}
-
 function processarFoto() {
   const file = document.getElementById('inputFoto').files[0];
   if (!file) return;
@@ -100,7 +82,6 @@ function processarFoto() {
 .then(({ data: { text } }) => {
       const textoLimpo = text.replace(/[^\wÀ-ÿ\s.,;:!?()\n-]/g, '').trim();
       document.getElementById('textoRedacao').value = textoLimpo;
-      localStorage.setItem('laura_texto', textoLimpo);
       atualizarContadores();
       document.getElementById('avisoValidacao').textContent = textoLimpo.length < 20?
         'Texto muito curto. Tente foto mais nítida e com boa luz.' :
@@ -182,8 +163,6 @@ function analisarRedacao() {
   document.getElementById('orientacoesTexto').innerHTML = `<p>Nível ${ano}º ano: Foque em coesão, pontuação e ortografia.</p>`;
   document.getElementById('comentariosTexto').innerHTML = sugestoes.map(s => `<p>${s}</p>`).join('') || `<p>${nota >= 8? 'Excelente redação.' : 'Bom trabalho, revise os pontos citados.'}</p>`;
   document.getElementById('resumoTexto').innerHTML = `<p>Nota final: ${nota}. ${erros.length === 0? 'Sem erros graves.' : `${erros.length} pontos a melhorar.`}</p>`;
-
-  atualizarGrafico(nota);
 }
 
 function exportarPDF() {
@@ -194,12 +173,6 @@ function exportarPDF() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
-  let titulo = texto.split('\n')[0].trim();
-  if (!titulo) titulo = 'Redacao';
-  titulo = titulo.substring(0, 40).replace(/[\\/:*?"<>|]/g, '').trim();
-  const data = new Date().toISOString().split('T')[0];
-  const nomeArquivo = `${titulo}_${data}.pdf`;
-
   doc.setFontSize(16);
   doc.text('Laura - Parecer Técnico de Redação', 10, 15);
   doc.setFontSize(12);
@@ -209,7 +182,7 @@ function exportarPDF() {
   doc.text(doc.splitTextToSize(texto, 180), 10, 55);
   doc.text('Resumo:', 10, 200);
   doc.text(doc.splitTextToSize(resumo, 180), 10, 210);
-  doc.save(nomeArquivo);
+  doc.save('parecer-laura.pdf');
 }
 
 function exportarXLS() {
@@ -260,17 +233,14 @@ function iniciarControlesVoz() {
     recognition.onresult = (event) => {
       let texto = event.results[event.results.length - 1][0].transcript.trim();
       if (modoVoz === 'titulo') {
-        // AJUSTE 2: não forçar maiúscula
-        textarea.value += (textarea.value? '\n\n' : '') + texto;
+        textarea.value += (textarea.value? '\n\n' : '') + texto.toUpperCase();
       } else if (modoVoz === 'paragrafo') {
-        texto = texto.charAt(0).toUpperCase() + texto.slice(1);
         textarea.value += (textarea.value? '\n\n' : '') + texto;
       }
       modoVoz = null;
       recognition.stop();
       statusVoz.textContent = 'Texto inserido.';
       textarea.dispatchEvent(new Event('input'));
-      localStorage.setItem('laura_texto', textarea.value);
     };
 
     recognition.onend = () => {
@@ -289,27 +259,4 @@ function iniciarControlesVoz() {
 
   document.getElementById('btnVozTitulo').onclick = () => iniciarVoz('titulo');
   document.getElementById('btnVozParagrafo').onclick = () => iniciarVoz('paragrafo');
-}
-
-// AJUSTE 2.1: Gráfico com altura fixa
-function atualizarGrafico(nota) {
-  const ctx = document.getElementById('graficoProgresso');
-  if (grafico) grafico.destroy();
-  grafico = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Nota'],
-      datasets: [{
-        label: 'Nota Final',
-        data:,
-        backgroundColor: '#1a73e8'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, max: 10 } }
-    }
-  });
 }
