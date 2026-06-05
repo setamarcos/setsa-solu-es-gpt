@@ -14,9 +14,12 @@ const TEMAS_POR_SERIE = {
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
   const textarea = document.getElementById('textoRedacao');
-  // Recupera texto salvo
+  // AJUSTE 2: Recupera texto salvo E atualiza contadores
   const textoSalvo = localStorage.getItem('laura_texto');
-  if (textoSalvo) textarea.value = textoSalvo;
+  if (textoSalvo) {
+    textarea.value = textoSalvo;
+    atualizarContadores();
+  }
   textarea.addEventListener('input', () => {
     atualizarContadores();
     localStorage.setItem('laura_texto', textarea.value);
@@ -122,6 +125,7 @@ function analisarRedacao() {
 
   let erros = [];
   let sugestoes = [];
+  let sugestoesCorrecao = []; // AJUSTE 1
   let validacoes = [];
   let nota = 10;
 
@@ -154,8 +158,13 @@ function analisarRedacao() {
     nota -= 0.3;
   }
 
-  const palavrasTema = temaAtual.toLowerCase().split(' ').filter(w => w.length > 3);
+  // AJUSTE 1: Sugestões de correção ortográfica
   const textoBaixo = texto.toLowerCase();
+  if (/o sport/.test(textoBaixo)) sugestoesCorrecao.push('“o Sport” → “O esporte”');
+  if (/porque mas/.test(textoBaixo)) sugestoesCorrecao.push('“porque mas” → “por que, mas”');
+  if (/fulebol/.test(textoBaixo)) sugestoesCorrecao.push('“fulebol” → “futebol”');
+
+  const palavrasTema = temaAtual.toLowerCase().split(' ').filter(w => w.length > 3);
   const aderencia = palavrasTema.filter(p => textoBaixo.includes(p)).length;
   if (aderencia < 2) {
     erros.push('Aderência: O texto se afasta do tema proposto. Releia o tema e reescreva a introdução.');
@@ -179,7 +188,15 @@ function analisarRedacao() {
   document.getElementById('errosTexto').innerHTML = erros.map(e => `<p>✗ ${e}</p>`).join('') || '<p>Nenhum erro grave.</p>';
   document.getElementById('analisaEstrutura').innerHTML = `<p>Parágrafos: ${paragrafos.length} | Palavras: ${palavras.length} | Frases: ${frases.length}</p>`;
   document.getElementById('orientacoesTexto').innerHTML = `<p>Nível ${ano}º ano: Foque em coesão, pontuação e ortografia.</p>`;
-  document.getElementById('comentariosTexto').innerHTML = sugestoes.map(s => `<p>${s}</p>`).join('') || `<p>${nota >= 8? 'Excelente redação.' : 'Bom trabalho, revise os pontos citados.'}</p>`;
+
+  // AJUSTE 1: Mostra sugestões de correção junto
+  let comentariosHTML = sugestoes.map(s => `<p>${s}</p>`).join('');
+  if (sugestoesCorrecao.length > 0) {
+    comentariosHTML += '<p><strong>Correções sugeridas:</strong></p>' + sugestoesCorrecao.map(c => `<p>• ${c}</p>`).join('');
+  }
+  if (!comentariosHTML) comentariosHTML = `<p>${nota >= 8? 'Excelente redação.' : 'Bom trabalho, revise os pontos citados.'}</p>`;
+  document.getElementById('comentariosTexto').innerHTML = comentariosHTML;
+
   document.getElementById('resumoTexto').innerHTML = `<p>Nota final: ${nota}. ${erros.length === 0? 'Sem erros graves.' : `${erros.length} pontos a melhorar.`}</p>`;
 }
 
@@ -191,10 +208,13 @@ function exportarPDF() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
-  // Nome do arquivo = Título + Data
+  // AJUSTE 4: Nome do arquivo cortando em palavra inteira
   let titulo = texto.split('\n')[0].trim();
   if (!titulo) titulo = 'Redacao';
-  titulo = titulo.substring(0, 40).replace(/[\\/:*?"<>|]/g, '').trim();
+  titulo = titulo.substring(0, 40).trim();
+  const ultimoEspaco = titulo.lastIndexOf(' ');
+  if (ultimoEspaco > 20) titulo = titulo.substring(0, ultimoEspaco);
+  titulo = titulo.replace(/[\\/:*?"<>|]/g, '').trim();
   const data = new Date().toISOString().split('T')[0];
   const nomeArquivo = `${titulo}_${data}.pdf`;
 
@@ -204,9 +224,21 @@ function exportarPDF() {
   doc.text(`Tema: ${temaAtual}`, 10, 25);
   doc.text(`Nota: ${nota}`, 10, 35);
   doc.text('Redação:', 10, 45);
-  doc.text(doc.splitTextToSize(texto, 180), 10, 55);
-  doc.text('Resumo:', 10, 200);
-  doc.text(doc.splitTextToSize(resumo, 180), 10, 210);
+
+  // AJUSTE 3: PDF respeita quebras de parágrafo
+  const linhas = texto.split('\n');
+  let y = 55;
+  linhas.forEach(linha => {
+    if (linha.trim() === '') {
+      y += 5;
+    } else {
+      doc.text(doc.splitTextToSize(linha, 180), 10, y);
+      y += 7;
+    }
+  });
+
+  doc.text('Resumo:', 10, y + 10);
+  doc.text(doc.splitTextToSize(resumo, 180), 10, y + 20);
   doc.save(nomeArquivo);
 }
 
@@ -258,7 +290,6 @@ function iniciarControlesVoz() {
     recognition.onresult = (event) => {
       let texto = event.results[event.results.length - 1][0].transcript.trim();
       if (modoVoz === 'titulo') {
-        // CORREÇÃO: não forçar maiúscula
         textarea.value += (textarea.value? '\n\n' : '') + texto;
       } else if (modoVoz === 'paragrafo') {
         texto = texto.charAt(0).toUpperCase() + texto.slice(1);
