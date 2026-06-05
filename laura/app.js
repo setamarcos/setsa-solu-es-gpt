@@ -14,7 +14,6 @@ const TEMAS_POR_SERIE = {
 document.addEventListener('DOMContentLoaded', () => {
   recuperarUsuario();
   const textarea = document.getElementById('textoRedacao');
-  // AJUSTE 2: Recupera texto salvo E atualiza contadores
   const textoSalvo = localStorage.getItem('laura_texto');
   if (textoSalvo) {
     textarea.value = textoSalvo;
@@ -83,40 +82,29 @@ function novaRedacao() {
   if (!confirm('Deseja limpar tudo e começar uma nova redação?')) return;
   document.getElementById('textoRedacao').value = '';
   localStorage.removeItem('laura_texto');
+  localStorage.removeItem('laura_foto');
   document.getElementById('resultadoAnalise').style.display = 'none';
   atualizarContadores();
   document.getElementById('statusVoz').textContent = '';
   document.getElementById('avisoValidacao').textContent = '';
+  document.getElementById('inputFoto').value = '';
 }
 
-function processarFoto() {
+function salvarFoto() {
   const file = document.getElementById('inputFoto').files[0];
   if (!file) return;
-  document.getElementById('avisoValidacao').textContent = 'Extraindo texto... Aguarde 10s';
-
-  Tesseract.recognize(file, 'por', {
-    logger: m => console.log(m),
-    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ0123456789.,;:!?()-\'" \n',
-    tessedit_pageseg_mode: 6
-  })
-.then(({ data: { text } }) => {
-      const textoLimpo = text.replace(/[^\wÀ-ÿ\s.,;:!?()\n-]/g, '').trim();
-      document.getElementById('textoRedacao').value = textoLimpo;
-      localStorage.setItem('laura_texto', textoLimpo);
-      atualizarContadores();
-      document.getElementById('avisoValidacao').textContent = textoLimpo.length < 20?
-        'Texto muito curto. Tente foto mais nítida e com boa luz.' :
-        'Texto extraído. Revise antes de analisar.';
-    })
-.catch(() => {
-      document.getElementById('avisoValidacao').textContent = 'Erro ao extrair. Foto precisa estar legível e sem reflexo.';
-    });
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    localStorage.setItem('laura_foto', e.target.result);
+    document.getElementById('avisoValidacao').textContent = 'Foto salva. Agora cole o texto transcrito abaixo.';
+  };
+  reader.readAsDataURL(file);
 }
 
 function analisarRedacao() {
   const texto = document.getElementById('textoRedacao').value.trim();
   const ano = document.getElementById('ano').value;
-  if (!texto) { alert('Digite ou cole uma redação primeiro.'); return; }
+  if (!texto) { alert('Cole ou digite uma redação primeiro.'); return; }
   if (!temaAtual) { alert('Gere um tema primeiro.'); return; }
 
   const palavras = texto.trim().split(/\s+/).filter(w => w.length > 0);
@@ -125,7 +113,7 @@ function analisarRedacao() {
 
   let erros = [];
   let sugestoes = [];
-  let sugestoesCorrecao = []; // AJUSTE 1
+  let sugestoesCorrecao = [];
   let validacoes = [];
   let nota = 10;
 
@@ -158,7 +146,6 @@ function analisarRedacao() {
     nota -= 0.3;
   }
 
-  // AJUSTE 1: Sugestões de correção ortográfica
   const textoBaixo = texto.toLowerCase();
   if (/o sport/.test(textoBaixo)) sugestoesCorrecao.push('“o Sport” → “O esporte”');
   if (/porque mas/.test(textoBaixo)) sugestoesCorrecao.push('“porque mas” → “por que, mas”');
@@ -189,7 +176,6 @@ function analisarRedacao() {
   document.getElementById('analisaEstrutura').innerHTML = `<p>Parágrafos: ${paragrafos.length} | Palavras: ${palavras.length} | Frases: ${frases.length}</p>`;
   document.getElementById('orientacoesTexto').innerHTML = `<p>Nível ${ano}º ano: Foque em coesão, pontuação e ortografia.</p>`;
 
-  // AJUSTE 1: Mostra sugestões de correção junto
   let comentariosHTML = sugestoes.map(s => `<p>${s}</p>`).join('');
   if (sugestoesCorrecao.length > 0) {
     comentariosHTML += '<p><strong>Correções sugeridas:</strong></p>' + sugestoesCorrecao.map(c => `<p>• ${c}</p>`).join('');
@@ -208,7 +194,6 @@ function exportarPDF() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
   const resumo = document.getElementById('resumoTexto').textContent || 'Faça a análise primeiro';
 
-  // AJUSTE 4: Nome do arquivo cortando em palavra inteira
   let titulo = texto.split('\n')[0].trim();
   if (!titulo) titulo = 'Redacao';
   titulo = titulo.substring(0, 40).trim();
@@ -225,10 +210,10 @@ function exportarPDF() {
   doc.text(`Nota: ${nota}`, 10, 35);
   doc.text('Redação:', 10, 45);
 
-  // AJUSTE 3: PDF respeita quebras de parágrafo
   const linhas = texto.split('\n');
   let y = 55;
   linhas.forEach(linha => {
+    if (y > 270) { doc.addPage(); y = 20; }
     if (linha.trim() === '') {
       y += 5;
     } else {
@@ -273,6 +258,7 @@ function iniciarControlesVoz() {
   const statusVoz = document.getElementById('statusVoz');
   const textarea = document.getElementById('textoRedacao');
   let modoVoz = null;
+  let silenceTimer = null;
 
   function iniciarVoz(modo) {
     if (!SpeechRecognition) {
@@ -285,9 +271,10 @@ function iniciarControlesVoz() {
     recognition.continuous = true;
     recognition.interimResults = false;
 
-    statusVoz.textContent = `Escutando ${modo}... Pause 2s para finalizar.`;
+    statusVoz.textContent = `Escutando ${modo}... Pause 3s para finalizar.`;
 
     recognition.onresult = (event) => {
+      clearTimeout(silenceTimer);
       let texto = event.results[event.results.length - 1][0].transcript.trim();
       if (modoVoz === 'titulo') {
         textarea.value += (textarea.value? '\n\n' : '') + texto;
@@ -295,22 +282,20 @@ function iniciarControlesVoz() {
         texto = texto.charAt(0).toUpperCase() + texto.slice(1);
         textarea.value += (textarea.value? '\n\n' : '') + texto;
       }
-      modoVoz = null;
-      recognition.stop();
-      statusVoz.textContent = 'Texto inserido.';
       textarea.dispatchEvent(new Event('input'));
       localStorage.setItem('laura_texto', textarea.value);
-    };
 
-    recognition.onend = () => {
-      if (modoVoz) {
-        setTimeout(() => recognition.start(), 200);
-      }
+      silenceTimer = setTimeout(() => {
+        recognition.stop();
+        modoVoz = null;
+        statusVoz.textContent = 'Texto inserido.';
+      }, 3000);
     };
 
     recognition.onerror = () => {
       statusVoz.textContent = 'Erro no microfone.';
       modoVoz = null;
+      clearTimeout(silenceTimer);
     };
 
     recognition.start();
