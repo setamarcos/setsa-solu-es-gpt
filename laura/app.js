@@ -79,7 +79,17 @@ function sortearTema() {
 }
 
 function novaRedacao() {
-  if (!confirm('Deseja limpar tudo e começar uma nova redação?')) return;
+  if (confirm('Deseja salvar esta redação em PDF antes de limpar?')) {
+    exportarPDF();
+    setTimeout(() => limparTudo(), 800);
+  } else {
+    if (confirm('Tem certeza que deseja limpar sem salvar? Esta ação não pode ser desfeita.')) {
+      limparTudo();
+    }
+  }
+}
+
+function limparTudo() {
   document.getElementById('textoRedacao').value = '';
   localStorage.removeItem('laura_texto');
   localStorage.removeItem('laura_foto');
