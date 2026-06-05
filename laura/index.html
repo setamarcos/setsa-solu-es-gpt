@@ -54,18 +54,18 @@
             </div>
 
             <div class="section">
-                <label>📷 Foto do Caderno ou Cole o Texto</label>
-                <input type="file" accept="image/*" id="inputFoto" onchange="processarFoto()" class="file-input">
-                <p class="hint">Tire uma foto clara do seu caderno. O sistema extrairá o texto automaticamente.</p>
+                <label>📷 1. Foto do Caderno</label>
+                <input type="file" accept="image/*" id="inputFoto" onchange="salvarFoto()" class="file-input">
+                <p class="hint">1. Tire foto do caderno. 2. Mande pra outra IA transcrever. 3. Cole o texto abaixo.</p>
             </div>
 
             <div class="section">
-                <label>✍️ Texto da Redação</label>
+                <label>✍️ 2. Cole o Texto Transcrito</label>
                 <div style="margin-bottom:8px; display:flex; gap:8px;">
                     <button type="button" id="btnVozTitulo" class="btn-mentor" style="flex:1;">🎤 Título</button>
                     <button type="button" id="btnVozParagrafo" class="btn-mentor" style="flex:1;">🎤 Parágrafo</button>
                 </div>
-                <textarea id="textoRedacao" placeholder="Cole, edite ou use os botões de voz acima..." class="textarea-redacao"></textarea>
+                <textarea id="textoRedacao" placeholder="Cole aqui o texto que a IA transcreveu..." class="textarea-redacao"></textarea>
                 <div class="contador">
                     <span id="contPalavras">0</span> palavras |
                     <span id="contFrases">0</span> frases |
@@ -124,7 +124,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
