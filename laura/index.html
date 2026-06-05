@@ -1,133 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0b63c6" />
-    <title>Laura - Mentoria de Redação Seta Soluções</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laura 2.1.1 - Parecer de Redação</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; padding: 16px; background: #f5f5f5; }
+.container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+#loginBox, #userInfo { display: flex; align-items: center; gap: 10px; }
+#userInfo { display: none; }
+#userImg { width: 36px; height: 36px; border-radius: 50%; }
+.section { margin-bottom: 20px; }
+label { font-weight: bold; display: block; margin-bottom: 6px; }
+select, button, textarea { font-size: 16px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
+.textarea-redacao { min-height: 200px; resize: vertical; }
+button { background: #1a73e8; color: #fff; border: none; cursor: pointer; margin-top: 8px; }
+button.btn-mentor { background: #34a853; }
+button.btn-main { background: #ea4335; }
+.hint { font-size: 13px; color: #666; margin-top: 4px; }
+.contador { font-size: 14px; color: #333; margin-top: 6px; }
+#temaDisplay { background: #e8f0fe; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
+#resultadoAnalise { display: none; margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
+.nota { font-size: 32px; font-weight: bold; color: #1a73e8; }
+.aviso { color: #d93025; font-size: 14px; margin-top: 6px; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <span class="seta-icon">➜</span>
-            <h1>Laura - Mentoria de Redação</h1>
-            <p>Inteligência para educar, rigor para crescer.</p>
+<div class="container">
+  <div class="header">
+    <h2>Laura 2.1.1</h2>
+    <div id="loginBox">
+      <div id="g_id_onload" data-client_id="SEU_CLIENT_ID_AQUI" data-callback="handleCredentialResponse"></div>
+      <div class="g_id_signin" data-type="standard"></div>
+    </div>
+    <div id="userInfo">
+      <img id="userImg" src="" alt="foto">
+      <span id="userName"></span>
+      <button onclick="logoutGoogle()">Sair</button>
+    </div>
+  </div>
 
-            <div id="userInfo" class="user-info" style="display:none;">
-                <img id="userImg" class="user-avatar" src="" alt="User">
-                <div>
-                    <span id="userName"></span>
-                    <button onclick="logoutGoogle()" class="btn-logout">Sair</button>
-                </div>
-            </div>
+  <div id="mainContent" style="display:none;">
 
-            <div id="loginBox" class="login-box">
-                <div id="g_id_onload"
-                     data-client_id="1097002227710-uqa72og3t9t6lena1gdpakrm7f0vob78.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signin_with"></div>
-            </div>
-        </div>
-
-        <div class="content" id="mainContent" style="display:none;">
-            <div class="section">
-                <label>📚 Nível Acadêmico</label>
-                <select id="ano" onchange="atualizarRigor()">
-                    <option value="5">5º Ano Fundamental</option>
-                    <option value="6">6º Ano Fundamental</option>
-                    <option value="7">7º Ano Fundamental</option>
-                    <option value="8">8º Ano Fundamental</option>
-                    <option value="9">9º Ano Fundamental</option>
-                </select>
-            </div>
-
-            <div class="section">
-                <button class="btn-main" onclick="sortearTema()">🎲 Gerar Tema de Redação</button>
-                <div id="temaDisplay" class="tema-box"></div>
-            </div>
-
-            <div class="section">
-                <label>📷 1. Foto do Caderno</label>
-                <input type="file" accept="image/*" id="inputFoto" onchange="salvarFoto()" class="file-input">
-                <p class="hint">1. Tire foto do caderno. 2. Mande pra outra IA transcrever. 3. Cole o texto abaixo.</p>
-            </div>
-
-            <div class="section">
-                <label>✍️ 2. Cole o Texto Transcrito</label>
-                <div style="margin-bottom:8px; display:flex; gap:8px;">
-                    <button type="button" id="btnVozTitulo" class="btn-mentor" style="flex:1;">🎤 Título</button>
-                    <button type="button" id="btnVozParagrafo" class="btn-mentor" style="flex:1;">🎤 Parágrafo</button>
-                </div>
-                <textarea id="textoRedacao" placeholder="Cole aqui o texto que a IA transcreveu..." class="textarea-redacao"></textarea>
-                <div class="contador">
-                    <span id="contPalavras">0</span> palavras |
-                    <span id="contFrases">0</span> frases |
-                    <span id="contParafos">0</span> parágrafos
-                </div>
-                <p id="statusVoz" class="hint" style="margin-top:4px;"></p>
-            </div>
-
-            <div id="avisoValidacao" class="warning"></div>
-
-            <div class="section">
-                <button class="btn-main" onclick="novaRedacao()">🗑️ Nova Redação</button>
-            </div>
-
-            <div class="btn-grid">
-                <button class="btn-mentor" onclick="analisarRedacao()">🧠 Análise Completa</button>
-                <button class="btn-save" onclick="exportarPDF()">📄 Gerar PDF</button>
-                <button class="btn-export" onclick="exportarXLS()">📊 Exportar XLS</button>
-                <button id="btnZap" class="btn-share" style="display:none" onclick="compartilharWhatsApp()">📱 Compartilhar via WhatsApp</button>
-            </div>
-
-            <div id="resultadoAnalise" class="resultado-box" style="display:none;">
-                <div class="resultado-header">
-                    <h2>📊 Parecer Técnico do Mentor</h2>
-                    <span id="notaFinal" class="nota-badge"></span>
-                </div>
-                <div class="validacoes">
-                    <h3>✅ Validações</h3>
-                    <div id="validacoesTexto"></div>
-                </div>
-                <div class="analise">
-                    <h3>📐 Análise Estrutural</h3>
-                    <div id="analisaEstrutura"></div>
-                </div>
-                <div class="erros">
-                    <h3>❌ Erros Detectados</h3>
-                    <div id="errosTexto"></div>
-                </div>
-                <div class="orientacoes">
-                    <h3>🎯 Orientações Vestibulares</h3>
-                    <div id="orientacoesTexto"></div>
-                </div>
-                <div class="comentarios">
-                    <h3>💬 Comentários do Mentor</h3>
-                    <div id="comentariosTexto"></div>
-                </div>
-                <div class="grafico-container" style="max-height:200px;margin-top:15px">
-                    <h3>📈 Evolução da Redação</h3>
-                    <canvas id="graficoProgresso" style="max-height:160px"></canvas>
-                </div>
-                <div class="resumo">
-                    <h3>📝 Resumo da Avaliação</h3>
-                    <div id="resumoTexto"></div>
-                </div>
-            </div>
-        </div>
+    <div class="section">
+      <label>Série/Ano</label>
+      <select id="ano" onchange="sortearTema()">
+        <option value="5">5º ano</option>
+        <option value="6">6º ano</option>
+        <option value="7">7º ano</option>
+        <option value="8">8º ano</option>
+        <option value="9">9º ano</option>
+      </select>
+      <button onclick="sortearTema()">🎲 Sortear Tema</button>
+      <div id="temaDisplay"></div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <div class="section">
+      <label>1. FOTO DO CADERNO</label>
+      <input type="file" id="inputFoto" accept="image/*">
+      <button class="btn-mentor" onclick="salvarFoto()">📷 Salvar Foto</button>
+      <p class="hint">A foto é só registro. O texto você vai colar abaixo.</p>
+    </div>
 
-    <script src="app.js"></script>
+    <div class="section">
+      <label>2. COLE O TEXTO TRANSCRITO</label>
+      <p class="hint">Cole aqui o texto que a IA transcreveu. Depois use os botões de voz se quiser acrescentar.</p>
+      <textarea id="textoRedacao" placeholder="Cole o texto transcrito aqui..." class="textarea-redacao"></textarea>
+      <div style="margin-top:8px; display:flex; gap:8px;">
+        <button type="button" id="btnVozTitulo" class="btn-mentor" style="flex:1;">🎤 Título</button>
+        <button type="button" id="btnVozParagrafo" class="btn-mentor" style="flex:1;">🎤 Parágrafo</button>
+      </div>
+      <div class="contador">
+        <span id="contPalavras">0</span> palavras |
+        <span id="contFrases">0</span> frases |
+        <span id="contParafos">0</span> parágrafos
+      </div>
+      <p id="statusVoz" class="hint" style="margin-top:4px;"></p>
+      <p id="avisoValidacao" class="aviso"></p>
+    </div>
+
+    <div class="section">
+      <button class="btn-main" onclick="analisarRedacao()">📊 ANÁLISE COMPLETA</button>
+    </div>
+
+    <div id="resultadoAnalise">
+      <h3>Resultado da Análise</h3>
+      <p class="nota">Nota: <span id="notaFinal">-</span></p>
+      <div id="validacoesTexto"></div>
+      <div id="errosTexto"></div>
+      <div id="analisaEstrutura"></div>
+      <div id="orientacoesTexto"></div>
+      <div id="comentariosTexto"></div>
+      <div id="resumoTexto"></div>
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="exportarPDF()">📄 Gerar PDF</button>
+        <button onclick="exportarXLS()">📊 Exportar XLS</button>
+        <button onclick="compartilharWhatsApp()">💬 WhatsApp</button>
+        <button class="btn-main" onclick="novaRedacao()">🗑️ Nova Redação</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
