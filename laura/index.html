@@ -37,9 +37,8 @@ button.btn-main { background: #ea4335; }
 <div class="container">
   <div class="header">
     <h2>Laura - Mentoria de Redação</h2>
-    <p>6º ano - CEDAF 2029</p>
     <div id="loginBox">
-      <div id="g_id_onload" data-client_id="SEU_CLIENT_ID_AQUI" data-callback="handleCredentialResponse"></div>
+      <div id="g_id_onload" data-client_id="" data-callback="handleCredentialResponse"></div>
       <div class="g_id_signin" data-type="standard"></div>
     </div>
     <div id="userInfo">
@@ -55,7 +54,7 @@ button.btn-main { background: #ea4335; }
       <label>Série/Ano</label>
       <select id="ano" onchange="sortearTema()">
         <option value="5">5º ano</option>
-        <option value="6" selected>6º ano</option>
+        <option value="6">6º ano</option>
         <option value="7">7º ano</option>
         <option value="8">8º ano</option>
         <option value="9">9º ano</option>
@@ -68,18 +67,13 @@ button.btn-main { background: #ea4335; }
       <label>1. FOTO DO CADERNO</label>
       <input type="file" id="inputFoto" accept="image/*">
       <button class="btn-mentor" onclick="salvarFoto()">📷 Salvar Foto</button>
-      <p class="hint">A foto é só registro. Transcreva abaixo com a IA.</p>
+      <p class="hint">A foto é só registro. O texto você vai colar abaixo.</p>
     </div>
 
     <div class="section">
-      <label>2. COLE O TEXTO TRANSCRITO PELA IA</label>
-      <textarea id="textoIA" placeholder="Cole aqui o texto que a IA transcreveu da foto..." class="textarea-redacao"></textarea>
-    </div>
-
-    <div class="section">
-      <label>3. TEXTO DA REDAÇÃO</label>
-      <p class="hint">Use os botões de voz ou edite direto. 3s de silêncio para parar.</p>
-      <textarea id="textoRedacao" placeholder="Cole da IA ou use os botões de voz..." class="textarea-redacao"></textarea>
+      <label>2. COLE O TEXTO TRANSCRITO</label>
+      <p class="hint">Cole aqui o texto que a IA transcreveu. Depois use os botões de voz se quiser acrescentar.</p>
+      <textarea id="textoRedacao" placeholder="Cole o texto transcrito aqui..." class="textarea-redacao"></textarea>
       <div style="margin-top:8px; display:flex; gap:8px;">
         <button type="button" id="btnVozTitulo" class="btn-mentor" style="flex:1;">🎤 Título</button>
         <button type="button" id="btnVozParagrafo" class="btn-mentor" style="flex:1;">🎤 Parágrafo</button>
