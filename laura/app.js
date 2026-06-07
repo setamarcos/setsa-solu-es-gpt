@@ -91,6 +91,7 @@ function novaRedacao() {
 
 function limparTudo() {
   document.getElementById('textoRedacao').value = '';
+  document.getElementById('textoIA').value = '';
   localStorage.removeItem('laura_texto');
   localStorage.removeItem('laura_foto');
   document.getElementById('resultadoAnalise').style.display = 'none';
@@ -259,7 +260,7 @@ function exportarXLS() {
 
 function compartilharWhatsApp() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
-  const texto = `Segue redação.\n\nNota: ${nota}\n\nEnviado via Laura Mentoria 2.1.2`;
+  const texto = `Segue redação.\n\nNota: ${nota}\n\nEnviado via Laura Mentoria 2.1.3`;
   const numeroDestino = '5531984821901';
   const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(texto)}`;
   window.open(url, '_blank');
