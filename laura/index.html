@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Laura 2.1.2 - Parecer de Redação</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -14,9 +12,6 @@ body { font-family: Arial, sans-serif; margin: 0; padding: 16px; background: #f5
 .header { background: #1a73e8; color: #fff; padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
 .header h2 { margin: 0; font-size: 22px; }
 .header p { margin: 4px 0 0; font-size: 14px; opacity: 0.9; }
-#loginBox, #userInfo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 10px; }
-#userInfo { display: none; }
-#userImg { width: 36px; height: 36px; border-radius: 50%; }
 .section { margin-bottom: 20px; }
 label { font-weight: bold; display: block; margin-bottom: 6px; }
 select, button, textarea { font-size: 16px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
@@ -27,7 +22,7 @@ button.btn-main { background: #ea4335; }
 .hint { font-size: 13px; color: #666; margin-top: 4px; }
 .contador { font-size: 14px; color: #333; margin-top: 6px; }
 #temaDisplay { background: #e8f0fe; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
-#resultadoAnalise { display: none; margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
+#resultadoAnalise { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
 .nota { font-size: 32px; font-weight: bold; color: #1a73e8; }
 .aviso { color: #d93025; font-size: 14px; margin-top: 6px; }
 .parecer-box { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #1a73e8; }
@@ -37,24 +32,16 @@ button.btn-main { background: #ea4335; }
 <div class="container">
   <div class="header">
     <h2>Laura - Mentoria de Redação</h2>
-    <div id="loginBox">
-      <div id="g_id_onload" data-client_id="" data-callback="handleCredentialResponse"></div>
-      <div class="g_id_signin" data-type="standard"></div>
-    </div>
-    <div id="userInfo">
-      <img id="userImg" src="" alt="foto">
-      <span id="userName"></span>
-      <button onclick="logoutGoogle()">Sair</button>
-    </div>
+    <p>Modo Teste</p>
   </div>
 
-  <div id="mainContent" style="display:none;">
+  <div id="mainContent">
 
     <div class="section">
       <label>Série/Ano</label>
       <select id="ano" onchange="sortearTema()">
         <option value="5">5º ano</option>
-        <option value="6">6º ano</option>
+        <option value="6" selected>6º ano</option>
         <option value="7">7º ano</option>
         <option value="8">8º ano</option>
         <option value="9">9º ano</option>
