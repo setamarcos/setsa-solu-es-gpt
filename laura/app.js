@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarControlesVoz();
 });
 
+function ativarLogin() {
+  document.getElementById('loginBox').style.display = 'flex';
+  document.getElementById('btnAtivarLogin').style.display = 'none';
+}
+
 function handleCredentialResponse(response) {
   const data = jwt_decode(response.credential);
   usuarioLogado = data.email;
@@ -45,18 +50,20 @@ function recuperarUsuario() {
 
 function mostrarUsuario(nome, foto) {
   document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('btnAtivarLogin').style.display = 'none';
   document.getElementById('userInfo').style.display = 'flex';
   document.getElementById('userName').textContent = nome;
   document.getElementById('userImg').src = foto;
-  document.getElementById('mainContent').style.display = 'block';
 }
 
 function logoutGoogle() {
   localStorage.removeItem('usuario');
   usuarioLogado = null;
-  document.getElementById('loginBox').style.display = 'block';
+  if (window.google && google.accounts) {
+    google.accounts.id.disableAutoSelect();
+  }
   document.getElementById('userInfo').style.display = 'none';
-  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('btnAtivarLogin').style.display = 'block';
 }
 
 function atualizarContadores() {
@@ -103,11 +110,15 @@ function limparTudo() {
 
 function salvarFoto() {
   const file = document.getElementById('inputFoto').files[0];
-  if (!file) return;
+  if (!file) {
+    document.getElementById('avisoValidacao').textContent = 'Selecione uma foto primeiro.';
+    return;
+  }
   const reader = new FileReader();
   reader.onload = function(e) {
     localStorage.setItem('laura_foto', e.target.result);
     document.getElementById('avisoValidacao').textContent = 'Foto salva. Agora cole o texto transcrito abaixo.';
+    setTimeout(() => document.getElementById('avisoValidacao').textContent = '', 3000);
   };
   reader.readAsDataURL(file);
 }
@@ -260,7 +271,7 @@ function exportarXLS() {
 
 function compartilharWhatsApp() {
   const nota = document.getElementById('notaFinal').textContent || 'N/A';
-  const texto = `Segue redação.\n\nNota: ${nota}\n\nEnviado via Laura Mentoria 2.1.3`;
+  const texto = `Segue redação.\n\nNota: ${nota}\n\nEnviado via Laura Mentoria 2.1.3f`;
   const numeroDestino = '5531984821901';
   const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(texto)}`;
   window.open(url, '_blank');
