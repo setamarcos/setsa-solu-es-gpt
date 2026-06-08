@@ -24,41 +24,45 @@
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 1.2rem 1rem; /* Reduzido para ganhar espaço vertical */
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
     
     header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
+      font-size: 2rem; /* Reduzido de 2.5rem */
+      margin-bottom: 0.3rem;
     }
     
     header p {
-      font-size: 1.1rem;
+      font-size: 1rem;
       opacity: 0.95;
       color: #ff6600;
     }
     
     .container {
       flex: 1;
-      max-width: 1000px;
-      margin: 2rem auto;
+      max-width: 1100px; /* Ampliado levemente para acomodar melhor 4 itens por linha */
+      margin: 1.5rem auto;
       padding: 0 1rem;
       width: 100%;
+      display: flex;
+      align-items: center; /* Centraliza verticalmente o grid no espaço disponível */
     }
     
     .abas-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
+      /* Ajustado para encaixar até 4 colunas em telas grandes, reduzindo a necessidade de rolagem */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
     }
     
     .aba-btn {
       background: #fff;
       border: none;
       border-radius: 12px;
-      padding: 2rem 1.5rem;
+      padding: 1.2rem 1rem; /* Reduzido o espaçamento interno de 2rem */
       cursor: pointer;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -69,11 +73,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 200px;
+      min-height: 160px; /* Reduzido de 200px para compactar na tela */
     }
     
     .aba-btn:hover {
-      transform: translateY(-8px);
+      transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0,0,0,0.25);
       background: #f9f9f9;
     }
@@ -89,20 +93,20 @@
     }
     
     .aba-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: 2.2rem; /* Reduzido de 3rem */
+      margin-bottom: 0.6rem;
     }
     
     .aba-titulo {
-      font-size: 1.3rem;
+      font-size: 1.1rem; /* Reduzido de 1.3rem */
       font-weight: bold;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
     
     .aba-desc {
-      font-size: 0.9rem;
+      font-size: 0.8rem; /* Reduzido de 0.9rem */
       opacity: 0.7;
-      line-height: 1.4;
+      line-height: 1.3;
     }
     
     .aba-btn.ativo .aba-desc {
@@ -113,27 +117,28 @@
       background: #003366;
       color: #fff;
       text-align: center;
-      padding: 1.5rem;
+      padding: 1rem; /* Compactado */
       margin-top: auto;
+      font-size: 0.9rem;
     }
     
     @media (max-width: 600px) {
       header h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
       }
       
       .abas-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
       }
       
       .aba-btn {
-        min-height: 150px;
-        padding: 1.5rem 1rem;
+        min-height: 120px;
+        padding: 1rem;
       }
       
       .aba-icon {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -147,42 +152,42 @@
   <div class="container">
     <div class="abas-grid">
       
-      <!-- Aba Inicial -->
       <a href="/" class="aba-btn">
         <div class="aba-icon">🏠</div>
         <div class="aba-titulo">Início</div>
         <div class="aba-desc">Voltar para a página principal</div>
       </a>
       
-      <!-- Aba IA -->
       <a href="/ia/" class="aba-btn ativo">
         <div class="aba-icon">🤖</div>
         <div class="aba-titulo">MP Hub IA</div>
         <div class="aba-desc">Assistente de inteligência artificial para suas demandas</div>
       </a>
       
-      <!-- Aba Laura -->
       <a href="/laura/" class="aba-btn">
         <div class="aba-icon">👩‍💼</div>
         <div class="aba-titulo">Laura</div>
         <div class="aba-desc">Soluções personalizadas para sua empresa</div>
       </a>
       
-      <!-- Aba Neurociência -->
+      <a href="https://www.setasolucoes.com.br/cedaf2026/" class="aba-btn">
+        <div class="aba-icon">🎯</div>
+        <div class="aba-titulo">CEDAF 2026</div>
+        <div class="aba-desc">Plataforma de simulados, redação e análise ativa de erros</div>
+      </a>
+      
       <a href="/neurociencia/" class="aba-btn">
         <div class="aba-icon">🧠</div>
         <div class="aba-titulo">Neurociência</div>
         <div class="aba-desc">Aplicações de neurociência em negócios</div>
       </a>
       
-      <!-- Aba Governança -->
       <a href="/governança/" class="aba-btn">
         <div class="aba-icon">📋</div>
         <div class="aba-titulo">Governança</div>
         <div class="aba-desc">Diagnóstico direto com IA para estruturas organizacionais</div>
       </a>
       
-      <!-- Aba Prospect Governança MP -->
       <a href="/prospect-governanca-mp/" class="aba-btn">
         <div class="aba-icon">💼</div>
         <div class="aba-titulo">Prospect Governança MP</div>
