@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CEDAF 2029 - Laura</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --seta-azul:#1a73e8;
@@ -93,6 +94,7 @@ let recDitado = null;
 let escutandoDitado = false;
 let temporizadorSilencio = null;
 let resultadoRedacaoHTML = '';
+let notaRedacao = 0;
 
 function modo(m){
   modoAtual = m;
@@ -226,7 +228,7 @@ function corrigirRedacao(){
   const c2=possuiPertinenciaTematica?180:100;
   const c3=conectivos>4?170:conectivos>2?150:130;
   const c4=(totalParagrafos>=4&&totalParagrafos<=5)?170:130;
-  const c5=160;const nota=c1+c2+c3+c4+c5;
+  const c5=160;notaRedacao=c1+c2+c3+c4+c5;
   let analiseEstrutural='';
   if(totalParagrafos<4){analiseEstrutural+=`<li><strong>Déficit de Macroestrutura Block:</strong> Faltam ${4-totalParagrafos} parágrafo(s).</li>`;}
   else if(totalParagrafos>5){analiseEstrutural+=`<li><strong>Excesso Estrutural:</strong> O texto apresenta ${totalParagrafos} parágrafos.</li>`;}
@@ -237,7 +239,7 @@ function corrigirRedacao(){
   if(!possuiPertinenciaTematica){analiseEstrutural+=`<li><strong>Alerta:</strong> Tema "${provaAtual.tema.nomeClean}" não explicitado.</li>`;}
   else{analiseEstrutural+=`<li><strong>Pertinência Temática:</strong> Validada.</li>`;}
   resultadoRedacaoHTML=`
-    <h4>Nota da Redação: ${nota}/1000</h4>
+    <h4>Nota da Redação: ${notaRedacao}/1000</h4>
     <p><strong>C1 Norma:</strong> ${c1} | <strong>C2 Tema:</strong> ${c2} | <strong>C3 Coesão:</strong> ${c3}</p>
     <p><strong>C4 Estrutura:</strong> ${c4} | <strong>C5 Proposta:</strong> ${c5}</p>
     <p class="hint">Métricas: ${palavras} palavras | ~${totalLinhasSimuladas} linhas | ${totalParagrafos} parágrafos</p>
@@ -296,9 +298,9 @@ function finalizar(){
     else{htmlResultado+=`<p style="color:var(--seta-verde);font-weight:bold">🎯 Desempenho excelente!</p>`;}
     if(resultadoRedacaoHTML){htmlResultado+=`<hr style="border:1px dashed #ddd"><h4>📝 Correção da Redação:</h4>${resultadoRedacaoHTML}`;}
     htmlResultado+=`<div class="export-bar">
-      <button class="btn-seta" onclick="exportarPDF()">📄 Exportar PDF</button>
-      <button class="btn-seta" onclick="exportarXLS()">📊 Exportar XLS</button>
-      <button class="btn-seta" onclick="exportarWhats()">📱 WhatsApp</button>
+      <button class="btn-seta" onclick="exportarPDF(${notaQ})">📄 Exportar PDF</button>
+      <button class="btn-seta" onclick="exportarXLSX(${notaQ})">📊 Exportar XLSX</button>
+      <button class="btn-seta" onclick="exportarWhats(${notaQ})">📱 WhatsApp</button>
       <button class="btn-seta" onclick="location.reload()">🎲 Nova Prova</button>
     </div>`;
     document.getElementById('resultadoFinal').innerHTML=htmlResultado;
@@ -307,18 +309,45 @@ function finalizar(){
   }else{alert('Redação corrigida acima!');}
 }
 
-function exportarPDF(){window.print();}
-function exportarXLS(){
-  let csv='Prova,Questao,Sua Resposta,Gabarito,Status,Tipo\n';
-  respostas.forEach((r,i)=>{if(r&&r.confirmado){
-    const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'Acerto':'Erro';
-    csv+=`${provaAtual.id},${i+1},${r.letra.toUpperCase()},${q.gab.toUpperCase()},${acertou},${r.tipo}\n`;
-  }});
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`cedaf2029_prova${provaAtual.id}.csv`;a.click();
+function exportarPDF(notaQ){
+  const data = new Date().toISOString().split('T')[0];
+  const titulo = `CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');
+  document.title = `${titulo}_${data}`;
+  window.print();
+  setTimeout(()=>{document.title = 'CEDAF 2029 - Laura'}, 1000);
 }
-function exportarWhats(){
-  let texto=`*CEDAF 2029 - Prova ${provaAtual.id}*\n\n`;
+
+function exportarXLSX(notaQ){
+  const data = new Date().toLocaleDateString('pt-BR');
+  const titulo = `CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');
+
+  const wsResumo = XLSX.utils.aoa_to_sheet([
+    ['Data', data],
+    ['Prova', provaAtual.id],
+    ['Tema', provaAtual.tema.nomeClean],
+    ['Nota Prova', notaQ],
+    ['Nota Redação', notaRedacao]
+  ]);
+
+  const dadosQuestoes = [['Questao','Sua Resposta','Gabarito','Status','Tipo']];
+  respostas.forEach((r,i)=>{
+    if(r&&r.confirmado){
+      const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'Acerto':'Erro';
+      dadosQuestoes.push([i+1,r.letra.toUpperCase(),q.gab.toUpperCase(),acertou,r.tipo]);
+    }
+  });
+  const wsQuestoes = XLSX.utils.aoa_to_sheet(dadosQuestoes);
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, wsResumo, 'Resumo');
+  XLSX.utils.book_append_sheet(wb, wsQuestoes, 'Questoes');
+  XLSX.writeFile(wb, `${titulo}_${new Date().toISOString().split('T')[0]}.xlsx`);
+}
+
+function exportarWhats(notaQ){
+  const textoRedacao = document.getElementById('textoRedacao')?.value || '';
+  const primeiraLinha = textoRedacao.split('\n')[0].substring(0,40) || provaAtual.tema.nomeClean;
+  let texto=`*CEDAF 2029 - Laura*\nProva ${provaAtual.id}: ${provaAtual.tema.nomeClean}\nNota Prova: ${notaQ}/1000\nRedação: ${primeiraLinha}\nNota Redação: ${notaRedacao}/1000\n`;
   respostas.forEach((r,i)=>{if(r&&r.confirmado){const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'✅':'❌';
     texto+=`Q${i+1}: ${r.letra.toUpperCase()} ${acertou}\n`;}});
   window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank');
