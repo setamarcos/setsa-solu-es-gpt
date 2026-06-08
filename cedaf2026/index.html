@@ -65,28 +65,18 @@ for(let i=0;i<20;i++){
 
 function gerarQuestoes(){
   const base = [
-    ["Sinônimo de 'importante'?",["fraco","comum","relevante","simples"],"c"],
-    ["Sujeito de 'Os alunos estudam'?",["Os alunos","estudam","Os","Não tem"],"a"],
-    ["Antônimo de 'alegre'?",["feliz","triste","calmo","rápido"],"b"],
-    ["O que é metáfora?",["Rima","Comparação com 'como'","Comparação sem 'como'","Pergunta"],"c"],
-    ["Plural de 'lápis'?",["lápis","lápises","lápiss","lapis"],"a"],
-    ["O que conecta ideias?",["Ponto","Conectivo","Título","Parágrafo"],"b"],
-    ["Sinônimo de 'porém'?",["então","portanto","assim","mas"],"d"],
-    ["O que é tese?",["Conclusão","Exemplo","Ideia principal","Título"],"c"],
-    ["Qual é advérbio?",["rapidamente","rápido","rapidez","rapaz"],"a"],
-    ["O que é crônica?",["Poema","Texto sobre cotidiano","Notícia","Receita"],"b"],
-    ["Sinônimo de 'dizer'?",["comer","correr","afirmar","dormir"],"c"],
-    ["O que é parágrafo?",["Bloco de texto","Frase","Letra","Palavra"],"a"],
-    ["Antônimo de 'começo'?",["início","fim","meio","parte"],"b"],
-    ["O que é argumento?",["Pergunta","Título","Desenho","Razão"],"d"],
-    ["Qual é verbo?",["casa","bonito","correr","azul"],"c"],
-    ["Sinônimo de 'além disso'?",["também","mas","porém","porque"],"a"],
-    ["O que é conclusão?",["Primeira ideia","Fechamento do texto","Exemplo","Pergunta"],"b"],
-    ["Plural de 'cidadão'?",["cidadões","cidadãos","cidadãos","cidadã"],"c"],
-    ["Texto dissertativo?",["Poema","História","Receita","Defende ideia"],"d"],
-    ["Sinônimo de 'portanto'?",["mas","logo","também","porém"],"b"]
+    ["Qual das palavras abaixo é um substantivo comum?", ["Brasil", "Maria", "Cachorro", "São Paulo"], "c"],
+    ["Qual palavra tem o mesmo sentido de 'alegre'?", ["Triste", "Feliz", "Bravo", "Lento"], "b"],
+    ["Se Ana tem 20 balas e ganha mais 15, com quantas balas ela fica?", ["5", "25", "30", "35"], "d"],
+    ["Qual é o dobro de 12?", ["6", "14", "24", "36"], "c"],
+    ["Como as plantas produzem o seu próprio alimento?", ["Pela respiração", "Pela digestão", "Pela fotossíntese", "Pelo vento"], "c"],
+    ["Qual é o planeta em que vivemos?", ["Marte", "Júpiter", "Terra", "Vênus"], "c"],
+    ["Quem já vivia no Brasil antes da chegada dos portugueses em 1500?", ["Os espanhóis", "Os indígenas", "Os franceses", "Os ingleses"], "b"],
+    ["Qual instrumento usamos para medir a passagem das horas no dia a dia?", ["Termômetro", "Balança", "Relógio", "Régua"], "c"],
+    ["Como chamamos a área onde há muitas fazendas, sítios e plantações?", ["Zona Urbana", "Zona Sul", "Zona Norte", "Zona Rural"], "d"],
+    ["O que usamos para nos guiar e ver a representação de um país no papel?", ["Um mapa", "Um livro de receitas", "Um dicionário", "Um calendário"], "a"]
   ];
-  return base.sort(()=>Math.random()-0.5).slice(0,20).map((q,idx)=>({
+  return base.sort(()=>Math.random()-0.5).slice(0,10).map((q,idx)=>({
     q:`${idx+1}. ${q[0]}`,
     ops:q[1],
     gab:q[2]
@@ -96,7 +86,9 @@ function gerarQuestoes(){
 let modoAtual = 'ambos';
 let provaAtual = null;
 let respostas = [];
-let reconhecimento = null;
+let recTitulo = null;
+let recDitado = null;
+let escutandoDitado = false;
 let temporizadorSilencio = null;
 
 function modo(m){
@@ -117,7 +109,7 @@ function iniciar(){
   }
   provaAtual = disponiveis[Math.floor(Math.random()*disponiveis.length)];
   document.getElementById('numProva').textContent = provaAtual.id;
-  respostas = Array(20).fill(null);
+  respostas = Array(10).fill(null);
   montarProva();
 }
 
@@ -131,20 +123,20 @@ function alternarVozTitulo(){
     return;
   }
 
-  if(reconhecimento){
-    reconhecimento.stop();
+  if(recTitulo){
+    recTitulo.stop();
     return;
   }
 
-  reconhecimento = new SpeechRecognition();
-  reconhecimento.lang = 'pt-BR';
-  reconhecimento.continuous = false;
-  reconhecimento.interimResults = false;
+  recTitulo = new SpeechRecognition();
+  recTitulo.lang = 'pt-BR';
+  recTitulo.continuous = false;
+  recTitulo.interimResults = false;
 
   btn.classList.add('escutando');
   btn.innerHTML = '🛑 Escutando Título...';
 
-  reconhecimento.onresult = function(e){
+  recTitulo.onresult = function(e){
     let trecho = e.results[0][0].transcript.trim();
     if(trecho.length > 0){
       trecho = trecho.charAt(0).toUpperCase() + trecho.slice(1);
@@ -156,13 +148,13 @@ function alternarVozTitulo(){
     }
   };
 
-  reconhecimento.onerror = function(){};
-  reconhecimento.onend = function(){
+  recTitulo.onerror = function(){};
+  recTitulo.onend = function(){
     btn.classList.remove('escutando');
     btn.innerHTML = '🎙️ Falar Botão Título';
-    reconhecimento = null;
+    recTitulo = null;
   };
-  reconhecimento.start();
+  recTitulo.start();
 }
 
 function alternarDitado(){
@@ -175,21 +167,21 @@ function alternarDitado(){
     return;
   }
 
-  if(reconhecimento){
+  if(recDitado && escutandoDitado){
     fecharParagrafoPorSilencio();
-    reconhecimento.stop();
     return;
   }
 
-  reconhecimento = new SpeechRecognition();
-  reconhecimento.lang = 'pt-BR';
-  reconhecimento.continuous = true;
-  reconhecimento.interimResults = false;
+  recDitado = new SpeechRecognition();
+  recDitado.lang = 'pt-BR';
+  recDitado.continuous = true;
+  recDitado.interimResults = false;
+  escutandoDitado = true;
 
   btn.classList.add('escutando');
   btn.innerHTML = '🛑 Escutando Parágrafo...';
 
-  reconhecimento.onresult = function(e){
+  recDitado.onresult = function(e){
     clearTimeout(temporizadorSilencio);
     let trecho = "";
     for(let i=e.resultIndex; i<e.results.length; ++i){
@@ -211,17 +203,17 @@ function alternarDitado(){
     }
   };
 
-  reconhecimento.onerror = function(){};
-  reconhecimento.onend = function(){
-    if(btn.classList.contains('escutando')){
-      if(reconhecimento) reconocimiento.start();
+  recDitado.onerror = function(){};
+  recDitado.onend = function(){
+    if(escutandoDitado){
+      try { recDitado.start(); } catch(err) {}
     }else{
       btn.classList.remove('escutando');
       btn.innerHTML = '🎙️ Falar Botão Parágrafo';
-      reconhecimento = null;
+      recDitado = null;
     }
   };
-  reconhecimento.start();
+  recDitado.start();
 }
 
 function fecharParagrafoPorSilencio(){
@@ -251,7 +243,7 @@ function montarProva(){
   }
 
   if(modoAtual==='prova' || modoAtual==='ambos'){
-    html += `<h3>20 Questões - Marque 1 alternativa e confirme</h3>`;
+    html += `<h3>10 Questões - Marque 1 alternativa e confirme</h3>`;
     provaAtual.questoes.forEach((q,i)=>{
       html += `<div class="questao" id="q${i}">
         <p><strong>${q.q}</strong></p>`;
@@ -364,7 +356,7 @@ function obterConselhoInovador(tipoErro, questaoTexto){
     "<strong>Análise de Pegadinha Sintática:</strong> Releia o enunciado prestando atenção nas palavras de comando (ex: 'Sujeito', 'Adjunto', 'Conectivo'). Errar o que sabe geralmente é falta de marcação de palavras-chave.",
     "<strong>Engenharia Reversa do Gabarito:</strong> Pegue a alternativa certa e reconstrói a regra gramatical ou semântica por trás dela em voz alta, simulando como se você estivesse ensinando para alguém.",
     "<strong>Calibragem de Velocidade vs Atenção:</strong> Erros em matérias dominadas ocorrem por pressa de avançar. Gaste 15 segundos a mais na releitura da frase-problema antes de cravar a confirmação.",
-    "<strong>Aplicação Prática Imediata:</strong> Crie duas frases novas usando o conectivo ou a regra da questão que você errou. O cérebro fixa conteúdos estruturados quando os transforma em produção ativa."
+    "<strong>Aplicação Prática Imediata:</strong> Crie duas frases novas usando o conectivo ou a regra da questão que você errou. O cérebro fixa conteúdos estruturados quando os transforma em produção activa."
   ];
 
   let randomIdx = Math.floor(Math.random() * 5);
@@ -414,7 +406,7 @@ function finalizar(){
 
     if(respondidas === 0) return alert('Responda e confirme pelo menos uma questão para finalizar!');
 
-    const notaQ = Math.round((acertosTotal/20)*1000);
+    const notaQ = Math.round((acertosTotal/10)*1000);
     const feitas = JSON.parse(localStorage.getItem('provasFeitas')||'[]');
     feitas.push(provaAtual.id);
     localStorage.setItem('provasFeitas',JSON.stringify(feitas));
@@ -422,7 +414,7 @@ function finalizar(){
     let htmlResultado = `
       <h3>Resultado Final - Prova ${provaAtual.id}</h3>
       <h2>Nota Questões: ${notaQ}/1000</h2>
-      <p><strong>Respondidas:</strong> ${respondidas}/20</p>
+      <p><strong>Respondidas:</strong> ${respondidas}/10</p>
       <p><strong>Total de Acertos:</strong> ${acertosTotal} de ${respondidas}</p>
       <p><strong>No que você já estudou:</strong> ${acertosEstudado}/${totalEstudado}</p>
       <p><strong>No chute:</strong> ${acertosChute}/${totalChute}</p>
