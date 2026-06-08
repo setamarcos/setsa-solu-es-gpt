@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEDAF 2029 - Laura</title>
+<style>
+:root{
+  --seta-azul:#1a73e8;
+  --seta-verde:#34a853;
+  --seta-laranja:#ff8c00;
+  --fundo:#fffaf0;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;max-width:950px;margin:0 auto;padding:16px;background:var(--fundo);color:#333}
+h1{color:var(--seta-azul);text-align:center;font-size:26px}
+.subtitulo{color:var(--seta-verde);text-align:center;font-weight:bold}
+.btn-topo{background:var(--seta-azul);color:#fff;border:none;padding:12px 18px;border-radius:8px;cursor:pointer;font-size:15px;margin:4px}
+.btn-topo.ativo{background:var(--seta-verde)}
+.btn-seta{background:var(--seta-verde);color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:15px;margin:3px}
+.btn-chute{background:var(--seta-laranja);color:#fff}
+.btn-alt{width:100%;text-align:left;background:#fff;border:2px solid #ddd;padding:10px 12px;margin:4px 0;border-radius:6px;cursor:pointer;font-size:15px}
+.btn-alt.selecionada{border-color:var(--seta-azul);background:#e8f0fe}
+.btn-alt.travada{cursor:not-allowed;opacity:0.7}
+.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,0.1);margin:16px 0}
+.hint{font-size:14px;color:#5f6368;font-style:italic}
+.textarea-redacao{width:100%;height:200px;padding:12px;font-size:15px;border:2px solid var(--seta-azul);border-radius:8px;margin:8px 0}
+#resultadoFinal{display:none}
+.prova-num{color:var(--seta-azul);font-weight:bold}
+.questao-travada{opacity:0.6}
+.btn-voz{background:#673ab7;color:#fff;font-weight:bold}
+.btn-voz.escutando{background:#d32f2f;animation:pulseVoz 1.5s infinite}
+.conselho-box{background:#f8f9fa;border-left:4px solid var(--seta-laranja);padding:10px;margin:8px 0;border-radius:4px;font-size:14px}
+.conselho-estudado{border-left-color:var(--seta-azul)}
+@keyframes pulseVoz{0%{opacity:1}50%{opacity:0.6}100%{opacity:1}}
+</style>
+</head>
+<body>
+<h1>CEDAF 2029 🎯</h1>
+<p class="subtitulo">Laura, 6º ano. Prova <span class="prova-num" id="numProva">1</span> de 20</p>
+
+<div style="text-align:center;margin:16px 0">
+  <button class="btn-topo" id="btnTexto" onclick="modo('texto')">📝 Só Redação</button>
+  <button class="btn-topo" id="btnProva" onclick="modo('prova')">❓ Só Questões</button>
+  <button class="btn-topo ativo" id="btnAmbos" onclick="modo('ambos')">📝+❓ Os Dois</button>
+</div>
+
+<div id="areaProva" class="card"></div>
+<div id="resultadoFinal" class="card"></div>
+
+<script>
+const bancoProvas = [];
+for(let i=0;i<20;i++){
+  const nomeTema = ['Internet','Meio ambiente','Bullying','Leitura','Esporte','Alimentação','Tecnologia','Sustentabilidade','Respeito','Tempo livre','Água','Cultura','Dinheiro','Ciência','Cidadania','Arte','Saúde','Amizade','Estudo','Futuro'][i];
+  bancoProvas.push({
+    id:i+1,
+    tema:{
+      nomeClean: nomeTema,
+      titulo:`Tema ${i+1}: ${nomeTema}`,
+      comando:"Redija um texto dissertativo-argumentativo sobre o tema.",
+      textos:["Texto motivador 1","Texto motivador 2","Texto motivador 3"]
+    },
+    questoes: gerarQuestoes()
+  });
+}
+
+function gerarQuestoes(){
+  const base = [
+    ["Sinônimo de 'importante'?",["fraco","comum","relevante","simples"],"c"],
+    ["Sujeito de 'Os alunos estudam'?",["Os alunos","estudam","Os","Não tem"],"a"],
+    ["Antônimo de 'alegre'?",["feliz","triste","calmo","rápido"],"b"],
+    ["O que é metáfora?",["Rima","Comparação com 'como'","Comparação sem 'como'","Pergunta"],"c"],
+    ["Plural de 'lápis'?",["lápis","lápises","lápiss","lapis"],"a"],
+    ["O que conecta ideias?",["Ponto","Conectivo","Título","Parágrafo"],"b"],
+    ["Sinônimo de 'porém'?",["então","portanto","assim","mas"],"d"],
+    ["O que é tese?",["Conclusão","Exemplo","Ideia principal","Título"],"c"],
+    ["Qual é advérbio?",["rapidamente","rápido","rapidez","rapaz"],"a"],
+    ["O que é crônica?",["Poema","Texto sobre cotidiano","Notícia","Receita"],"b"],
+    ["Sinônimo de 'dizer'?",["comer","correr","afirmar","dormir"],"c"],
+    ["O que é parágrafo?",["Bloco de texto","Frase","Letra","Palavra"],"a"],
+    ["Antônimo de 'começo'?",["início","fim","meio","parte"],"b"],
+    ["O que é argumento?",["Pergunta","Título","Desenho","Razão"],"d"],
+    ["Qual é verbo?",["casa","bonito","correr","azul"],"c"],
+    ["Sinônimo de 'além disso'?",["também","mas","porém","porque"],"a"],
+    ["O que é conclusão?",["Primeira ideia","Fechamento do texto","Exemplo","Pergunta"],"b"],
+    ["Plural de 'cidadão'?",["cidadões","cidadãos","cidadãos","cidadã"],"c"],
+    ["Texto dissertativo?",["Poema","História","Receita","Defende ideia"],"d"],
+    ["Sinônimo de 'portanto'?",["mas","logo","também","porém"],"b"]
+  ];
+  return base.sort(()=>Math.random()-0.5).slice(0,20).map((q,idx)=>({
+    q:`${idx+1}. ${q[0]}`,
+    ops:q[1],
+    gab:q[2]
+  }));
+}
+
+let modoAtual = 'ambos';
+let provaAtual = null;
+let respostas = [];
+let reconhecimento = null;
+let temporizadorSilencio = null;
+
+function modo(m){
+  modoAtual = m;
+  document.querySelectorAll('.btn-topo').forEach(b=>b.classList.remove('ativo'));
+  document.getElementById(`btn${m.charAt(0).toUpperCase()+m.slice(1)}`).classList.add('ativo');
+  if(provaAtual) montarProva();
+}
+
+function iniciar(){
+  const feitas = JSON.parse(localStorage.getItem('provasFeitas')||'[]');
+  const disponiveis = bancoProvas.filter(p=>!feitas.includes(p.id));
+  if(disponiveis.length===0){
+    alert('Parabéns! Você fez as 20 provas. Resetando...');
+    localStorage.removeItem('provasFeitas');
+    location.reload();
+    return;
+  }
+  provaAtual = disponiveis[Math.floor(Math.random()*disponiveis.length)];
+  document.getElementById('numProva').textContent = provaAtual.id;
+  respostas = Array(20).fill(null);
+  montarProva();
+}
+
+function alternarVozTitulo(){
+  const btn = document.getElementById('btnVozTitulo');
+  const campo = document.getElementById('textoRedacao');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert('Transcrição de voz não suportada neste navegador.');
+    return;
+  }
+
+  if(reconhecimento){
+    reconhecimento.stop();
+    return;
+  }
+
+  reconhecimento = new SpeechRecognition();
+  reconhecimento.lang = 'pt-BR';
+  reconhecimento.continuous = false;
+  reconhecimento.interimResults = false;
+
+  btn.classList.add('escutando');
+  btn.innerHTML = '🛑 Escutando Título...';
+
+  reconhecimento.onresult = function(e){
+    let trecho = e.results[0][0].transcript.trim();
+    if(trecho.length > 0){
+      trecho = trecho.charAt(0).toUpperCase() + trecho.slice(1);
+      if(campo.value.trim() === ""){
+        campo.value = trecho + "\n\n";
+      }else{
+        campo.value = trecho + "\n\n" + campo.value;
+      }
+    }
+  };
+
+  reconhecimento.onerror = function(){};
+  reconhecimento.onend = function(){
+    btn.classList.remove('escutando');
+    btn.innerHTML = '🎙️ Falar Botão Título';
+    reconhecimento = null;
+  };
+  reconhecimento.start();
+}
+
+function alternarDitado(){
+  const btn = document.getElementById('btnDitado');
+  const campo = document.getElementById('textoRedacao');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert('Transcrição de voz não suportada neste navegador.');
+    return;
+  }
+
+  if(reconhecimento){
+    fecharParagrafoPorSilencio();
+    reconhecimento.stop();
+    return;
+  }
+
+  reconhecimento = new SpeechRecognition();
+  reconhecimento.lang = 'pt-BR';
+  reconhecimento.continuous = true;
+  reconhecimento.interimResults = false;
+
+  btn.classList.add('escutando');
+  btn.innerHTML = '🛑 Escutando Parágrafo...';
+
+  reconhecimento.onresult = function(e){
+    clearTimeout(temporizadorSilencio);
+    let trecho = "";
+    for(let i=e.resultIndex; i<e.results.length; ++i){
+      if(e.results[i].isFinal) trecho += e.results[i][0].transcript;
+    }
+
+    if(trecho.trim().length > 0){
+      trecho = trecho.trim();
+      let atual = campo.value;
+
+      if(atual.trim() === "" || atual.endsWith('\n\n')){
+        trecho = trecho.charAt(0).toUpperCase() + trecho.slice(1);
+      }else{
+        trecho = " " + trecho;
+      }
+
+      campo.value += trecho;
+      temporizadorSilencio = setTimeout(fecharParagrafoPorSilencio, 5000);
+    }
+  };
+
+  reconhecimento.onerror = function(){};
+  reconhecimento.onend = function(){
+    if(btn.classList.contains('escutando')){
+      if(reconhecimento) reconocimiento.start();
+    }else{
+      btn.classList.remove('escutando');
+      btn.innerHTML = '🎙️ Falar Botão Parágrafo';
+      reconhecimento = null;
+    }
+  };
+  reconhecimento.start();
+}
+
+function fecharParagrafoPorSilencio(){
+  const campo = document.getElementById('textoRedacao');
+  let txt = campo.value.trim();
+  if(txt.length > 0 && !txt.endsWith('.') && !txt.endsWith('\n\n')){
+    campo.value = txt + ".\n\n";
+  }
+}
+
+function montarProva(){
+  let html = '';
+
+  if(modoAtual==='texto' || modoAtual==='ambos'){
+    html += `<h3>Redação: ${provaAtual.tema.titulo}</h3>
+    <p><strong>Comando:</strong> ${provaAtual.tema.comando}</p>
+    
+    <div style="margin:12px 0">
+      <button class="btn-seta btn-voz" id="btnVozTitulo" onclick="alternarVozTitulo()">🎙️ Falar Botão Título</button>
+      <button class="btn-seta btn-voz" id="btnDitado" onclick="alternarDitado()">🎙️ Falar Botão Parágrafo</button>
+    </div>
+
+    <p class="hint">Textos motivadores: ${provaAtual.tema.textos.join(' | ')}</p>
+    <textarea id="textoRedacao" class="textarea-redacao" placeholder="Escreva sua redação aqui..."></textarea>
+    <button class="btn-seta" onclick="corrigirRedacao()">📊 Corrigir Redação</button>
+    <div id="resultadoRedacao" style="display:none;margin-top:12px"></div><hr>`;
+  }
+
+  if(modoAtual==='prova' || modoAtual==='ambos'){
+    html += `<h3>20 Questões - Marque 1 alternativa e confirme</h3>`;
+    provaAtual.questoes.forEach((q,i)=>{
+      html += `<div class="questao" id="q${i}">
+        <p><strong>${q.q}</strong></p>`;
+      q.ops.forEach((op,idx)=>{
+        const letra = ['a','b','c','d'][idx];
+        html += `<button class="btn-alt" id="alt${i}${letra}" onclick="selecionar(${i},'${letra}')">${letra}) ${op}</button>`;
+      });
+      html += `<div style="margin-top:8px;display:none" id="acoes${i}">
+        <button class="btn-seta" onclick="confirmar(${i},'estudado')">Já estudei</button>
+        <button class="btn-seta btn-chute" onclick="confirmar(${i},'chute')">Não estudei - chute</button>
+      </div></div><hr>`;
+    });
+    html += `<button class="btn-seta" onclick="finalizar()" style="font-size:18px">📊 Finalizar Prova</button>`;
+  }
+
+  document.getElementById('areaProva').innerHTML = html;
+}
+
+function selecionar(idx,letra){
+  if(respostas[idx] && respostas[idx].confirmado) return;
+  document.querySelectorAll(`#q${idx} .btn-alt`).forEach(b=>b.classList.remove('selecionada'));
+  document.getElementById(`alt${idx}${letra}`).classList.add('selecionada');
+  respostas[idx] = {letra, tipo:null, confirmado:false};
+  document.getElementById(`acoes${idx}`).style.display='block';
+}
+
+function confirmar(idx,tipo){
+  if(!respostas[idx] ||!respostas[idx].letra) return alert('Marque uma alternativa primeiro!');
+  respostas[idx].tipo = tipo;
+  respostas[idx].confirmado = true;
+  document.getElementById(`acoes${idx}`).style.display='none';
+  document.querySelectorAll(`#q${idx} .btn-alt`).forEach(b=>b.classList.add('travada'));
+  document.getElementById(`q${idx}`).classList.add('questao-travada');
+}
+
+function corrigirRedacao(){
+  const texto = document.getElementById('textoRedacao').value;
+  if(texto.trim().length<10) return alert('Escreva a sua redação antes de corrigir!');
+
+  const linhasFicticiasPorPalavra = 7; 
+  const palavras = texto.trim().split(/\s+/).length;
+  const listaParagrafos = texto.split(/\n\n/).filter(p=>p.trim().length > 2);
+  const totalParagrafos = listaParagrafos.length;
+  const conectivos = (texto.match(/mas|porém|então|portanto|assim|além disso|porque/gi)||[]).length;
+
+  let primeiroBloco = listaParagrafos[0] || "";
+  let palavraTema = provaAtual.tema.nomeClean.toLowerCase();
+  let possuiPertinenciaTematica = primeiroBloco.toLowerCase().includes(palavraTema);
+
+  let totalLinhasSimuladas = 0;
+  listaParagrafos.forEach(p => {
+    let pals = p.trim().split(/\s+/).length;
+    totalLinhasSimuladas += Math.max(1, Math.ceil(pals / linhasFicticiasPorPalavra));
+  });
+
+  const c1 = Math.min(200, palavras>100?180:palavras>50?140:100);
+  const c2 = possuiPertinenciaTematica ? 180 : 100;
+  const c3 = conectivos>4?170:conectivos>2?150:130;
+  const c4 = (totalParagrafos>=4 && totalParagrafos<=5)?170:130;
+  const c5 = 160;
+  const nota = c1+c2+c3+c4+c5;
+
+  let analiseEstrutural = "";
+  if(totalParagrafos < 4){
+    analiseEstrutural += `<li><strong>Déficit de Macroestrutura Block:</strong> Faltam ${4 - totalParagrafos} parágrafo(s) para atingir a estrutura padrão de vestibular (Introdução, D1, D2 e Conclusão).</li>`;
+  } else if(totalParagrafos > 5){
+    analiseEstrutural += `<li><strong>Excesso Estrutural:</strong> O texto apresenta ${totalParagrafos} parágrafos, fragmentando a progressão textual linear.</li>`;
+  } else {
+    analiseEstrutural += `<li><strong>Macroestrutura Nota 10:</strong> Excelente! Texto estruturado dentro do limite ideal de ${totalParagrafos} parágrafos.</li>`;
+  }
+
+  let linhasAlvo = totalParagrafos * 5;
+  if(totalLinhasSimuladas < linhasAlvo){
+    analiseEstrutural += `<li><strong>Extensão Equivalente (Formato Prova A4):</strong> Ritmo de escrita abaixo do padrão. Faltam aproximadamente ${linhasAlvo - totalLinhasSimuladas} linhas estruturais para manter a média técnica de 5 linhas por parágrafo.</li>`;
+  } else {
+    analiseEstrutural += `<li><strong>Densidade de Conteúdo:</strong> Ótimo volume de texto, com média técnica equivalente a 5 ou mais linhas por bloco estrutural.</li>`;
+  }
+
+  if(!possuiPertinenciaTematica){
+    analiseEstrutural += `<li><strong>Alerta de Coesão Macro:</strong> O termo nuclear do tema "<strong>${provaAtual.tema.nomeClean}</strong>" não foi explicitado na introdução/título. Perigo de tangenciamento.</li>`;
+  } else {
+    analiseEstrutural += `<li><strong>Pertinência Temática:</strong> Adequação macro-semântica validada com sucesso! O tema principal foi bem posicionado.</li>`;
+  }
+
+  document.getElementById('resultadoRedacao').innerHTML = `
+    <h4>Nota da Redação: ${nota}/1000</h4>
+    <p><strong>C1 Norma:</strong> ${c1} | <strong>C2 Tema:</strong> ${c2} | <strong>C3 Coesão:</strong> ${c3}</p>
+    <p><strong>C4 Estrutura:</strong> ${c4} | <strong>C5 Proposta:</strong> ${c5}</p>
+    <p class="hint">Métricas Rápidas: ${palavras} palavras | ~${totalLinhasSimuladas} linhas geradas | ${totalParagrafos} parágrafos identificados</p>
+    <hr style="border:1px dashed #ddd">
+    <h5>📋 Parecer Técnico Orientador:</h5>
+    <ul style="padding-left:20px; font-size:14px; line-height:20px; color:#444">
+      ${analiseEstrutural}
+    </ul>
+  `;
+  document.getElementById('resultadoRedacao').style.display='block';
+}
+
+function obterConselhoInovador(tipoErro, questaoTexto){
+  const tecnicasChute = [
+    "<strong>Técnica da Alternativa Includente:</strong> Analise se a alternativa correta engloba as outras. Em questões de semântica ou gramática, o item mais completo e formal costuma ser o gabarito oficial.",
+    "<strong>Eliminação de Absurdos Semânticos:</strong> Descarte opções com termos muito radicais ou simplistas (ex: 'nunca', 'sempre', 'apenas'). Em provas como a do CEDAF, o equilíbrio conceitual dita a alternativa certa.",
+    "<strong>Análise Fonética e Raiz de Palavra:</strong> Se não conhece o sinônimo/antônimo, quebre a palavra no radical (ex: 'relevante' vem de 'relevar'). Busque aproximação com palavras que você já usa nas redações.",
+    "<strong>Associação pelo Contexto Direto:</strong> Releia o enunciado projetando a lacuna. Muitas vezes a resposta correta mantém a mesma classe gramatical ou regência exigida pelo verbo da frase analisada.",
+    "<strong>Técnica do Contraste de Opostos:</strong> Quando duas alternativas dizem exatamente o oposto uma da outra, a resposta verdadeira tem alta probabilidade estatística de ser uma daquelas duas."
+  ];
+
+  const tecnicasEstudo = [
+    "<strong>Revisão Ativa por Contraste:</strong> Você errou um conceito conhecido. Force sua mente a explicar a diferença exata entre o que marcou e a resposta certa. Fixe o erro para gerar tração.",
+    "<strong>Análise de Pegadinha Sintática:</strong> Releia o enunciado prestando atenção nas palavras de comando (ex: 'Sujeito', 'Adjunto', 'Conectivo'). Errar o que sabe geralmente é falta de marcação de palavras-chave.",
+    "<strong>Engenharia Reversa do Gabarito:</strong> Pegue a alternativa certa e reconstrói a regra gramatical ou semântica por trás dela em voz alta, simulando como se você estivesse ensinando para alguém.",
+    "<strong>Calibragem de Velocidade vs Atenção:</strong> Erros em matérias dominadas ocorrem por pressa de avançar. Gaste 15 segundos a mais na releitura da frase-problema antes de cravar a confirmação.",
+    "<strong>Aplicação Prática Imediata:</strong> Crie duas frases novas usando o conectivo ou a regra da questão que você errou. O cérebro fixa conteúdos estruturados quando os transforma em produção ativa."
+  ];
+
+  let randomIdx = Math.floor(Math.random() * 5);
+  if(tipoErro === 'chute'){
+    return `<strong>💡 Direcionamento para Chute Técnico:</strong><br>${tecnicasChute[randomIdx]}`;
+  } else {
+    return `<strong>🧠 Reforço de Revisão Ativa (Assunto já Estudado):</strong><br>${tecnicasEstudo[randomIdx]}`;
+  }
+}
+
+function finalizar(){
+  if(modoAtual==='prova' || modoAtual==='ambos'){
+    let acertosTotal=0, acertosEstudado=0, acertosChute=0, totalEstudado=0, totalChute=0, respondidas=0;
+    let listaErrosHtml = "";
+
+    respostas.forEach((r,i)=>{
+      if(r && r.confirmado){
+        respondidas++;
+        const qCorreta = provaAtual.questoes[i];
+        const acertou = r.letra === qCorreta.gab;
+        
+        if(acertou){
+          acertosTotal++;
+          if(r.tipo==='estudado') { totalEstudado++; acertosEstudado++; }
+          else { totalChute++; acertosChute++; }
+        } else {
+          if(r.tipo==='estudado') totalEstudado++;
+          else totalChute++;
+
+          let classeVozBox = r.tipo === 'estudado' ? 'conselho-estudado' : '';
+          let txtConselho = obterConselhoInovador(r.tipo, qCorreta.q);
+          
+          let indGabarito = ['a','b','c','d'].indexOf(qCorreta.gab);
+          let textoAlternativaCerta = qCorreta.ops[indGabarito];
+
+          listaErrosHtml += `
+            <div class="conselho-box ${classeVozBox}">
+              <strong>Questão Errada:</strong> ${qCorreta.q}<br>
+              <span style="color:#d32f2f">Sua Resposta: ${r.letra.toUpperCase()}</span> | 
+              <span style="color:#34a853">Gabarito: ${qCorreta.gab.toUpperCase()}) ${textoAlternativaCerta}</span><br>
+              <p style="margin:6px 0 0 0; color:#555">${txtConselho}</p>
+            </div>
+          `;
+        }
+      }
+    });
+
+    if(respondidas === 0) return alert('Responda e confirme pelo menos uma questão para finalizar!');
+
+    const notaQ = Math.round((acertosTotal/20)*1000);
+    const feitas = JSON.parse(localStorage.getItem('provasFeitas')||'[]');
+    feitas.push(provaAtual.id);
+    localStorage.setItem('provasFeitas',JSON.stringify(feitas));
+
+    let htmlResultado = `
+      <h3>Resultado Final - Prova ${provaAtual.id}</h3>
+      <h2>Nota Questões: ${notaQ}/1000</h2>
+      <p><strong>Respondidas:</strong> ${respondidas}/20</p>
+      <p><strong>Total de Acertos:</strong> ${acertosTotal} de ${respondidas}</p>
+      <p><strong>No que você já estudou:</strong> ${acertosEstudado}/${totalEstudado}</p>
+      <p><strong>No chute:</strong> ${acertosChute}/${totalChute}</p>
+    `;
+
+    if(listaErrosHtml !== ""){
+      htmlResultado += `
+        <hr style="border:1px dashed #ddd">
+        <h4>📋 Mentoria e Análise Baseada nos Erros:</h4>
+        ${listaErrosHtml}
+      `;
+    } else {
+      htmlResultado += `<p style="color:var(--seta-verde); font-weight:bold">🎯 Desempenho excelente! Nenhuma correção necessária nas questões respondidas.</p>`;
+    }
+
+    htmlResultado += `<br><button class="btn-seta" onclick="location.reload()">🎲 Nova Prova</button>`;
+    
+    document.getElementById('resultadoFinal').innerHTML = htmlResultado;
+    document.getElementById('resultadoFinal').style.display='block';
+    document.getElementById('areaProva').style.display='none';
+  }else{
+    alert('Redação corrigida acima!');
+  }
+}
+
+iniciar();
+</script>
+</body>
+</html>
