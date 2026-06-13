@@ -1,8 +1,4 @@
-// ============================================
-// CONFIGURAÇÃO DA API GEMINI
-// IMPORTANTE: COLE SUA CHAVE AQUI ENTRE AS ASPAS
-// ============================================
-
+const GEMINI_API_KEY = "AQ.Ab8RN6LvEeUGiwmgp6_zsqwUnHTTSE1a8bvtU6LVcyng_sjrEQ";
 
 const TEMAS = {
   futebol: { titulo: "ESQUADRÃO IMORTAL", subtitulo: "Temporada 2026 · Rumo ao título", historias: ["Mais que um time, uma irmandade. Este álbum registra a garra, os gols e a resenha do vestiário que nos fez campeões dentro e fora de campo.","Entre treinos na chuva e vitórias no domingo, construímos uma família. Cada rosto aqui suou a camisa e honrou o manto sagrado."], editorial: "O suor de hoje é o troféu de amanhã.", legendas: ["Goleiro Titular","Lateral Direito","Zagueiro","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Técnico","Capitão"] },
