@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Álbum Premium - Seta Soluções</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <header class="topo">
+      <img src="imagem/logo-seta.png" alt="Seta Soluções" class="logo">
+      <h1>Álbum Premium</h1>
+      <p>Criador de Álbuns Colecionáveis</p>
+    </header>
+
+    <section class="configuracoes">
+      <h2>Configurações</h2>
+
+      <div class="form-group">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" placeholder="Ex: Nossa Comunidade de Fé">
+      </div>
+
+      <div class="form-group">
+        <label for="subtitulo">Subtítulo:</label>
+        <input type="text" id="subtitulo" placeholder="Ex: Unidos em propósito">
+      </div>
+
+      <div class="form-group">
+        <label for="ano">Ano:</label>
+        <input type="text" id="ano" value="2026" style="max-width: 100px;">
+        <label for="historia" class="inline">História:</label>
+      </div>
+
+      <div class="form-group">
+        <textarea id="historia" rows="4" placeholder="Conte a história do álbum aqui..."></textarea>
+      </div>
+
+      <div class="botoes">
+        <button onclick="ouvir()">🔊 Ouvir</button>
+        <button onclick="pausar()">⏸️ Pausar</button>
+        <button onclick="comoUsar()">❓ Como usar</button>
+        <button onclick="gerarAlbum()">📖 Gerar Álbum</button>
+        <button onclick="gerarComIA()" class="btn-gerar">✨ Gerar com IA</button>
+      </div>
+    </section>
+
+    <section class="area-figurinhas">
+      <h2>Figurinhas</h2>
+      <div id="gridEditavel" class="grid-editavel"></div>
+    </section>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
