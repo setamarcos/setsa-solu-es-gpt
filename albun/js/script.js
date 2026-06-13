@@ -1,5 +1,3 @@
-const GEMINI_API_KEY = "AQ.Ab8RN6LvEeUGiwmgp6_zsqwUnHTTSE1a8bvtU6LVcyng_sjrEQ";
-
 const TEMAS = {
   futebol: { titulo: "ESQUADRÃO IMORTAL", subtitulo: "Temporada 2026 · Rumo ao título", historias: ["Mais que um time, uma irmandade. Este álbum registra a garra, os gols e a resenha do vestiário que nos fez campeões dentro e fora de campo.","Entre treinos na chuva e vitórias no domingo, construímos uma família. Cada rosto aqui suou a camisa e honrou o manto sagrado."], editorial: "O suor de hoje é o troféu de amanhã.", legendas: ["Goleiro Titular","Lateral Direito","Zagueiro","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Técnico","Capitão"] },
   escola: { titulo: "MEMÓRIAS DO ENSINO MÉDIO", subtitulo: "Turma 2026 · Uma história que não termina", historias: ["Este álbum guarda os rostos, os sorrisos e as histórias de uma jornada única. Entre provas, risadas no corredor e sonhos compartilhados, construímos memórias que o tempo não apaga.","Cada figurinha aqui representa mais que um colega: representa um capítulo da nossa juventude. Que este registro seja ponte entre o que vivemos e o que ainda vamos viver."], editorial: "Amizades forjadas no recreio duram para toda vida.", legendas: ["Diretora","Coordenador","Prof. Matemática","Prof. Português","Prof. História","Representante","Aluno Destaque","Capitão do Time","Rainha da Turma","Artista da Sala","Músico","Escritor"] },
@@ -88,79 +86,10 @@ document.getElementById('paleta').addEventListener('change', e => {
 
 initUploadGrid();
 
-// FUNÇÃO IA AUTOMÁTICA
-async function gerarComIA() {
-  const nome = document.getElementById('nomeLocal').value;
-  const local = document.getElementById('cidadeCEP').value;
-  const status = document.getElementById('statusIA');
-
-  if(!nome ||!local) {
-    alert('Preencha nome e cidade');
-    return;
-  }
-
-  if(GEMINI_API_KEY === "COLE_SUA_CHAVE_AQUI") {
-    alert('Cole sua API Key do Gemini na variável GEMINI_API_KEY no arquivo js/app.js');
-    return;
-  }
-
-  status.style.display = 'block';
-  status.style.color = 'white';
-  status.innerText = 'IA montando seu álbum... 5s';
-
-  const prompt = `Você é especialista em álbuns colecionáveis.
-Nome: ${nome}
-Local: ${local}
-
-Retorne APENAS JSON:
-{
-  "categoria": "futebol",
-  "titulo": "Título em caixa alta",
-  "subtitulo": "Subtítulo com ano e frase",
-  "historia": "Texto de 3 frases sobre o local, tom emocional",
-  "editorial": "Frase de 1 linha",
-  "paginas": 16,
-  "figurinhas": 96
-}
-
-Deduza se é Academia, Arena, Igreja, etc pelo nome. Use tom de periferia/comunidade se for Betim/São Luiz.`;
-
-  try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        contents: [{parts: [{text: prompt}]}]
-      })
-    });
-
-    const data = await response.json();
-    const jsonText = data.candidates[0].content.parts[0].text.replace(/```json|```/g, '').trim();
-    const r = JSON.parse(jsonText);
-
-    document.getElementById('titulo').value = r.titulo;
-    document.getElementById('subtitulo').value = r.subtitulo;
-    document.getElementById('historia').value = r.historia;
-    document.getElementById('editorial').value = r.editorial;
-    document.getElementById('qtde').value = '12';
-    document.getElementById('tema').value = r.categoria || 'futebol';
-    document.getElementById('tema').dispatchEvent(new Event('change'));
-
-    status.innerText = 'Pronto! Revise e clique em Gerar Álbum Premium Completo.';
-    status.style.color = '#00ff88';
-
-  } catch(e) {
-    console.error(e);
-    status.innerText = 'Erro na API. Verifique a chave no console.';
-    status.style.color = '#ff3d00';
-  }
-}
-
 function gerarAlbum() {
   const titulo = document.getElementById('titulo').value || "ÁLBUM SEM TÍTULO";
   const subtitulo = document.getElementById('subtitulo').value;
   const historia = document.getElementById('historia').value;
-  const editorial = document.getElementById('editorial').value;
   const qtde = parseInt(document.getElementById('qtde').value);
   const layout = document.getElementById('layout').value;
   const paleta = document.getElementById('paleta').value;
@@ -169,13 +98,11 @@ function gerarAlbum() {
   printArea.innerHTML = '';
   paginasGeradas = [];
 
-  // CAPA
   const capa = createPage('capa');
   capa.innerHTML = `<div class="selo-capa">EDIÇÃO PREMIUM</div><div class="page-content"><h1>${titulo}</h1><p class="subtitulo">${subtitulo}</p></div>`;
   printArea.appendChild(capa);
   paginasGeradas.push({id: 'capa', nome: 'Capa'});
 
-  // INTRODUÇÃO
   if(historia) {
     const intro = createPage('');
     intro.innerHTML = `<div class="page-content"><h2 style="font-size:1.8rem;margin-bottom:8mm;color:#0B3D91;">Apresentação</h2><div style="font-size:1rem;line-height:1.8;color:#333;white-space:pre-wrap;">${historia}</div></div>`;
@@ -183,50 +110,22 @@ function gerarAlbum() {
     paginasGeradas.push({id: 'intro', nome: 'Introdução'});
   }
 
-  // MIOLO
-  const totalPaginas = 1;
-  for(let p = 0; p < totalPaginas; p++) {
-    const miolo = createPage('');
-    const gridClass = `grid-${layout}-${qtde}`;
-    let figurinhasHTML = '';
-    for(let i = 0; i < qtde; i++) {
-      const img = imagens[i]? `<img src="${imagens[i]}">` : '';
-      const nome = nomes[i] || 'Sem Foto';
-      const numPag = `N° ${i+1} - Pág. 1`;
-      const rotacao = layout === 'solto'? `transform: rotate(${(Math.random()*4-2).toFixed(1)}deg);` : '';
-      const left = layout!== 'alinhado'? `left: ${10 + (i%4)*60}mm;` : '';
-      const top = layout!== 'alinhado'? `top: ${20 + Math.floor(i/4)*90}mm;` : '';
-      const draggable = layout === 'editavel'? 'draggable="true"' : '';
-      figurinhasHTML += `<div class="figurinha-slot" data-idx="${i}" style="${rotacao}${left}${top}" ${draggable}><div class="img-box">${img}</div><div class="tarja-azul"><div class="nome">${nome}</div><div class="numero">${numPag}</div></div></div>`;
-    }
-    miolo.innerHTML = `<div class="page-content"><div class="miolo-header"><h3>${titulo}</h3><span class="pag-num">Pág. ${p+1}</span></div><div class="${gridClass}">${figurinhasHTML}</div></div>`;
-    printArea.appendChild(miolo);
-    paginasGeradas.push({id: `miolo${p}`, nome: `Miolo Pág. ${p+1}`});
-  }
-
-  // ÍNDICE
-  const indice = createPage('');
-  let indiceHTML = '<div style="columns:2;column-gap:10mm;">';
+  const miolo = createPage('');
+  const gridClass = `grid-${layout}-${qtde}`;
+  let figurinhasHTML = '';
   for(let i = 0; i < qtde; i++) {
-    const pagina = 1;
-    indiceHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:3mm;break-inside:avoid;"><span>${nomes[i] || `Item ${i+1}`}</span><span>pág. ${pagina}</span></div>`;
+    const img = imagens[i]? `<img src="${imagens[i]}">` : '';
+    const nome = nomes[i] || 'Sem Foto';
+    const numPag = `N° ${i+1} - Pág. 1`;
+    const rotacao = layout === 'solto'? `transform: rotate(${(Math.random()*4-2).toFixed(1)}deg);` : '';
+    const left = layout!== 'alinhado'? `left: ${10 + (i%4)*60}mm;` : '';
+    const top = layout!== 'alinhado'? `top: ${20 + Math.floor(i/4)*90}mm;` : '';
+    const draggable = layout === 'editavel'? 'draggable="true"' : '';
+    figurinhasHTML += `<div class="figurinha-slot" data-idx="${i}" style="${rotacao}${left}${top}" ${draggable}><div class="img-box">${img}</div><div class="tarja-azul"><div class="nome">${nome}</div><div class="numero">${numPag}</div></div></div>`;
   }
-  indiceHTML += '</div>';
-  indice.innerHTML = `<div class="page-content"><h2 style="font-size:1.8rem;margin-bottom:8mm;color:#0B3D91;">Índice de Figurinhas</h2>${indiceHTML}</div>`;
-  printArea.appendChild(indice);
-  paginasGeradas.push({id: 'indice', nome: 'Índice'});
-
-  // CARTELA
-  const cartela = createPage('');
-  let cartelaHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;">';
-  for(let i = 0; i < qtde; i++) {
-    const img = imagens[i]? `<img src="${imagens[i]}" style="width:100%;height:100%;object-fit:contain!important;padding:1mm;background:var(--paleta-fundo);">` : '';
-    cartelaHTML += `<div style="aspect-ratio:3/4;border:1px dashed #999;overflow:hidden;">${img}</div>`;
-  }
-  cartelaHTML += '</div>';
-  cartela.innerHTML = `<div class="page-content"><h2 style="text-align:center;margin-bottom:8mm;color:#0B3D91;">Cartela de Figurinhas</h2>${cartelaHTML}</div>`;
-  printArea.appendChild(cartela);
-  paginasGeradas.push({id: 'cartela', nome: 'Cartela'});
+  miolo.innerHTML = `<div class="page-content"><div class="miolo-header"><h3>${titulo}</h3><span class="pag-num">Pág. 1</span></div><div class="${gridClass}">${figurinhasHTML}</div></div>`;
+  printArea.appendChild(miolo);
+  paginasGeradas.push({id: 'miolo0', nome: 'Miolo Pág. 1'});
 
   showPrintSelector();
   if(layout === 'editavel') setTimeout(initDragDrop, 100);
