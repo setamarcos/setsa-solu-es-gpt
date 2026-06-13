@@ -20,14 +20,12 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact!important; print-color-adjust: exact!important; }
 html, body { background: var(--color-bg); color: var(--color-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; }
-
 .app-header { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; padding: 0; position: relative; }
 .app-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--color-accent); }
 .app-header-content { padding: 28px 20px 32px; max-width: 900px; margin: 0 auto; }
 .selo { display: inline-block; background: var(--color-accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
 .app-header h1 { font-size: 1.8rem; font-weight: 800; line-height: 1.1; margin-bottom: 12px; }
 .app-header p { font-size: 0.95rem; opacity: 0.9; }
-
 .control-panel { max-width: 900px; margin: -16px auto 0; padding: 0 16px 24px; position: relative; z-index: 2; }
 .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
 .card-title { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 16px; }
@@ -38,11 +36,9 @@ html, body { background: var(--color-bg); color: var(--color-text); font-family:
 select, input[type="text"], textarea { width: 100%; background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: 10px; padding: 12px 14px; color: var(--color-text); font-size: 1rem; }
 select:focus, input:focus, textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.1); }
 textarea { resize: vertical; min-height: 70px; }
-
 .btn { background: var(--color-primary); color: white; border: none; border-radius: 10px; padding: 16px 24px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-bottom: 10px; }
 .btn.laranja { background: var(--color-accent); }
 .btn:active { transform: scale(0.98); }
-
 .upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .upload-slot { background: var(--color-surface); border: 2px dashed var(--color-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
 .upload-slot.filled { border: 2px solid var(--color-primary); background: #F0F5FF; }
@@ -53,24 +49,19 @@ textarea { resize: vertical; min-height: 70px; }
 .file-input { position: relative; overflow: hidden; }
 .file-input button { width: 100%; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 8px; font-size: 0.8rem; color: var(--color-text-muted); }
 .file-input input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-
 .print-selector { background: #FFF3E0; border: 1px solid var(--color-accent); border-radius: 10px; padding: 16px; margin-top: 16px; }
 .print-selector label { display: inline-flex; align-items: center; gap: 8px; margin: 4px 12px 4px 0; font-size: 0.9rem; }
-
 #print-area { display: none; }
 .page { width: 210mm; height: 297mm; background: var(--paleta-fundo); color: #1a1a1a; margin: 0 auto 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
 .page-content { padding: 12mm; flex: 1; display: flex; flex-direction: column; }
-
 .capa { background: linear-gradient(135deg, #0B3D91 0%, #072A64 100%); color: white; justify-content: center; align-items: center; text-align: center; }
 .capa::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--color-accent); }
 .capa.selo-capa { position: absolute; top: 20mm; right: 20mm; background: var(--color-accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
 .capa h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
 .capa.subtitulo { font-size: 1.2rem; opacity: 0.9; }
-
 .miolo-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6mm; padding-bottom: 3mm; border-bottom: 3px solid var(--color-primary); }
 .miolo-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--color-primary); flex: 1; }
 .miolo-header.pag-num { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
-
 .grid-alinhado-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8mm; flex: 1; }
 .grid-alinhado-8 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm; flex: 1; }
 .grid-alinhado-12 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; flex: 1; }
@@ -78,50 +69,12 @@ textarea { resize: vertical; min-height: 70px; }
 .grid-solto.figurinha-slot { position: absolute; width: 55mm; }
 .grid-editavel { position: relative; flex: 1; background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 20px 20px; }
 .grid-editavel.figurinha-slot { position: absolute; width: 55mm; cursor: move; }
-
-.figurinha-slot {
-    background: #FFFFFF;
-    border: 1px solid #CFD8DC;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    aspect-ratio: 3/4;
-    overflow: hidden;
-}
-.figurinha-slot.img-box {
-    flex: 1;
-    background: #FA;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3mm;
-}
-.figurinha-slot img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain!important;
-}
-.figurinha-slot.tarja-azul {
-    background: #0B3D91;
-    color: white;
-    padding: 2.5mm 2mm;
-    text-align: center;
-}
-.figurinha-slot.tarja-azul.nome {
-    font-size: 0.65rem;
-    font-weight: 700;
-    margin-bottom: 0.8mm;
-    line-height: 1.1;
-}
-.figurinha-slot.tarja-azul.numero {
-    font-size: 0.55rem;
-    opacity: 0.95;
-    font-weight: 600;
-}
-
+.figurinha-slot { background: #FFFFFF; border: 1px solid #CFD8DC; display: flex; flex-direction: column; position: relative; aspect-ratio: 3/4; overflow: hidden; }
+.figurinha-slot.img-box { flex: 1; background: #FA; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 3mm; }
+.figurinha-slot img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain!important; }
+.figurinha-slot.tarja-azul { background: #0B3D91; color: white; padding: 2.5mm 2mm; text-align: center; }
+.figurinha-slot.tarja-azul.nome { font-size: 0.65rem; font-weight: 700; margin-bottom: 0.8mm; line-height: 1.1; }
+.figurinha-slot.tarja-azul.numero { font-size: 0.55rem; opacity: 0.95; font-weight: 600; }
 @media print {
 @page { size: A4; margin: 0; }
 body { background: white; }
@@ -131,7 +84,6 @@ body { background: white; }
 .page:last-child { page-break-after: auto; }
 .no-print { display: none!important; }
 }
-
 @media screen and (max-width: 600px) {
 .grid-2,.grid-3,.upload-grid { grid-template-columns: 1fr; }
 .app-header h1 { font-size: 1.5rem; }
@@ -149,6 +101,26 @@ body { background: white; }
 </div>
 
 <div class="control-panel">
+
+<!-- CARD IA AUTOMÁTICO - COLADO AQUI -->
+<div style="background: linear-gradient(135deg, #ff6b00 0%, #ff9f00 100%); padding: 24px; border-radius: 14px; margin-bottom: 24px; color: white;">
+  <h2 style="margin: 0 0 8px 0; font-size: 22px;">🚀 CRIAÇÃO AUTOMÁTICA COM IA</h2>
+  <p style="margin: 0 0 16px 0; opacity: 0.9; font-size: 14px;">
+    Digite só o nome do local e cidade. A IA preenche tudo pra você.
+  </p>
+  <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px;">
+    <input type="text" id="nomeLocal" placeholder="Ex: Academia 4 Elementos"
+      style="padding: 12px; border: none; border-radius: 8px; font-size: 15px; color: #1C2B3A;">
+    <input type="text" id="cidadeCEP" placeholder="Ex: Betim MG"
+      style="padding: 12px; border: none; border-radius: 8px; font-size: 15px; color: #1C2B3A;">
+    <button onclick="gerarComIA()"
+      style="padding: 12px 24px; background: #0B3D91; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+      GERAR DEMONSTRAÇÃO
+    </button>
+  </div>
+  <div id="statusIA" style="margin-top: 12px; font-size: 13px; display: none;"></div>
+</div>
+
 <div class="card">
 <div class="card-title">1. Configuração Editorial</div>
 <div class="grid-2">
@@ -156,7 +128,7 @@ body { background: white; }
 <label>Categoria do Álbum</label>
 <select id="tema">
 <option value="">Selecione</option>
-<option value="futebol" selected>⚽ Futebol / Esportes</option>
+<option value="futebol">⚽ Futebol / Esportes</option>
 <option value="escola">🏫 Escola / Ensino Médio</option>
 <option value="igreja">⛪ Igreja / Religioso</option>
 <option value="casamento">💍 Casamento / Social</option>
@@ -173,22 +145,21 @@ body { background: white; }
 </select>
 </div>
 </div>
-
 <div class="form-group">
 <label>Título do Álbum</label>
-<input type="text" id="titulo" value="MEMÓRIAS DA ACADEMIA 4 ELEMENTOS">
+<input type="text" id="titulo" placeholder="Ex: COPA INTERATIVA 2026">
 </div>
 <div class="form-group">
 <label>Subtítulo Dinâmico</label>
-<input type="text" id="subtitulo" value="Betim 2025 · Onde faixa se conquista, não se compra">
+<input type="text" id="subtitulo" placeholder="Ex: Uma jornada inesquecível">
 </div>
 <div class="form-group">
 <label>História / Introdução da Capa</label>
-<textarea id="historia">A Academia 4 Elementos nasceu no tatame e no suor de Betim. Mais que treino, virou caminho pra quem busca disciplina, respeito e evolução. Aqui cada queda ensina, cada faixa tem história, e cada vitória é da turma toda. De faixa branca a faixa preta, construímos juntos mais que atletas – construímos caráter.</textarea>
+<textarea id="historia" placeholder="Texto que vai na página de introdução..."></textarea>
 </div>
 <div class="form-group">
 <label>Página Livre Editorial</label>
-<textarea id="editorial">Suor, respeito e evolução. O tatame não mente.</textarea>
+<textarea id="editorial" placeholder="Texto emocional que aparece no miolo..."></textarea>
 </div>
 </div>
 
@@ -243,17 +214,10 @@ body { background: white; }
 <div id="print-area"></div>
 
 <script>
+const GEMINI_API_KEY = "COLE_SUA_CHAVE_AQUI"; // <-- COLE SUA CHAVE AQUI
+
 const TEMAS = {
-futebol: {
-  titulo: "MEMÓRIAS DA ACADEMIA 4 ELEMENTOS",
-  subtitulo: "Betim 2025 · Onde faixa se conquista, não se compra",
-  historias: [
-    "A Academia 4 Elementos nasceu no tatame e no suor de Betim. Mais que treino, virou caminho pra quem busca disciplina, respeito e evolução. Aqui cada queda ensina, cada faixa tem história, e cada vitória é da turma toda. De faixa branca a faixa preta, construímos juntos mais que atletas – construímos caráter.",
-    "Mais que um time, uma irmandade. Este álbum registra a garra, os golpes e a resenha do vestiário que nos fez crescer dentro e fora do tatame."
-  ],
-  editorial: "Suor, respeito e evolução. O tatame não mente.",
-  legendas: ["Mestre Fundador","Professor Destaque","Faixa Preta","Aluno Superação","Campeão do Mês","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Capitão"]
-},
+futebol: { titulo: "ESQUADRÃO IMORTAL", subtitulo: "Temporada 2026 · Rumo ao título", historias: ["Mais que um time, uma irmandade. Este álbum registra a garra, os gols e a resenha do vestiário que nos fez campeões dentro e fora de campo.","Entre treinos na chuva e vitórias no domingo, construímos uma família. Cada rosto aqui suou a camisa e honrou o manto sagrado."], editorial: "O suor de hoje é o troféu de amanhã.", legendas: ["Goleiro Titular","Lateral Direito","Zagueiro","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Técnico","Capitão"] },
 escola: { titulo: "MEMÓRIAS DO ENSINO MÉDIO", subtitulo: "Turma 2026 · Uma história que não termina", historias: ["Este álbum guarda os rostos, os sorrisos e as histórias de uma jornada única. Entre provas, risadas no corredor e sonhos compartilhados, construímos memórias que o tempo não apaga.","Cada figurinha aqui representa mais que um colega: representa um capítulo da nossa juventude. Que este registro seja ponte entre o que vivemos e o que ainda vamos viver."], editorial: "Amizades forjadas no recreio duram para toda vida.", legendas: ["Diretora","Coordenador","Prof. Matemática","Prof. Português","Prof. História","Representante","Aluno Destaque","Capitão do Time","Rainha da Turma","Artista da Sala","Músico","Escritor"] },
 igreja: { titulo: "NOSSA COMUNIDADE DE FÉ", subtitulo: "Unidos em propósito e amor", historias: ["Este álbum celebra a família que escolhemos pela fé. Cada rosto aqui representa orações compartilhadas, cultos memoráveis e serviço ao próximo.","Somos um corpo com muitos membros. Este registro honra cada irmão e irmã que caminha conosco na jornada da fé e do amor."], editorial: "Onde dois ou três estão reunidos, ali está o amor.", legendas: ["Pastor","Pastora","Diácono","Diaconisa","Líder de Louvor","Músico","Professor EBD","Coordenador","Intercessor","Recepção","Juventude","Crianças"] },
 casamento: { titulo: "O GRANDE DIA", subtitulo: "Uma história de amor eterno", historias: ["Este álbum eterniza o dia em que duas vidas se tornaram uma. Cada convidado, cada sorriso, cada lágrima de alegria está guardada aqui.","O amor não se explica, se vive. E hoje vivemos o capítulo mais lindo da nossa história, cercados por quem amamos."], editorial: "O amor é a única coisa que cresce quando é dividido.", legendas: ["Noivo","Noiva","Pai do Noivo","Mãe do Noivo","Pai da Noiva","Mãe da Noiva","Padrinho","Madrinha","Daminha","Pajem","Cerimonialista","Fotógrafo"] },
@@ -263,18 +227,8 @@ excursao: { titulo: "AVENTURA 2026", subtitulo: "Memórias que viraram história
 livre: { titulo: "", subtitulo: "", historias: ["",""], editorial: "", legendas: Array.from({length: 12}, function(_,i) { return "Item " + (i+1); }) }
 };
 
-// OPÇÃO 2: ARENA EXPORTES BETIM - cole isso no console pra trocar rápido
-const ARENA_DATA = {
-  titulo: "MEMÓRIAS DA ARENA EXPORTES BETIM",
-  subtitulo: "São Luiz 2025 · Mais que pelada, é tradição do bairro",
-  historia: "A Arena Exportes é ponto de encontro do São Luiz há mais de 10 anos. No sol de domingo ou na luz do refletor, o apito marca o ritmo do bairro. Aqui o zagueiro vira herói, o goleiro fecha o gol, e a torcida canta mesmo sem arquibancada. Mais que futebol, é identidade, é resenha, é a história da comunidade contada em cada gol.",
-  editorial: "Domingo tem jogo, tem resenha, tem Arena.",
-  legendas: ["Capitão da Arena","Goleiro Muralha","Artilheiro do Ano","Zagueiro","Lateral Direito","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Técnico"]
-};
-
 var imagens = Array(12).fill(null);
 var nomes = Array(12).fill('');
-var posicoesEditaveis = [];
 var paginasGeradas = [];
 
 function initUploadGrid() {
@@ -350,6 +304,74 @@ document.documentElement.style.setProperty('--paleta-fundo', e.target.value);
 
 initUploadGrid();
 
+// FUNÇÃO IA AUTOMÁTICA
+async function gerarComIA() {
+  const nome = document.getElementById('nomeLocal').value;
+  const local = document.getElementById('cidadeCEP').value;
+  const status = document.getElementById('statusIA');
+
+  if(!nome ||!local) {
+    alert('Preencha nome e cidade');
+    return;
+  }
+
+  if(GEMINI_API_KEY === "COLE_SUA_CHAVE_AQUI") {
+    alert('Cole sua API Key do Gemini na variável GEMINI_API_KEY no código');
+    return;
+  }
+
+  status.style.display = 'block';
+  status.style.color = 'white';
+  status.innerText = 'IA montando seu álbum... 5s';
+
+  const prompt = `Você é especialista em álbuns colecionáveis.
+Nome: ${nome}
+Local: ${local}
+
+Retorne APENAS JSON:
+{
+  "categoria": "futebol",
+  "titulo": "Título em caixa alta",
+  "subtitulo": "Subtítulo com ano e frase",
+  "historia": "Texto de 3 frases sobre o local, tom emocional",
+  "editorial": "Frase de 1 linha",
+  "paginas": 16,
+  "figurinhas": 96
+}
+
+Deduza se é Academia, Arena, Igreja, etc pelo nome. Use tom de periferia/comunidade se for Betim/São Luiz.`;
+
+  try {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        contents: [{parts: [{text: prompt}]}]
+      })
+    });
+
+    const data = await response.json();
+    const jsonText = data.candidates[0].content.parts[0].text.replace(/```json|```/g, '').trim();
+    const r = JSON.parse(jsonText);
+
+    document.getElementById('titulo').value = r.titulo;
+    document.getElementById('subtitulo').value = r.subtitulo;
+    document.getElementById('historia').value = r.historia;
+    document.getElementById('editorial').value = r.editorial;
+    document.getElementById('qtde').value = '12';
+    document.getElementById('tema').value = r.categoria || 'futebol';
+    document.getElementById('tema').dispatchEvent(new Event('change'));
+
+    status.innerText = 'Pronto! Revise e clique em Gerar Álbum Premium Completo.';
+    status.style.color = '#00ff88';
+
+  } catch(e) {
+    console.error(e);
+    status.innerText = 'Erro na API. Verifique a chave no console.';
+    status.style.color = '#ff3d00';
+  }
+}
+
 function gerarAlbum() {
 var titulo = document.getElementById('titulo').value || "ÁLBUM SEM TÍTULO";
 var subtitulo = document.getElementById('subtitulo').value;
@@ -391,7 +413,6 @@ var rotacao = layout === 'solto'? 'transform: rotate(' + (Math.random()*4-2).toF
 var left = layout!== 'alinhado'? 'left: ' + (10 + (i%4)*60) + 'mm;' : '';
 var top = layout!== 'alinhado'? 'top: ' + (20 + Math.floor(i/4)*90) + 'mm;' : '';
 var draggable = layout==='editavel'?'draggable="true"':'';
-
 figurinhasHTML += '<div class="figurinha-slot" data-idx="' + i + '" style="' + rotacao + left + top + '" ' + draggable + '><div class="img-box">' + img + '</div><div class="tarja-azul"><div class="nome">' + nome + '</div><div class="numero">' + numPag + '</div></div></div>';
 }
 miolo.innerHTML = '<div class="page-content"><div class="miolo-header"><h3>' + titulo + '</h3><span class="pag-num">Pág. ' + (p+1) + '</span></div><div class="' + gridClass + '">' + figurinhasHTML + '</div></div>';
@@ -465,7 +486,31 @@ imprimirSelecionadas();
 
 function initDragDrop() {
 var dragged = null;
-document.querySelectorAll('.grid-editavel.figurinha-slot').forEach(function(slot) {
+document.querySelectorAll('.grid-editavel .figurinha-slot').forEach(function(slot) {
+slot.addEventListener('dragstart', function(e) {
+dragged = e.target.closest('.figurinha-slot');
+});
+slot.addEventListener('dragend', function(e) {
+dragged = null;
+});
+document.querySelectorAll('.grid-editavel').forEach(function(grid) {
+grid.addEventListener('dragover', function(e) {
+e.preventDefault();
+});
+grid.addEventListener('drop', function(e) {
+e.preventDefault();
+if(dragged) {
+var rect = grid.getBoundingClientRect();
+dragged.style.left = (e.clientX - rect.left - 30) + 'px';
+dragged.style.top = (e.clientY - rect.top - 40) + 'px';
+}
+});
+}
+</script>
+</body>
+</html>function initDragDrop() {
+var dragged = null;
+document.querySelectorAll('.grid-editavel .figurinha-slot').forEach(function(slot) {
 slot.addEventListener('dragstart', function(e) {
 dragged = e.target.closest('.figurinha-slot');
 });
