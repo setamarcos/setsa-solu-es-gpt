@@ -1,199 +1,475 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>MP Hub IA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Seta Soluções · Álbum Editorial Premium</title>
 <style>
-body {
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#003366;
-  color:#fff;
+:root {
+    --color-primary: #0B3D91;
+    --color-primary-dark: #072A64;
+    --color-accent: #FF6A00;
+    --color-bg: #F4F6F8;
+    --color-surface: #FFFFFF;
+    --color-border: #DDE3EA;
+    --color-text: #1C2B3A;
+    --color-text-muted: #5A6B7D;
+    --radius: 14px;
+    --shadow: 0 4px 16px rgba(11, 61, 145, 0.08);
+    --paleta-fundo: #FFFFFF;
 }
-header { text-align:center; padding:1.5rem 1rem; }
-header h2 { font-size:22px; margin-bottom:8px; }
-header p { font-size:14px; line-height:1.4; opacity:0.95; }
-.container {
-  background:#fff; color:#000; max-width:780px;
-  margin:20px auto; padding:20px; border-radius:12px;
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact!important; print-color-adjust: exact!important; }
+html, body { background: var(--color-bg); color: var(--color-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; }
+
+.app-header { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; padding: 0; position: relative; }
+.app-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--color-accent); }
+.app-header-content { padding: 28px 20px 32px; max-width: 900px; margin: 0 auto; }
+.selo { display: inline-block; background: var(--color-accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
+.app-header h1 { font-size: 1.8rem; font-weight: 800; line-height: 1.1; margin-bottom: 12px; }
+.app-header p { font-size: 0.95rem; opacity: 0.9; }
+
+.control-panel { max-width: 900px; margin: -16px auto 0; padding: 0 16px 24px; position: relative; z-index: 2; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.card-title { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group label { font-size: 0.9rem; font-weight: 600; color: var(--color-text); }
+select, input[type="text"], textarea { width: 100%; background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: 10px; padding: 12px 14px; color: var(--color-text); font-size: 1rem; }
+select:focus, input:focus, textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.1); }
+textarea { resize: vertical; min-height: 70px; }
+
+.btn { background: var(--color-primary); color: white; border: none; border-radius: 10px; padding: 16px 24px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-bottom: 10px; }
+.btn.laranja { background: var(--color-accent); }
+.btn:active { transform: scale(0.98); }
+
+.upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.upload-slot { background: var(--color-surface); border: 2px dashed var(--color-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.upload-slot.filled { border: 2px solid var(--color-primary); background: #F0F5FF; }
+.upload-slot.posicao { text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; }
+.upload-slot.preview { width: 100%; height: 180px; background: #E9EEF5; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.upload-slot.preview img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain!important; padding: 2mm; background: var(--paleta-fundo); }
+.upload-slot input[type="text"] { font-size: 0.9rem; padding: 8px 10px; }
+.file-input { position: relative; overflow: hidden; }
+.file-input button { width: 100%; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 8px; font-size: 0.8rem; color: var(--color-text-muted); }
+.file-input input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+.print-selector { background: #FFF3E0; border: 1px solid var(--color-accent); border-radius: 10px; padding: 16px; margin-top: 16px; }
+.print-selector label { display: inline-flex; align-items: center; gap: 8px; margin: 4px 12px 4px 0; font-size: 0.9rem; }
+
+#print-area { display: none; }
+.page { width: 210mm; height: 297mm; background: var(--paleta-fundo); color: #1a1a1a; margin: 0 auto 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
+.page-content { padding: 12mm; flex: 1; display: flex; flex-direction: column; }
+
+.capa { background: linear-gradient(135deg, #0B3D91 0%, #072A64 100%); color: white; justify-content: center; align-items: center; text-align: center; }
+.capa::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--color-accent); }
+.capa.selo-capa { position: absolute; top: 20mm; right: 20mm; background: var(--color-accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.capa h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+.capa.subtitulo { font-size: 1.2rem; opacity: 0.9; }
+
+.miolo-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6mm; padding-bottom: 3mm; border-bottom: 3px solid var(--color-primary); }
+.miolo-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--color-primary); flex: 1; }
+.miolo-header.pag-num { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+
+.grid-alinhado-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8mm; flex: 1; }
+.grid-alinhado-8 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm; flex: 1; }
+.grid-alinhado-12 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; flex: 1; }
+.grid-solto { position: relative; flex: 1; }
+.grid-solto.figurinha-slot { position: absolute; width: 55mm; }
+.grid-editavel { position: relative; flex: 1; background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 20px 20px; }
+.grid-editavel.figurinha-slot { position: absolute; width: 55mm; cursor: move; }
+
+/* LAYOUT FIGURINHA IDÊNTICO À FOTO 02 */
+.figurinha-slot {
+    background: #FFFFFF;
+    border: 1px solid #CFD8DC;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
 }
-label { font-size:14px; font-weight:bold; }
-small { display:block; font-size:12px; color:#555; margin-bottom:8px; }
-input, textarea, select {
-  width:100%; padding:10px; font-size:14px;
-  border-radius:6px; border:1px solid #ccc; margin-bottom:14px;
+.figurinha-slot.img-box {
+    flex: 1;
+    background: #FAFA;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3mm;
 }
-button {
-  background:#ff6600; color:#fff; border:none;
-  padding:12px; font-size:15px; border-radius:8px;
-  cursor:pointer; margin-right:8px; margin-top:5px; min-height:40px;
+.figurinha-slot img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain!important;
 }
-button:hover { opacity:0.9; }
-.result {
-  background:#eef; padding:12px; margin-top:16px;
-  border-radius:8px; white-space:pre-wrap; font-size:13px;
+.figurinha-slot.tarja-azul {
+    background: #0B3D91;
+    color: white;
+    padding: 2.5mm 2mm;
+    text-align: center;
 }
-.toast {
-  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-  background:#333; color:#fff; padding:10px 16px;
-  border-radius:20px; font-size:13px; opacity:0; transition:0.3s;
+.figurinha-slot.tarja-azul.nome {
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-bottom: 0.8mm;
+    line-height: 1.1;
 }
-#retornoIA {
-  margin-top:16px; background:#f9f9f9;
-  padding:12px; border-radius:8px; display:none;
+.figurinha-slot.tarja-azul.numero {
+    font-size: 0.55rem;
+    opacity: 0.95;
+    font-weight: 600;
+}
+
+@media print {
+@page { size: A4; margin: 0; }
+body { background: white; }
+.app-header,.control-panel { display: none!important; }
+#print-area { display: block!important; }
+.page { page-break-after: always; box-shadow: none; margin: 0; }
+.page:last-child { page-break-after: auto; }
+.no-print { display: none!important; }
+}
+
+@media screen and (max-width: 600px) {
+.grid-2,.grid-3,.upload-grid { grid-template-columns: 1fr; }
+.app-header h1 { font-size: 1.5rem; }
+.card { padding: 16px; }
 }
 </style>
 </head>
 <body>
+<div class="app-header">
+<div class="app-header-content">
+<div class="selo">SETA SOLUÇÕES · EDIÇÃO PREMIUM</div>
+<h1>Álbum Editorial Colecionável</h1>
+<p>Plataforma premium para criação de álbuns escolares, esportivos, catequese, equipes e coleções emocionais.</p>
+</div>
+</div>
 
-<header>
-<h2>Estamos juntos nisso.</h2>
-<p>Fala do seu jeito — eu organizo.<br>Simples ou mais a fundo, a gente resolve.</p>
-</header>
-
-<div class="container">
-
-<label>Pra que você precisa agora?</label>
-<small>(Escolha o tipo de ajuda mais próximo do que você precisa)</small>
-<select id="tipo">
-<option>Pessoal</option><option>Técnica</option><option>Comercial</option><option>Casa</option>
+<div class="control-panel">
+<div class="card">
+<div class="card-title">1. Configuração Editorial</div>
+<div class="grid-2">
+<div class="form-group">
+<label>Categoria do Álbum</label>
+<select id="tema">
+<option value="">Selecione</option>
+<option value="escola">🏫 Escola / Ensino Médio</option>
+<option value="futebol">⚽ Futebol / Esportes</option>
+<option value="igreja">⛪ Igreja / Religioso</option>
+<option value="casamento">💍 Casamento / Social</option>
+<option value="formatura">🎓 Formatura / Conquista</option>
+<option value="empresa">🏢 Empresa / Corporativo</option>
+<option value="excursao">🚌 Excursão / Viagem</option>
+<option value="livre">✨ Livre Personalizado</option>
 </select>
-
-<label>Se quiser detalhar melhor</label>
-<input id="subtipo">
-
-<label>O que tá pegando aí?</label>
-<textarea id="problema"></textarea>
-
-<label>O que já aconteceu até aqui?</label>
-<textarea id="contexto"></textarea>
-
-<label>O que você quer resolver?</label>
-<textarea id="objetivo"></textarea>
-
-<label>Como você sabe que deu certo?</label>
-<textarea id="resultadoEsperado"></textarea>
-
-<label>O que você quer evitar?</label>
-<textarea id="naoQuero"></textarea>
-
-<button onclick="gerar()">Me ajuda com isso</button>
-<button onclick="copiar()">Copiar e usar na IA</button>
-<button onclick="exportarXLS()">Exportar XLS</button>
-
-<small>(Clique, copie e cole em uma IA como ChatGPT, Gemini ou Copilot. Ela vai entender tudo e te responder direto ao ponto.)</small>
-
-<div class="result" id="saida"></div>
-
-<!-- CAMPO DE RETORNO DA IA -->
-<div id="retornoIA">
-  <label>Cole aqui a resposta da IA:</label>
-  <textarea id="respostaIA"></textarea>
-  <button onclick="continuar()">Continuar interação</button>
-  <div id="botoesExtras"></div>
+</div>
+<div class="form-group">
+<label>História do Tema</label>
+<select id="historiaOpcao">
+<option value="">Escolha uma história</option>
+</select>
+</div>
 </div>
 
+<div class="form-group">
+<label>Título do Álbum</label>
+<input type="text" id="titulo" placeholder="Ex: COPA INTERATIVA 2026">
+</div>
+<div class="form-group">
+<label>Subtítulo Dinâmico</label>
+<input type="text" id="subtitulo" placeholder="Ex: Uma jornada inesquecível">
+</div>
+<div class="form-group">
+<label>História / Introdução da Capa</label>
+<textarea id="historia" placeholder="Texto que vai na página de introdução..."></textarea>
+</div>
+<div class="form-group">
+<label>Página Livre Editorial</label>
+<textarea id="editorial" placeholder="Texto emocional que aparece no miolo..."></textarea>
+</div>
 </div>
 
-<div id="toast" class="toast">Copiado! Agora é só colar na IA.</div>
+<div class="card">
+<div class="card-title">2. Layout e Visual</div>
+<div class="grid-3">
+<div class="form-group">
+<label>Qtde Figurinhas</label>
+<select id="qtde">
+<option value="4">4 por página</option>
+<option value="8">8 por página</option>
+<option value="12" selected>12 por página</option>
+</select>
+</div>
+<div class="form-group">
+<label>Estilo da Página</label>
+<select id="layout">
+<option value="alinhado">1. Alinhados - Editorial</option>
+<option value="solto">2. Soltos - Scrapbook</option>
+<option value="editavel">3. Editável - Arraste e Solte</option>
+</select>
+</div>
+<div class="form-group">
+<label>Paleta de Cores Suaves</label>
+<select id="paleta">
+<option value="#FFFFFF">⚪ Branco Premium</option>
+<option value="#F5F7FA">🔘 Cinza Claro Suave</option>
+<option value="#E3F2FD">🔵 Azul Pastel</option>
+<option value="#E8F5E9">🟢 Verde Campo Claro</option>
+<option value="#FFF8E1">🟡 Areia Editorial</option>
+<option value="#FFF3E0">🟠 Amarelo Palha</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">3. Insira as Fotos e Nomes</div>
+<div class="upload-grid" id="uploadGrid"></div>
+</div>
+
+<button class="btn" onclick="gerarAlbum()">Gerar Álbum Premium Completo</button>
+<button class="btn laranja" onclick="gerarCartela()">Gerar Só Cartela de Figurinhas</button>
+
+<div class="print-selector" id="printSelector" style="display:none;">
+<strong>Páginas geradas:</strong>
+<div id="paginasCheck"></div>
+<button class="btn" style="margin-top:12px;" onclick="imprimirSelecionadas()">Imprimir Selecionadas</button>
+</div>
+</div>
+
+<div id="print-area"></div>
 
 <script>
-let banco = [];
+const TEMAS = {
+escola: { titulo: "MEMÓRIAS DO ENSINO MÉDIO", subtitulo: "Turma 2026 · Uma história que não termina", historias: ["Este álbum guarda os rostos, os sorrisos e as histórias de uma jornada única. Entre provas, risadas no corredor e sonhos compartilhados, construímos memórias que o tempo não apaga.","Cada figurinha aqui representa mais que um colega: representa um capítulo da nossa juventude. Que este registro seja ponte entre o que vivemos e o que ainda vamos viver."], editorial: "Amizades forjadas no recreio duram para toda vida.", legendas: ["Diretora","Coordenador","Prof. Matemática","Prof. Português","Prof. História","Representante","Aluno Destaque","Capitão do Time","Rainha da Turma","Artista da Sala","Músico","Escritor"] },
+futebol: { titulo: "ESQUADRÃO IMORTAL", subtitulo: "Temporada 2026 · Rumo ao título", historias: ["Mais que um time, uma irmandade. Este álbum registra a garra, os gols e a resenha do vestiário que nos fez campeões dentro e fora de campo.","Entre treinos na chuva e vitórias no domingo, construímos uma família. Cada rosto aqui suou a camisa e honrou o manto sagrado."], editorial: "O suor de hoje é o troféu de amanhã.", legendas: ["Goleiro Titular","Lateral Direito","Zagueiro","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Técnico","Capitão"] },
+igreja: { titulo: "NOSSA COMUNIDADE DE FÉ", subtitulo: "Unidos em propósito e amor", historias: ["Este álbum celebra a família que escolhemos pela fé. Cada rosto aqui representa orações compartilhadas, cultos memoráveis e serviço ao próximo.","Somos um corpo com muitos membros. Este registro honra cada irmão e irmã que caminha conosco na jornada da fé e do amor."], editorial: "Onde dois ou três estão reunidos, ali está o amor.", legendas: ["Pastor","Pastora","Diácono","Diaconisa","Líder de Louvor","Músico","Professor EBD","Coordenador","Intercessor","Recepção","Juventude","Crianças"] },
+casamento: { titulo: "O GRANDE DIA", subtitulo: "Uma história de amor eterno", historias: ["Este álbum eterniza o dia em que duas vidas se tornaram uma. Cada convidado, cada sorriso, cada lágrima de alegria está guardada aqui.","O amor não se explica, se vive. E hoje vivemos o capítulo mais lindo da nossa história, cercados por quem amamos."], editorial: "O amor é a única coisa que cresce quando é dividido.", legendas: ["Noivo","Noiva","Pai do Noivo","Mãe do Noivo","Pai da Noiva","Mãe da Noiva","Padrinho","Madrinha","Daminha","Pajem","Cerimonialista","Fotógrafo"] },
+formatura: { titulo: "VENCEMOS", subtitulo: "Formatura 2026 · O futuro começou", historias: ["Noites em claro, trabalhos em grupo, estágios e sonhos. Chegamos. Este álbum é a prova de que todo esforço vale a pena.","Não foi só um diploma. Foi superação, foi amizade, foi crescimento. Este registro guarda a turma que fez história."], editorial: "O diploma é o começo. O legado é o que fazemos com ele.", legendas: ["Orador","Juramentista","Paraninfo","Homenageado","Destaque Acadêmico","Líder de Turma","Artista","Atleta","Empreendedor","Pesquisador","Voluntário","Sonhador"] },
+empresa: { titulo: "NOSSO TIME", subtitulo: "Quem faz a empresa acontecer", historias: ["Por trás de cada meta batida existe um rosto, uma história, uma dedicação. Este álbum homenageia quem constrói nosso sucesso diariamente.","Resultados são feitos de pessoas. Este registro celebra os talentos que transformam desafios em conquistas."], editorial: "Pessoas certas nos lugares certos movem montanhas.", legendas: ["CEO","Diretor","Gerente","Coordenador","Analista Sênior","Analista Pleno","Analista Júnior","Estagiário","RH","Financeiro","TI","Marketing"] },
+excursao: { titulo: "AVENTURA 2026", subtitulo: "Memórias que viraram história", historias: ["Entre estradas, risadas e descobertas, vivemos dias que não voltam mais. Este álbum guarda cada momento da nossa grande aventura.","Viajar é colecionar momentos. E esta excursão nos deu uma coleção inteira de memórias inesquecíveis."], editorial: "A vida é feita de histórias. E as melhores são vividas juntos.", legendas: ["Guia","Motorista","Coordenador","Fotógrafo","Animador","Cantor do Ônibus","Dorminhoco","Comilão","Aventureiro","Contador de Histórias","DJ","Organizador"] },
+livre: { titulo: "", subtitulo: "", historias: ["",""], editorial: "", legendas: Array.from({length: 12}, function(_,i) { return "Item " + (i+1); }) }
+};
 
-function gerar() {
-  // Correção ortográfica amigável
-  let erros = [];
-  if (problema.value.includes("pronpr")) erros.push("prompt");
-  if (problema.value.includes("bejevo")) erros.push("objetivo");
+var imagens = Array(12).fill(null);
+var nomes = Array(12).fill('');
+var posicoesEditaveis = [];
+var paginasGeradas = [];
 
-  let mensagemCorrecao = "";
-  if (erros.length > 0) {
-    mensagemCorrecao =
-`Notei alguns erros de digitação:
-- ${erros.join(", ")}
-
-Quer que eu corrija o texto para você?
-Posso fazer a correção antes de executar.
-Se preferir, posso executar deste jeito mesmo.`;
-  }
-
-  let textoFinal = `
-ASSUNTO:
-${tipo.value} - ${subtipo.value}
-
-PROBLEMA:
-${problema.value}
-
-OBJETIVO:
-${objetivo.value}
-
-RESULTADO:
-${resultadoEsperado.value}
-
-RESTRIÇÕES:
-${naoQuero.value}
-
-CONTEXTO:
-${contexto.value}
-
-INSTRUÇÃO:
-Responder de forma direta, prática e sem excesso.
-
-${mensagemCorrecao}
-`;
-
-  saida.innerText = textoFinal;
-  window.textoFinal = textoFinal;
-
-  banco.push({ data: new Date().toLocaleString(), tipo: tipo.value, problema: problema.value });
-
-  document.getElementById("retornoIA").style.display = "block";
+function initUploadGrid() {
+var qtde = parseInt(document.getElementById('qtde').value);
+var uploadGrid = document.getElementById('uploadGrid');
+uploadGrid.innerHTML = '';
+imagens = Array(qtde).fill(null);
+nomes = Array(qtde).fill('');
+for(var i = 0; i < qtde; i++) {
+var slot = document.createElement('div');
+slot.className = 'upload-slot';
+slot.innerHTML = '<div class="posicao">POSIÇÃO ' + (i+1) + '</div><div class="preview"></div><input type="text" placeholder="Nome" data-idx="' + i + '" value="' + (nomes[i] || '') + '"><div class="file-input"><button>Escolher arquivo</button><input type="file" accept="image/*" data-idx="' + i + '"></div>';
+uploadGrid.appendChild(slot);
+}
+bindUploadEvents();
 }
 
-function copiar() {
-  navigator.clipboard.writeText(window.textoFinal);
-  let toast = document.getElementById("toast");
-  toast.style.opacity = 1;
-  setTimeout(() => { toast.style.opacity = 0; }, 2000);
+function bindUploadEvents() {
+document.querySelectorAll('.upload-slot input[type="file"]').forEach(function(input) {
+input.onchange = function(e) {
+var idx = e.target.getAttribute('data-idx');
+var file = e.target.files[0];
+if(!file) return;
+var reader = new FileReader();
+reader.onload = function(ev) {
+imagens[idx] = ev.target.result;
+var slot = e.target.closest('.upload-slot');
+slot.classList.add('filled');
+slot.querySelector('.preview').innerHTML = '<img src="' + ev.target.result + '">';
+};
+reader.readAsDataURL(file);
+};
+});
+document.querySelectorAll('.upload-slot input[type="text"]').forEach(function(input) {
+input.oninput = function(e) {
+nomes[e.target.getAttribute('data-idx')] = e.target.value;
+};
+});
 }
 
-function exportarXLS() {
-  let tabela = "Data\tTipo\tProblema\n";
-  banco.forEach(item => { tabela += `${item.data}\t${item.tipo}\t${item.problema}\n`; });
-  let blob = new Blob([tabela], { type: "application/vnd.ms-excel" });
-  let link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "mp_hub.xls";
-  link.click();
+document.getElementById('tema').addEventListener('change', function(e) {
+var tema = TEMAS[e.target.value];
+var historiaSelect = document.getElementById('historiaOpcao');
+historiaSelect.innerHTML = '<option value="">Escolha uma história</option>';
+if(!tema) return;
+tema.historias.forEach(function(h, i) {
+var opt = document.createElement('option');
+opt.value = i;
+opt.textContent = 'Opção ' + (i+1) + ': ' + h.substring(0,40) + '...';
+historiaSelect.appendChild(opt);
+});
+document.getElementById('titulo').value = tema.titulo;
+document.getElementById('subtitulo').value = tema.subtitulo;
+document.getElementById('editorial').value = tema.editorial;
+var qtde = parseInt(document.getElementById('qtde').value);
+nomes = tema.legendas.slice(0, qtde);
+document.querySelectorAll('.upload-slot input[type="text"]').forEach(function(input, i) {
+input.value = nomes[i] || '';
+});
+});
+
+document.getElementById('historiaOpcao').addEventListener('change', function(e) {
+var tema = TEMAS[document.getElementById('tema').value];
+if(tema && e.target.value!== '') {
+document.getElementById('historia').value = tema.historias[e.target.value];
+}
+});
+
+document.getElementById('qtde').addEventListener('change', initUploadGrid);
+document.getElementById('paleta').addEventListener('change', function(e) {
+document.documentElement.style.setProperty('--paleta-fundo', e.target.value);
+});
+
+initUploadGrid();
+
+function gerarAlbum() {
+var titulo = document.getElementById('titulo').value || "ÁLBUM SEM TÍTULO";
+var subtitulo = document.getElementById('subtitulo').value;
+var historia = document.getElementById('historia').value;
+var editorial = document.getElementById('editorial').value;
+var qtde = parseInt(document.getElementById('qtde').value);
+var layout = document.getElementById('layout').value;
+var paleta = document.getElementById('paleta').value;
+document.documentElement.style.setProperty('--paleta-fundo', paleta);
+var printArea = document.getElementById('print-area');
+printArea.innerHTML = '';
+paginasGeradas = [];
+
+// CAPA
+var capa = createPage('capa');
+capa.innerHTML = '<div class="selo-capa">EDIÇÃO PREMIUM</div><div class="page-content"><h1>' + titulo + '</h1><p class="subtitulo">' + subtitulo + '</p></div>';
+printArea.appendChild(capa);
+paginasGeradas.push({id: 'capa', nome: 'Capa'});
+
+// INTRODUÇÃO
+if(historia) {
+var intro = createPage('');
+intro.innerHTML = '<div class="page-content"><h2 style="font-size:1.8rem;margin-bottom:8mm;color:#0B3D91;">Apresentação</h2><div style="font-size:1rem;line-height:1.8;color:#333;white-space:pre-wrap;">' + historia + '</div></div>';
+printArea.appendChild(intro);
+paginasGeradas.push({id: 'intro', nome: 'Introdução'});
 }
 
-function continuar() {
-  let resposta = document.getElementById("respostaIA").value;
-  alert("Interação continuada com a resposta da IA:\n\n" + resposta);
+// MIOLO - LAYOUT IDÊNTICO FOTO 02
+var totalPaginas = 1;
+for(var p = 0; p < totalPaginas; p++) {
+var miolo = createPage('');
+var gridClass = 'grid-' + layout + '-' + qtde;
+var figurinhasHTML = '';
+for(var i = 0; i < qtde; i++) {
+var img = imagens[i]? '<img src="' + imagens[i] + '">' : '';
+var nome = nomes[i] || 'Sem Foto';
+var numPag = 'N° ' + (i+1) + ' - Pág. 1';
+var rotacao = layout === 'solto'? 'transform: rotate(' + (Math.random()*4-2).toFixed(1) + 'deg);' : '';
+var left = layout!== 'alinhado'? 'left: ' + (10 + (i%4)*60) + 'mm;' : '';
+var top = layout!== 'alinhado'? 'top: ' + (20 + Math.floor(i/4)*90) + 'mm;' : '';
+var draggable = layout==='editavel'?'draggable="true"':'';
 
-  // Criar três botões extras
-  let div = document.getElementById("botoesExtras");
-  div.innerHTML = "";
-  let btn1 = document.createElement("button");
-  btn1.innerText = "Nova análise";
-  btn1.onclick = () => gerar();
-  let btn2 = document.createElement("button");
-  btn2.innerText = "Copiar retorno";
-  btn2.onclick = () => navigator.clipboard.writeText(resposta);
-  let btn3 = document.createElement("button");
-  btn3.innerText = "Exportar retorno";
-  btn3.onclick = () => {
-    let blob = new Blob([resposta], { type: "text/plain" });
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "retornoIA.txt";
-    link.click();
-  };
-  div.appendChild(btn1);
-  div.appendChild(btn2);
-  div.appendChild(btn3);
+figurinhasHTML += '<div class="figurinha-slot" data-idx="' + i + '" style="' + rotacao + left + top + '" ' + draggable + '><div class="img-box">' + img + '</div><div class="tarja-azul"><div class="nome">' + nome + '</div><div class="numero">' + numPag + '</div></div></div>';
+}
+miolo.innerHTML = '<div class="page-content"><div class="miolo-header"><h3>' + titulo + '</h3><span class="pag-num">Pág. ' + (p+1) + '</span></div><div class="' + gridClass + '">' + figurinhasHTML + '</div></div>';
+printArea.appendChild(miolo);
+paginasGeradas.push({id: 'miolo' + p, nome: 'Miolo Pág. ' + (p+1)});
+}
+
+// ÍNDICE
+var indice = createPage('');
+var indiceHTML = '<div style="columns:2;column-gap:10mm;">';
+for(var i = 0; i < qtde; i++) {
+var pagina = 1;
+indiceHTML += '<div style="display:flex;justify-content:space-between;margin-bottom:3mm;break-inside:avoid;"><span>' + (nomes[i] || 'Item ' + (i+1)) + '</span><span>pág. ' + pagina + '</span></div>';
+}
+indiceHTML += '</div>';
+indice.innerHTML = '<div class="page-content"><h2 style="font-size:1.8rem;margin-bottom:8mm;color:#0B3D91;">Índice de Figurinhas</h2>' + indiceHTML + '</div>';
+printArea.appendChild(indice);
+paginasGeradas.push({id: 'indice', nome: 'Índice'});
+
+// CARTELA
+var cartela = createPage('');
+var cartelaHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;">';
+for(var i = 0; i < qtde; i++) {
+var img = imagens[i]? '<img src="' + imagens[i] + '" style="width:100%;height:100%;object-fit:contain!important;padding:1mm;background:var(--paleta-fundo);">' : '';
+cartelaHTML += '<div style="aspect-ratio:3/4;border:1px dashed #999;overflow:hidden;">' + img + '</div>';
+}
+cartelaHTML += '</div>';
+cartela.innerHTML = '<div class="page-content"><h2 style="text-align:center;margin-bottom:8mm;color:#0B3D91;">Cartela de Figurinhas</h2>' + cartelaHTML + '</div>';
+printArea.appendChild(cartela);
+paginasGeradas.push({id: 'cartela', nome: 'Cartela'});
+
+showPrintSelector();
+if(layout === 'editavel') setTimeout(initDragDrop, 100);
+}
+
+function createPage(classe) {
+var page = document.createElement('div');
+page.className = 'page ' + classe;
+return page;
+}
+
+function showPrintSelector() {
+var selector = document.getElementById('printSelector');
+var checkDiv = document.getElementById('paginasCheck');
+checkDiv.innerHTML = '';
+paginasGeradas.forEach(function(p) {
+checkDiv.innerHTML += '<label><input type="checkbox" value="' + p.id + '" checked> ' + p.nome + '</label>';
+});
+selector.style.display = 'block';
+}
+
+function imprimirSelecionadas() {
+var checks = document.querySelectorAll('#paginasCheck input:checked');
+var ids = Array.from(checks).map(function(c) { return c.value; });
+document.querySelectorAll('#print-area.page').forEach(function(page, i) {
+if(ids.indexOf(paginasGeradas[i].id) === -1) {
+page.classList.add('no-print');
+} else {
+page.classList.remove('no-print');
+}
+});
+setTimeout(function() { window.print(); }, 300);
+}
+
+function gerarCartela() {
+document.querySelectorAll('#paginasCheck input').forEach(function(c) { c.checked = false; });
+var cartelaCheck = document.querySelector('#paginasCheck input[value="cartela"]');
+if(cartelaCheck) cartelaCheck.checked = true;
+imprimirSelecionadas();
+}
+
+function initDragDrop() {
+var dragged = null;
+document.querySelectorAll('.grid-editavel.figurinha-slot').forEach(function(slot) {
+slot.addEventListener('dragstart', function(e) {
+dragged = e.target.closest('.figurinha-slot');
+});
+slot.addEventListener('dragend', function(e) {
+dragged = null;
+});
+});
+document.querySelectorAll('.grid-editavel').forEach(function(grid) {
+grid.addEventListener('dragover', function(e) {
+e.preventDefault();
+});
+grid.addEventListener('drop', function(e) {
+e.preventDefault();
+if(dragged) {
+var rect = grid.getBoundingClientRect();
+dragged.style.left = (e.clientX - rect.left - 30) + 'px';
+dragged.style.top = (e.clientY - rect.top - 40) + 'px';
+}
+});
+});
 }
 </script>
-
 </body>
 </html>
