@@ -1,59 +1,126 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Álbum Premium - Seta Soluções</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Seta Soluções · Álbum Editorial Premium</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
+<div class="app-header">
+  <div class="app-header-content">
+    <div class="selo">SETA SOLUÇÕES · EDIÇÃO PREMIUM</div>
+    <h1>Álbum Editorial Colecionável</h1>
+    <p>Plataforma premium para criação de álbuns escolares, esportivos, catequese, equipes e coleções emocionais.</p>
+  </div>
+</div>
 
-    <header class="topo">
-      <img src="imagem/logo-seta.png" alt="Seta Soluções" class="logo">
-      <h1>Álbum Premium</h1>
-      <p>Criador de Álbuns Colecionáveis</p>
-    </header>
+<div class="control-panel">
 
-    <section class="configuracoes">
-      <h2>Configurações</h2>
-
-      <div class="form-group">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" placeholder="Ex: Nossa Comunidade de Fé">
-      </div>
-
-      <div class="form-group">
-        <label for="subtitulo">Subtítulo:</label>
-        <input type="text" id="subtitulo" placeholder="Ex: Unidos em propósito">
-      </div>
-
-      <div class="form-group">
-        <label for="ano">Ano:</label>
-        <input type="text" id="ano" value="2026" style="max-width: 100px;">
-        <label for="historia" class="inline">História:</label>
-      </div>
-
-      <div class="form-group">
-        <textarea id="historia" rows="4" placeholder="Conte a história do álbum aqui..."></textarea>
-      </div>
-
-      <div class="botoes">
-        <button onclick="ouvir()">🔊 Ouvir</button>
-        <button onclick="pausar()">⏸️ Pausar</button>
-        <button onclick="comoUsar()">❓ Como usar</button>
-        <button onclick="gerarAlbum()">📖 Gerar Álbum</button>
-        <button onclick="gerarComIA()" class="btn-gerar">✨ Gerar com IA</button>
-      </div>
-    </section>
-
-    <section class="area-figurinhas">
-      <h2>Figurinhas</h2>
-      <div id="gridEditavel" class="grid-editavel"></div>
-    </section>
-
+  <!-- CARD IA AUTOMÁTICO -->
+  <div class="card-ia">
+    <h2>🚀 CRIAÇÃO AUTOMÁTICA COM IA</h2>
+    <p>Digite só o nome do local e cidade. A IA preenche tudo pra você.</p>
+    <div class="grid-3">
+      <input type="text" id="nomeLocal" placeholder="Ex: Academia 4 Elementos">
+      <input type="text" id="cidadeCEP" placeholder="Ex: Betim MG">
+      <button onclick="gerarComIA()" class="btn btn-azul">GERAR DEMONSTRAÇÃO</button>
+    </div>
+    <div id="statusIA" style="margin-top: 12px; font-size: 13px; display: none;"></div>
   </div>
 
-  <script src="js/app.js"></script>
+  <div class="card">
+    <div class="card-title">1. Configuração Editorial</div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Categoria do Álbum</label>
+        <select id="tema">
+          <option value="">Selecione</option>
+          <option value="futebol">⚽ Futebol / Esportes</option>
+          <option value="escola">🏫 Escola / Ensino Médio</option>
+          <option value="igreja">⛪ Igreja / Religioso</option>
+          <option value="casamento">💍 Casamento / Social</option>
+          <option value="formatura">🎓 Formatura / Conquista</option>
+          <option value="empresa">🏢 Empresa / Corporativo</option>
+          <option value="excursao">🚌 Excursão / Viagem</option>
+          <option value="livre">✨ Livre Personalizado</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>História do Tema</label>
+        <select id="historiaOpcao">
+          <option value="">Escolha uma história</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Título do Álbum</label>
+      <input type="text" id="titulo" placeholder="Ex: COPA INTERATIVA 2026">
+    </div>
+    <div class="form-group">
+      <label>Subtítulo Dinâmico</label>
+      <input type="text" id="subtitulo" placeholder="Ex: Uma jornada inesquecível">
+    </div>
+    <div class="form-group">
+      <label>História / Introdução da Capa</label>
+      <textarea id="historia" placeholder="Texto que vai na página de introdução..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Página Livre Editorial</label>
+      <textarea id="editorial" placeholder="Texto emocional que aparece no miolo..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Layout e Visual</div>
+    <div class="grid-3">
+      <div class="form-group">
+        <label>Qtde Figurinhas</label>
+        <select id="qtde">
+          <option value="4">4 por página</option>
+          <option value="8">8 por página</option>
+          <option value="12" selected>12 por página</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Estilo da Página</label>
+        <select id="layout">
+          <option value="alinhado" selected>1. Alinhados - Editorial</option>
+          <option value="solto">2. Soltos - Scrapbook</option>
+          <option value="editavel">3. Editável - Arraste e Solte</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Paleta de Cores Suaves</label>
+        <select id="paleta">
+          <option value="#FFFFFF" selected>⚪ Branco Premium</option>
+          <option value="#F5F7FA">🔘 Cinza Claro Suave</option>
+          <option value="#E3F2FD">🔵 Azul Pastel</option>
+          <option value="#E8F5E9">🟢 Verde Campo Claro</option>
+          <option value="#FFF8E1">🟡 Areia Editorial</option>
+          <option value="#FFF3E0">🟠 Amarelo Palha</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. Insira as Fotos e Nomes</div>
+    <div class="upload-grid" id="uploadGrid"></div>
+  </div>
+
+  <button class="btn" onclick="gerarAlbum()">Gerar Álbum Premium Completo</button>
+  <button class="btn laranja" onclick="gerarCartela()">Gerar Só Cartela de Figurinhas</button>
+
+  <div class="print-selector" id="printSelector" style="display:none;">
+    <strong>Páginas geradas:</strong>
+    <div id="paginasCheck"></div>
+    <button class="btn" style="margin-top:12px;" onclick="imprimirSelecionadas()">Imprimir Selecionadas</button>
+  </div>
+</div>
+
+<div id="print-area"></div>
+
+<script src="js/app.js"></script>
 </body>
 </html>
