@@ -79,7 +79,6 @@ textarea { resize: vertical; min-height: 70px; }
 .grid-editavel { position: relative; flex: 1; background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 20px 20px; }
 .grid-editavel.figurinha-slot { position: absolute; width: 55mm; cursor: move; }
 
-/* LAYOUT FIGURINHA IDÊNTICO À FOTO 02 */
 .figurinha-slot {
     background: #FFFFFF;
     border: 1px solid #CFD8DC;
@@ -91,7 +90,7 @@ textarea { resize: vertical; min-height: 70px; }
 }
 .figurinha-slot.img-box {
     flex: 1;
-    background: #FAFA;
+    background: #FA;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -157,8 +156,8 @@ body { background: white; }
 <label>Categoria do Álbum</label>
 <select id="tema">
 <option value="">Selecione</option>
+<option value="futebol" selected>⚽ Futebol / Esportes</option>
 <option value="escola">🏫 Escola / Ensino Médio</option>
-<option value="futebol">⚽ Futebol / Esportes</option>
 <option value="igreja">⛪ Igreja / Religioso</option>
 <option value="casamento">💍 Casamento / Social</option>
 <option value="formatura">🎓 Formatura / Conquista</option>
@@ -177,19 +176,19 @@ body { background: white; }
 
 <div class="form-group">
 <label>Título do Álbum</label>
-<input type="text" id="titulo" placeholder="Ex: COPA INTERATIVA 2026">
+<input type="text" id="titulo" value="MEMÓRIAS DA ACADEMIA 4 ELEMENTOS">
 </div>
 <div class="form-group">
 <label>Subtítulo Dinâmico</label>
-<input type="text" id="subtitulo" placeholder="Ex: Uma jornada inesquecível">
+<input type="text" id="subtitulo" value="Betim 2025 · Onde faixa se conquista, não se compra">
 </div>
 <div class="form-group">
 <label>História / Introdução da Capa</label>
-<textarea id="historia" placeholder="Texto que vai na página de introdução..."></textarea>
+<textarea id="historia">A Academia 4 Elementos nasceu no tatame e no suor de Betim. Mais que treino, virou caminho pra quem busca disciplina, respeito e evolução. Aqui cada queda ensina, cada faixa tem história, e cada vitória é da turma toda. De faixa branca a faixa preta, construímos juntos mais que atletas – construímos caráter.</textarea>
 </div>
 <div class="form-group">
 <label>Página Livre Editorial</label>
-<textarea id="editorial" placeholder="Texto emocional que aparece no miolo..."></textarea>
+<textarea id="editorial">Suor, respeito e evolução. O tatame não mente.</textarea>
 </div>
 </div>
 
@@ -207,7 +206,7 @@ body { background: white; }
 <div class="form-group">
 <label>Estilo da Página</label>
 <select id="layout">
-<option value="alinhado">1. Alinhados - Editorial</option>
+<option value="alinhado" selected>1. Alinhados - Editorial</option>
 <option value="solto">2. Soltos - Scrapbook</option>
 <option value="editavel">3. Editável - Arraste e Solte</option>
 </select>
@@ -215,7 +214,7 @@ body { background: white; }
 <div class="form-group">
 <label>Paleta de Cores Suaves</label>
 <select id="paleta">
-<option value="#FFFFFF">⚪ Branco Premium</option>
+<option value="#FFFFFF" selected>⚪ Branco Premium</option>
 <option value="#F5F7FA">🔘 Cinza Claro Suave</option>
 <option value="#E3F2FD">🔵 Azul Pastel</option>
 <option value="#E8F5E9">🟢 Verde Campo Claro</option>
@@ -245,14 +244,32 @@ body { background: white; }
 
 <script>
 const TEMAS = {
+futebol: {
+  titulo: "MEMÓRIAS DA ACADEMIA 4 ELEMENTOS",
+  subtitulo: "Betim 2025 · Onde faixa se conquista, não se compra",
+  historias: [
+    "A Academia 4 Elementos nasceu no tatame e no suor de Betim. Mais que treino, virou caminho pra quem busca disciplina, respeito e evolução. Aqui cada queda ensina, cada faixa tem história, e cada vitória é da turma toda. De faixa branca a faixa preta, construímos juntos mais que atletas – construímos caráter.",
+    "Mais que um time, uma irmandade. Este álbum registra a garra, os golpes e a resenha do vestiário que nos fez crescer dentro e fora do tatame."
+  ],
+  editorial: "Suor, respeito e evolução. O tatame não mente.",
+  legendas: ["Mestre Fundador","Professor Destaque","Faixa Preta","Aluno Superação","Campeão do Mês","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Capitão"]
+},
 escola: { titulo: "MEMÓRIAS DO ENSINO MÉDIO", subtitulo: "Turma 2026 · Uma história que não termina", historias: ["Este álbum guarda os rostos, os sorrisos e as histórias de uma jornada única. Entre provas, risadas no corredor e sonhos compartilhados, construímos memórias que o tempo não apaga.","Cada figurinha aqui representa mais que um colega: representa um capítulo da nossa juventude. Que este registro seja ponte entre o que vivemos e o que ainda vamos viver."], editorial: "Amizades forjadas no recreio duram para toda vida.", legendas: ["Diretora","Coordenador","Prof. Matemática","Prof. Português","Prof. História","Representante","Aluno Destaque","Capitão do Time","Rainha da Turma","Artista da Sala","Músico","Escritor"] },
-futebol: { titulo: "ESQUADRÃO IMORTAL", subtitulo: "Temporada 2026 · Rumo ao título", historias: ["Mais que um time, uma irmandade. Este álbum registra a garra, os gols e a resenha do vestiário que nos fez campeões dentro e fora de campo.","Entre treinos na chuva e vitórias no domingo, construímos uma família. Cada rosto aqui suou a camisa e honrou o manto sagrado."], editorial: "O suor de hoje é o troféu de amanhã.", legendas: ["Goleiro Titular","Lateral Direito","Zagueiro","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Ponta Esquerda","Técnico","Capitão"] },
 igreja: { titulo: "NOSSA COMUNIDADE DE FÉ", subtitulo: "Unidos em propósito e amor", historias: ["Este álbum celebra a família que escolhemos pela fé. Cada rosto aqui representa orações compartilhadas, cultos memoráveis e serviço ao próximo.","Somos um corpo com muitos membros. Este registro honra cada irmão e irmã que caminha conosco na jornada da fé e do amor."], editorial: "Onde dois ou três estão reunidos, ali está o amor.", legendas: ["Pastor","Pastora","Diácono","Diaconisa","Líder de Louvor","Músico","Professor EBD","Coordenador","Intercessor","Recepção","Juventude","Crianças"] },
 casamento: { titulo: "O GRANDE DIA", subtitulo: "Uma história de amor eterno", historias: ["Este álbum eterniza o dia em que duas vidas se tornaram uma. Cada convidado, cada sorriso, cada lágrima de alegria está guardada aqui.","O amor não se explica, se vive. E hoje vivemos o capítulo mais lindo da nossa história, cercados por quem amamos."], editorial: "O amor é a única coisa que cresce quando é dividido.", legendas: ["Noivo","Noiva","Pai do Noivo","Mãe do Noivo","Pai da Noiva","Mãe da Noiva","Padrinho","Madrinha","Daminha","Pajem","Cerimonialista","Fotógrafo"] },
 formatura: { titulo: "VENCEMOS", subtitulo: "Formatura 2026 · O futuro começou", historias: ["Noites em claro, trabalhos em grupo, estágios e sonhos. Chegamos. Este álbum é a prova de que todo esforço vale a pena.","Não foi só um diploma. Foi superação, foi amizade, foi crescimento. Este registro guarda a turma que fez história."], editorial: "O diploma é o começo. O legado é o que fazemos com ele.", legendas: ["Orador","Juramentista","Paraninfo","Homenageado","Destaque Acadêmico","Líder de Turma","Artista","Atleta","Empreendedor","Pesquisador","Voluntário","Sonhador"] },
 empresa: { titulo: "NOSSO TIME", subtitulo: "Quem faz a empresa acontecer", historias: ["Por trás de cada meta batida existe um rosto, uma história, uma dedicação. Este álbum homenageia quem constrói nosso sucesso diariamente.","Resultados são feitos de pessoas. Este registro celebra os talentos que transformam desafios em conquistas."], editorial: "Pessoas certas nos lugares certos movem montanhas.", legendas: ["CEO","Diretor","Gerente","Coordenador","Analista Sênior","Analista Pleno","Analista Júnior","Estagiário","RH","Financeiro","TI","Marketing"] },
 excursao: { titulo: "AVENTURA 2026", subtitulo: "Memórias que viraram história", historias: ["Entre estradas, risadas e descobertas, vivemos dias que não voltam mais. Este álbum guarda cada momento da nossa grande aventura.","Viajar é colecionar momentos. E esta excursão nos deu uma coleção inteira de memórias inesquecíveis."], editorial: "A vida é feita de histórias. E as melhores são vividas juntos.", legendas: ["Guia","Motorista","Coordenador","Fotógrafo","Animador","Cantor do Ônibus","Dorminhoco","Comilão","Aventureiro","Contador de Histórias","DJ","Organizador"] },
 livre: { titulo: "", subtitulo: "", historias: ["",""], editorial: "", legendas: Array.from({length: 12}, function(_,i) { return "Item " + (i+1); }) }
+};
+
+// OPÇÃO 2: ARENA EXPORTES BETIM - cole isso no console pra trocar rápido
+const ARENA_DATA = {
+  titulo: "MEMÓRIAS DA ARENA EXPORTES BETIM",
+  subtitulo: "São Luiz 2025 · Mais que pelada, é tradição do bairro",
+  historia: "A Arena Exportes é ponto de encontro do São Luiz há mais de 10 anos. No sol de domingo ou na luz do refletor, o apito marca o ritmo do bairro. Aqui o zagueiro vira herói, o goleiro fecha o gol, e a torcida canta mesmo sem arquibancada. Mais que futebol, é identidade, é resenha, é a história da comunidade contada em cada gol.",
+  editorial: "Domingo tem jogo, tem resenha, tem Arena.",
+  legendas: ["Capitão da Arena","Goleiro Muralha","Artilheiro do Ano","Zagueiro","Lateral Direito","Lateral Esquerdo","Volante","Meio Campo","Meia Atacante","Ponta Direita","Centroavante","Técnico"]
 };
 
 var imagens = Array(12).fill(null);
@@ -360,7 +377,7 @@ printArea.appendChild(intro);
 paginasGeradas.push({id: 'intro', nome: 'Introdução'});
 }
 
-// MIOLO - LAYOUT IDÊNTICO FOTO 02
+// MIOLO
 var totalPaginas = 1;
 for(var p = 0; p < totalPaginas; p++) {
 var miolo = createPage('');
@@ -455,7 +472,6 @@ dragged = e.target.closest('.figurinha-slot');
 slot.addEventListener('dragend', function(e) {
 dragged = null;
 });
-});
 document.querySelectorAll('.grid-editavel').forEach(function(grid) {
 grid.addEventListener('dragover', function(e) {
 e.preventDefault();
@@ -467,7 +483,6 @@ var rect = grid.getBoundingClientRect();
 dragged.style.left = (e.clientX - rect.left - 30) + 'px';
 dragged.style.top = (e.clientY - rect.top - 40) + 'px';
 }
-});
 });
 }
 </script>
