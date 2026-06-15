@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Álbum Editorial IA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <img src="img/logo-seta.png" alt="Logo" class="logo">
+  <h1>Álbum Editorial Automático</h1>
+</header>
+
+<main>
+  <section class="config">
+    <label>Nome do Local:
+      <input id="nomeLocal" type="text" placeholder="Ex: Arena Betim">
+    </label>
+
+    <label>Cidade:
+      <input id="cidade" type="text" placeholder="Ex: Betim MG">
+    </label>
+
+    <label>Tipo:
+      <select id="tipo">
+        <option value="quadra">Quadra Esportiva</option>
+        <option value="academia">Academia</option>
+        <option value="igreja">Igreja</option>
+        <option value="bar">Bar</option>
+        <option value="comunidade">Comunidade</option>
+      </select>
+    </label>
+
+    <label>Quantidade de Figurinhas:
+      <input id="qtde" type="number" value="12" min="1" max="48">
+    </label>
+
+    <label>Paleta:
+      <input id="paleta" type="color" value="#f9f9f9">
+    </label>
+
+    <button onclick="gerarAlbum()">Gerar Álbum</button>
+  </section>
+
+  <section id="print-area"></section>
+</main>
+
+<script src="js/automatizar.js"></script>
+</body>
+</html>
