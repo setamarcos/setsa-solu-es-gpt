@@ -1,17 +1,14 @@
-:root {
-  --paleta-fundo: #f9f9f9;
-}
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: var(--paleta-fundo);
+  background: #F4F6F8;
+  color: #1C2B3A;
 }
 
 header {
   background: #0B3D91;
   color: white;
-  padding: 10px;
+  padding: 20px;
   display: flex;
   align-items: center;
 }
@@ -22,36 +19,18 @@ header .logo {
 }
 
 .config {
-  padding: 15px;
   background: #eee;
+  padding: 20px;
 }
 
 .page {
   border: 1px solid #ccc;
-  margin: 10px;
+  margin: 20px;
   padding: 20px;
   background: white;
+  border-radius: 10px;
 }
 
-.page-content h1, h2, h3 {
+.page h1, h2, h3 {
   margin-top: 0;
-}
-
-.no-print {
-  display: none;
-}
-
-.figurinha-slot {
-  border: 1px dashed #aaa;
-  margin: 5px;
-  padding: 10px;
-  display: inline-block;
-  width: 120px;
-  text-align: center;
-}
-
-.img-box {
-  height: 100px;
-  background: #ddd;
-  margin-bottom: 5px;
 }
