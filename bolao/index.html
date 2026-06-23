@@ -103,7 +103,6 @@
         const inputTel = document.getElementById('contato');
         const erroTel = document.getElementById('erroTel');
 
-        // MÁSCARA AJUSTADA: Aceita celular 11 dígitos e fixo 10 dígitos
         inputTel.addEventListener('input', (e) => {
             let valor = e.target.value.replace(/\D/g,'');
             if (valor.length > 11) valor = valor.slice(0,11);
@@ -118,7 +117,6 @@
             e.target.value = valor;
         });
 
-        // VALIDAÇÃO: Aceita (xx) xxxx-xxxx e (xx) xxxxx-xxxx
         function validaTelefone(tel) {
             const regex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
             return regex.test(tel);
@@ -140,7 +138,6 @@
         form.addEventListener('submit', e => {
             e.preventDefault();
             
-            // TRAVA 1: Telefone formato errado
             if(!validaTelefone(inputTel.value)) {
                 inputTel.classList.add('erro');
                 erroTel.style.display = 'block';
@@ -149,7 +146,6 @@
             inputTel.classList.remove('erro');
             erroTel.style.display = 'none';
             
-            // TRAVA 2: Se for pago e não marcou comprovante
             if(tipoPago.checked && !checkComprovante.checked) {
                 boxComprovante.classList.add('erro');
                 msg.style.display = 'block';
@@ -164,14 +160,12 @@
             
             const formData = new FormData(form);
             
-            // 1. Envia pra Planilha
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(response => {
                     msg.style.display = 'block';
                     msg.textContent = 'Palpite registrado! Abrindo WhatsApp...';
                     msg.className = 'success';
                     
-                    // 2. Monta texto e abre SEU WhatsApp
                     const nome = formData.get('nome');
                     const placarBR = formData.get('placar_brasil');
                     const placarES = formData.get('placar_escocia');
