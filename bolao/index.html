@@ -1,347 +1,414 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BOLÃO SETASOLUCOES — Brasil x Japão</title>
-  <style>
-    :root{
-      --green:#0b7a3f;
-      --yellow:#ffd400;
-      --card:#fff;
-      --muted:#666;
-      --radius:12px;
-      --pad:16px;
-      --maxw:640px;
-    }
-    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:linear-gradient(180deg,var(--green) 0%, #7fcf4a 45%, var(--yellow) 100%);-webkit-font-smoothing:antialiased;color:#111}
-    .wrap{max-width:var(--maxw);margin:18px auto;padding:var(--pad);box-sizing:border-box}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 20px rgba(0,0,0,0.12);overflow:hidden;}
-    .header{background:linear-gradient(90deg,var(--green),#2fa84a);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;}
-    .title{font-size:18px;font-weight:700;margin:0}
-    .subtitle{font-size:12px;opacity:0.95;margin:0}
-    .body{padding:18px}
-    .row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
-    .col{flex:1}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
-    input[type="text"], input[type="tel"], input[type="number"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;font-size:15px;box-sizing:border-box;}
-    .inline{display:flex;align-items:center;gap:10px}
-    .inline label{width:36%;text-align:right;margin:0;font-size:14px;color:#333}
-    .inline .controls{width:64%;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid #ddd;background:#fafafa;cursor:pointer;font-size:14px}
-    .pill input{margin:0}
-    .actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
-    .btn{background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(11,122,63,0.18);}
-    .btn.secondary{background:#f3f3f3;color:#333;box-shadow:none;border:1px solid #e6e6e6}
-    .summary{margin-top:18px;padding:12px;border-top:1px solid #f0f0f0}
-    .summary h3{margin:0 0 8px 0;font-size:15px;color:#222}
-    .summary p{margin:0 0 8px 0;color:var(--muted)}
-    table{width:100%;border-collapse:collapse;margin-top:8px}
-    th,td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;font-size:14px}
-    th{color:#333;background:transparent;font-weight:700}
-    .chart{width:100%;height:160px;margin-top:12px;background:#fff;border-radius:8px;padding:8px;box-sizing:border-box;overflow:auto}
-    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:rgba(0,0,0,0.8);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:9999}
-    @media (max-width:420px){
-      .inline label{width:40%;font-size:13px}
-      .inline .controls{width:60%}
-      .title{font-size:16px}
-      .header{padding:12px}
-    }
-  </style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bolão da Família</title>
+
+<style>
+
+:root{
+--verde:#137333;
+--verde2:#1faa59;
+--amarelo:#ffd54f;
+}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:linear-gradient(180deg,#0f6c35,#1faa59,#ffd54f);
+min-height:100vh;
+padding:20px;
+}
+.container{
+max-width:700px;
+margin:auto;
+}
+.card{
+background:#fff;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+.topo{
+background:var(--verde);
+color:#fff;
+text-align:center;
+padding:25px;
+}
+.topo h1{
+font-size:32px;
+margin-bottom:6px;
+}
+.topo h3{
+font-size:18px;
+font-weight:normal;
+margin-bottom:18px;
+}
+.partida{
+font-size:28px;
+font-weight:bold;
+}
+.rodada{
+margin-top:12px;
+font-size:17px;
+}
+.corpo{
+padding:25px;
+}
+label{
+display:block;
+margin-top:18px;
+margin-bottom:6px;
+font-weight:bold;
+}
+.placar{
+display:flex;
+align-items:center;
+gap:15px;
+}
+.placar input{
+width:100%;
+padding:14px;
+font-size:30px;
+font-weight:bold;
+text-align:center;
+border-radius:10px;
+border:1px solid #ccc;
+}
+.x{
+font-size:34px;
+font-weight:bold;
+}
+input[type=text],
+input[type=tel]{
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+}
+.pix{
+margin-top:25px;
+padding:18px;
+background:#eef9f0;
+border:2px solid var(--verde2);
+border-radius:12px;
+text-align:center;
+}
+.pix h2{
+font-size:22px;
+color:var(--verde);
+}
+.pix h4{
+margin-top:10px;
+font-size:20px;
+}
+.chave{
+margin-top:10px;
+font-size:20px;
+font-weight:bold;
+color:#0b7a3f;
+word-break:break-all;
+}
+button{
+width:100%;
+margin-top:18px;
+padding:15px;
+font-size:18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+#btnPix{
+background:#1976d2;
+color:#fff;
+}
+#btnEnviar{
+background:var(--verde);
+color:#fff;
+}
+.resumo{
+margin-top:35px;
+}
+.resumo h2{
+text-align:center;
+margin-bottom:15px;
+}
+table{
+width:100%;
+border-collapse:collapse;
+}
+th{
+background:var(--verde);
+color:#fff;
+padding:12px;
+}
+td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+.toast{
+display:none;
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#222;
+color:#fff;
+padding:12px 20px;
+border-radius:8px;
+}
+@media(max-width:600px){
+.topo h1{
+font-size:26px;
+}
+.partida{
+font-size:22px;
+}
+</style>
+
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="header">
-        <div>
-          <div class="title">BOLÃO SETASOLUCOES</div>
-          <div class="subtitle">Brasil x Japão</div>
-        </div>
-      </div>
 
-      <div class="body">
-        <form id="formPalpite" autocomplete="off">
-          <div class="row">
-            <div class="col">
-              <label for="placar_brasil">Palpite</label>
-              <div style="display:flex;gap:8px">
-                <input id="placar_brasil" name="placar_brasil" type="number" min="0" placeholder="Brasil" required>
-                <input id="placar_japao" name="placar_japao" type="number" min="0" placeholder="Japão" required>
-              </div>
-            </div>
-          </div>
+<div class="container">
 
-          <div class="row">
-            <div class="col">
-              <label for="nome">Nome</label>
-              <input id="nome" name="nome" type="text" placeholder="Seu nome" required>
-            </div>
-          </div>
+<div class="card">
 
-          <div class="row">
-            <div class="col">
-              <label for="contato">Contato</label>
-              <input id="contato" name="contato" type="tel" placeholder="(31) 9xxxx-xxxx" required>
-            </div>
-          </div>
+<div class="topo">
 
-          <div class="inline" style="margin-top:6px">
-            <label>Tipo aposta</label>
-            <div class="controls">
-              <label class="pill"><input id="tipo_pago" type="radio" name="tipo" value="Pago" checked> Pago</label>
-              <label class="pill"><input id="tipo_gratis" type="radio" name="tipo" value="Gratis"> Grátis</label>
-            </div>
-          </div>
+<h1>🇧🇷 BOLÃO DA FAMÍLIA</h1>
 
-          <div id="pagamentoBlock" class="inline">
-            <label>Pagamento</label>
-            <div class="controls">
-              <label class="pill"><input type="radio" name="forma" value="Pix"> Pix</label>
-              <label class="pill"><input type="radio" name="forma" value="Especie"> Espécie</label>
-            </div>
-          </div>
+<h3>SEGUINDO A TRADIÇÃO</h3>
 
-          <div id="comprovanteBlock" class="inline">
-            <label>Comprovante</label>
-            <div class="controls">
-              <label class="pill"><input type="radio" name="comprovante" value="Sim"> Sim</label>
-              <label class="pill"><input type="radio" name="comprovante" value="Não" checked> Não</label>
-            </div>
-          </div>
+<div class="partida">
 
-          <div id="valorBlock" class="inline">
-            <label>Valor (opcional)</label>
-            <div class="controls">
-              <input id="valor" name="valor" type="text" placeholder="R$ 5,00 (opcional)" style="padding:8px;border-radius:8px;border:1px solid #e6e6e6;width:120px">
-            </div>
-          </div>
+Brasil 🇧🇷 × 🇯🇵 Japão
 
-          <div class="actions">
-            <button type="submit" class="btn">Confirmar Palpite</button>
-            <button type="button" id="btnLimpar" class="btn secondary">Limpar</button>
-          </div>
-        </form>
+</div>
 
-        <div class="summary" aria-live="polite">
-          <h3>Resumo de Apostas</h3>
-          <p id="total">Carregando resumo...</p>
-          <div style="overflow:auto;max-height:220px">
-            <table id="placares">
-              <thead><tr><th>Placar</th><th>Qtd</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
+<div class="rodada">
 
-          <div class="chart" id="chartArea" aria-hidden="false">
-            <canvas id="placarChart" width="600" height="160"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+Rodada 1 de 16
 
-  <div id="toast" class="toast">Palpite enviado</div>
+</div>
 
-  <script>
-    const urlScript = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => document.querySelectorAll(sel);
+</div>
 
-    // Toggle payment controls when Gratis selected
-    function updatePaymentVisibility() {
-      const isGratis = document.getElementById('tipo_gratis').checked;
-      const pagamentoBlock = document.getElementById('pagamentoBlock');
-      const comprovanteBlock = document.getElementById('comprovanteBlock');
-      const valorBlock = document.getElementById('valorBlock');
+<div class="corpo">
 
-      if (isGratis) {
-        pagamentoBlock.style.display = 'none';
-        comprovanteBlock.style.display = 'none';
-        valorBlock.style.display = 'none';
-        $$('input[name="forma"]').forEach(i => i.checked = false);
-      } else {
-        pagamentoBlock.style.display = '';
-        comprovanteBlock.style.display = '';
-        valorBlock.style.display = '';
-      }
-    }
+<form id="formPalpite">
 
-    function showToast(msg = 'Palpite enviado') {
-      const t = $('#toast');
-      t.textContent = msg;
-      t.style.display = 'block';
-      setTimeout(() => t.style.display = 'none', 2200);
-    }
+<label>Palpite</label>
 
-    // Normalize valor input to number string (dot decimal)
-    function normalizeValor(v) {
-      if (!v) return '';
-      return v.replace('R$', '').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
-    }
+<div class="placar">
 
-    // Draw simple bar chart from placares data
-    function drawChart(placares) {
-      const canvas = document.getElementById('placarChart');
-      if (!canvas || !placares || placares.length === 0) {
-        // clear canvas
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        return;
-      }
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const padding = 10;
-      const w = canvas.width - padding*2;
-      const h = canvas.height - padding*2;
-      const max = Math.max(...placares.map(p => p.qtd), 1);
-      const barW = Math.max(20, Math.floor(w / placares.length) - 8);
-      placares.forEach((p, i) => {
-        const x = padding + i * (barW + 8);
-        const barH = Math.round((p.qtd / max) * (h - 20));
-        ctx.fillStyle = '#2fa84a';
-        ctx.fillRect(x, padding + (h - barH), barW, barH);
-        ctx.fillStyle = '#111';
-        ctx.font = '12px Arial';
-        ctx.fillText(p.placar, x, padding + h + 14);
-        ctx.fillText(p.qtd, x, padding + (h - barH) - 6);
-      });
-    }
+<input
+type="number"
+id="placar_brasil"
+name="placar_brasil"
+min="0"
+required>
 
-    // Carregar resumo (GET)
-    async function carregarResumo() {
-      try {
-        const resp = await fetch(urlScript);
-        if (!resp.ok) throw new Error("Resposta não OK");
-        const dados = await resp.json();
-        $("#total").innerText = "Total de apostas: " + (dados.total ?? 0);
-        const tbody = document.querySelector("#placares tbody");
-        tbody.innerHTML = "";
-        const placares = (dados.placares || []);
-        placares.forEach(p => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${p.placar}</td><td>${p.qtd}</td>`;
-          tbody.appendChild(tr);
-        });
-        drawChart(placares);
-      } catch (err) {
-        $("#total").innerText = "Erro ao carregar resumo.";
-        console.warn("Erro resumo:", err);
-      }
-    }
+<div class="x">X</div>
 
-    // Submit handler: send in background, open WhatsApp in new tab (Android opens app)
-    document.getElementById("formPalpite").addEventListener("submit", function(e){
-      e.preventDefault();
-      const form = this;
-      const fd = new FormData(form);
+<input
+type="number"
+id="placar_japao"
+name="placar_japao"
+min="0"
+required>
 
-      // Validate required fields
-      const nome = (fd.get('nome') || '').trim();
-      const contato = (fd.get('contato') || '').trim();
-      const pb = fd.get('placar_brasil');
-      const pj = fd.get('placar_japao');
-      if (!nome || !contato || pb === null || pj === null || pb === '' || pj === '') {
-        alert('Preencha Nome, Contato e Palpite (placares).');
-        return;
-      }
+</div>
 
-      const isGratis = document.getElementById('tipo_gratis').checked;
-      const forma = fd.get('forma') || '';
-      const comprovante = fd.get('comprovante') || 'Não';
-      const valorRaw = fd.get('valor') || '';
-      const valor = normalizeValor(valorRaw);
+<label>Nome</label>
 
-      // If Pago, require forma (Pix/Especie)
-      if (!isGratis && !forma) {
-        alert('Escolha forma de pagamento: Pix ou Espécie.');
-        return;
-      }
+<input
+type="text"
+id="nome"
+name="nome"
+required>
 
-      // Determine status to send
-      let statusToSend = 'Pendente';
-      if (isGratis) {
-        statusToSend = 'Pendente'; // grátis não é pago
-      } else {
-        if (forma.toLowerCase() === 'especie') {
-          statusToSend = 'Pago';
-        } else if (forma.toLowerCase() === 'pix') {
-          statusToSend = (comprovante === 'Sim') ? 'Pago' : 'Pendente';
-        } else {
-          statusToSend = 'Pendente';
-        }
-      }
+<label>Contato</label>
 
-      // Build params
-      const params = new URLSearchParams();
-      params.append("nome", nome);
-      params.append("contato", contato);
-      params.append("placar_brasil", pb);
-      params.append("placar_japao", pj);
-      params.append("tipo", isGratis ? 'Gratis' : (forma.toLowerCase() === 'pix' ? 'Valor' : 'Especie'));
-      if (forma) params.append("forma", forma);
-      params.append("comprovante", comprovante);
-      if (valor) params.append("valor", valor);
-      // send status param (server may or may not use it; useful if server updated)
-      params.append("status", statusToSend);
+<input
+type="tel"
+id="contato"
+name="contato"
+required>
 
-      // Send in background: prefer sendBeacon
-      const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
-      if (navigator.sendBeacon) {
-        try {
-          navigator.sendBeacon(urlScript, blob);
-        } catch (err) {
-          fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
-        }
-      } else {
-        fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
-      }
+<div class="pix">
+<h2>💳 Aposta R$ 5,00</h2>
+<h4>Marcos PicPay</h4>
+<div class="chave">
+setamarcos@yahoo.com.br
+</div>
+<button
+type="button"
+id="btnPix">
+📋 Copiar PIX
+</button>
+</div>
 
-      // Update UI immediately
-      carregarResumo();
-      showToast(statusToSend === 'Pago' ? 'Palpite confirmado (Pago)' : 'Palpite enviado (Pendente)');
+<button
+type="submit"
+id="btnEnviar">
+CONFIRMAR PALPITE
+</button>
 
-      // Open WhatsApp in new tab so Android routes to app
-      const texto =
-        "BOLÃO SETASOLUCOES\nBrasil x Japão\n\n" +
-        "Palpite: " + pb + "x" + pj + "\n" +
-        "Nome: " + nome + "\n" +
-        "Contato: " + contato + "\n" +
-        "Tipo aposta: " + (isGratis ? 'Gratis' : forma) + "\n" +
-        "Comprovante: " + comprovante + "\n" +
-        "Status: " + statusToSend;
+</form>
 
-      const waUrl = "https://wa.me/5531984821901?text=" + encodeURIComponent(texto);
-      window.open(waUrl, '_blank');
+<div class="resumo">
+<h2>Palpites da Família</h2>
+<table id="placares">
+<thead>
+<tr>
+<th>Palpite</th>
+<th>Qtd.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
 
-      // If status is Pago, force an extra refresh shortly to reflect confirmed state
-      if (statusToSend === 'Pago') {
-        setTimeout(() => carregarResumo(), 1200);
-      }
+</div>
 
-      // Clear form (keep Tipo default Pago)
-      setTimeout(() => {
-        form.reset();
-        document.getElementById('tipo_pago').checked = true;
-        updatePaymentVisibility();
-        carregarResumo();
-      }, 800);
-    });
+</div>
 
-    // Limpar botão
-    document.getElementById("btnLimpar").addEventListener("click", function(){
-      document.getElementById("formPalpite").reset();
-      document.getElementById('tipo_pago').checked = true;
-      updatePaymentVisibility();
-    });
+</div>
 
-    // Event listeners to toggle payment visibility
-    document.getElementById('tipo_gratis').addEventListener('change', updatePaymentVisibility);
-    document.getElementById('tipo_pago').addEventListener('change', updatePaymentVisibility);
+<div
+id="toast"
+class="toast">
+</div>
+<script>
+// ===============================
+// URL DO APPS SCRIPT
+// ===============================
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
+const NUMERO_ZAP = "5531984821901"; // <-- Seu WhatsApp
 
-    // Init
-    updatePaymentVisibility();
-    carregarResumo();
-    setInterval(carregarResumo, 20000); // polling 20s
-  </script>
-</body>
-</html>
+// ===============================
+// TOAST
+// ===============================
+function toast(msg){
+    const t=document.getElementById("toast");
+    t.innerHTML=msg;
+    t.style.display="block";
+    setTimeout(()=>{
+        t.style.display="none";
+    },2500);
+}
+
+// ===============================
+// COPIAR PIX
+// ===============================
+document
+.getElementById("btnPix")
+.addEventListener("click",()=>{
+    navigator.clipboard.writeText("setamarcos@yahoo.com.br");
+    toast("PIX copiado.");
+});
+
+// ===============================
+// ENVIAR PALPITE
+// ===============================
+document
+.getElementById("formPalpite")
+.addEventListener("submit",async(e)=>{
+e.preventDefault();
+
+const dados=new FormData(e.target);
+
+// Pega os valores pra mandar no Zap
+const pb = dados.get('placar_brasil');
+const pj = dados.get('placar_japao');
+const nome = dados.get('nome');
+const contato = dados.get('contato');
+
+try{
+const resposta=await fetch(URL_SCRIPT,{
+method:"POST",
+body:dados
+});
+const json=await resposta.json();
+if(json.ok){
+toast("Palpite enviado!");
+
+e.target.reset();
+carregarResumo();
+
+// 1. Chama o Zap em nova aba
+const texto = `BOLÃO DA FAMÍLIA\nBrasil x Japão\nMeu Palpite: ${pb}x${pj}\nNome: ${nome}\nContato: ${contato}`;
+const waUrl = "https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(texto);
+window.open(waUrl, '_blank');
+
+// 2. Atualiza a página em 1.2s
+setTimeout(()=>{
+    window.location.reload();
+}, 1200);
+
+}else{
+toast(json.erro || "Erro ao enviar.");
+}
+}catch{
+toast("Erro de conexão.");
+}
+});
+
+// ===============================
+// CARREGAR PALPITES
+// ===============================
+async function carregarResumo(){
+try{
+const resposta=await fetch(URL_SCRIPT);
+const dados=await resposta.json();
+const tbody=document.querySelector("#placares tbody");
+tbody.innerHTML="";
+// Caso o Apps Script devolva "placares"
+if(dados.placares){
+dados.placares
+.sort((a,b)=>b.qtd-a.qtd)
+.forEach(item=>{
+tbody.innerHTML+=`
+<tr>
+<td>${item.placar}</td>
+<td>${item.qtd}</td>
+</tr>
+`;
+});
+}
+// Caso o Apps Script devolva "resumo"
+else if(dados.resumo){
+dados.resumo
+.sort((a,b)=>b.qtd-a.qtd)
+.forEach(item=>{
+tbody.innerHTML+=`
+<tr>
+<td>${item.placar}</td>
+<td>${item.qtd}</td>
+</tr>
+`;
+});
+}
+}catch(err){
+console.log(err);
+}
+}
+
+// ===============================
+// INICIALIZAÇÃO
+// ===============================
+carregarResumo();
+setInterval(carregarResumo,15000);
+</script>
