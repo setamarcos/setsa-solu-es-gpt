@@ -1,414 +1,140 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Bolão da Família</title>
-
 <style>
-
-:root{
---verde:#137333;
---verde2:#1faa59;
---amarelo:#ffd54f;
-}
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:linear-gradient(180deg,#0f6c35,#1faa59,#ffd54f);
-min-height:100vh;
-padding:20px;
-}
-.container{
-max-width:700px;
-margin:auto;
-}
-.card{
-background:#fff;
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 8px 30px rgba(0,0,0,.25);
-}
-.topo{
-background:var(--verde);
-color:#fff;
-text-align:center;
-padding:25px;
-}
-.topo h1{
-font-size:32px;
-margin-bottom:6px;
-}
-.topo h3{
-font-size:18px;
-font-weight:normal;
-margin-bottom:18px;
-}
-.partida{
-font-size:28px;
-font-weight:bold;
-}
-.rodada{
-margin-top:12px;
-font-size:17px;
-}
-.corpo{
-padding:25px;
-}
-label{
-display:block;
-margin-top:18px;
-margin-bottom:6px;
-font-weight:bold;
-}
-.placar{
-display:flex;
-align-items:center;
-gap:15px;
-}
-.placar input{
-width:100%;
-padding:14px;
-font-size:30px;
-font-weight:bold;
-text-align:center;
-border-radius:10px;
-border:1px solid #ccc;
-}
-.x{
-font-size:34px;
-font-weight:bold;
-}
-input[type=text],
-input[type=tel]{
-width:100%;
-padding:13px;
-border-radius:10px;
-border:1px solid #ccc;
-font-size:16px;
-}
-.pix{
-margin-top:25px;
-padding:18px;
-background:#eef9f0;
-border:2px solid var(--verde2);
-border-radius:12px;
-text-align:center;
-}
-.pix h2{
-font-size:22px;
-color:var(--verde);
-}
-.pix h4{
-margin-top:10px;
-font-size:20px;
-}
-.chave{
-margin-top:10px;
-font-size:20px;
-font-weight:bold;
-color:#0b7a3f;
-word-break:break-all;
-}
-button{
-width:100%;
-margin-top:18px;
-padding:15px;
-font-size:18px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-#btnPix{
-background:#1976d2;
-color:#fff;
-}
-#btnEnviar{
-background:var(--verde);
-color:#fff;
-}
-.resumo{
-margin-top:35px;
-}
-.resumo h2{
-text-align:center;
-margin-bottom:15px;
-}
-table{
-width:100%;
-border-collapse:collapse;
-}
-th{
-background:var(--verde);
-color:#fff;
-padding:12px;
-}
-td{
-padding:12px;
-text-align:center;
-border-bottom:1px solid #ddd;
-}
-.toast{
-display:none;
-position:fixed;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-background:#222;
-color:#fff;
-padding:12px 20px;
-border-radius:8px;
-}
-@media(max-width:600px){
-.topo h1{
-font-size:26px;
-}
-.partida{
-font-size:22px;
-}
+:root{--verde:#137333;--verde2:#1faa59;--amarelo:#ffd54f;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0f6c35,#1faa59,#ffd54f);min-height:100vh;padding:20px;}
+.container{max-width:700px;margin:auto;}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25);}
+.topo{background:var(--verde);color:#fff;text-align:center;padding:25px;}
+.topo h1{font-size:32px;margin-bottom:6px;}
+.topo h3{font-size:18px;font-weight:normal;margin-bottom:18px;}
+.partida{font-size:28px;font-weight:bold;}
+.rodada{margin-top:12px;font-size:17px;}
+.corpo{padding:25px;}
+label{display:block;margin-top:18px;margin-bottom:6px;font-weight:bold;}
+.placar{display:flex;align-items:center;gap:15px;}
+.placar input{width:100%;padding:14px;font-size:30px;font-weight:bold;text-align:center;border-radius:10px;border:1px solid #ccc;}
+.x{font-size:34px;font-weight:bold;}
+input[type=text],input[type=tel]{width:100%;padding:13px;border-radius:10px;border:1px solid #ccc;font-size:16px;}
+.pix{margin-top:25px;padding:18px;background:#eef9f0;border:2px solid var(--verde2);border-radius:12px;text-align:center;}
+.pix h2{font-size:22px;color:var(--verde);}
+.pix h4{margin-top:10px;font-size:20px;}
+.chave{margin-top:10px;font-size:20px;font-weight:bold;color:#0b7a3f;word-break:break-all;}
+button{width:100%;margin-top:18px;padding:15px;font-size:18px;border:none;border-radius:10px;cursor:pointer;}
+#btnPix{background:#1976d2;color:#fff;}
+#btnEnviar{background:var(--verde);color:#fff;}
+.resumo{margin-top:35px;}
+.resumo h2{text-align:center;margin-bottom:15px;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--verde);color:#fff;padding:12px;}
+td{padding:12px;text-align:center;border-bottom:1px solid #ddd;}
+.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 20px;border-radius:8px;}
+@media(max-width:600px){.topo h1{font-size:26px;}.partida{font-size:22px;}}
 </style>
-
 </head>
-
 <body>
-
 <div class="container">
-
 <div class="card">
-
 <div class="topo">
-
 <h1>🇧🇷 BOLÃO DA FAMÍLIA</h1>
-
 <h3>SEGUINDO A TRADIÇÃO</h3>
-
-<div class="partida">
-
-Brasil 🇧🇷 × 🇯🇵 Japão
-
+<div class="partida">Brasil 🇧🇷 × 🇯🇵 Japão</div>
+<div class="rodada">Rodada 1 de 16</div>
 </div>
-
-<div class="rodada">
-
-Rodada 1 de 16
-
-</div>
-
-</div>
-
 <div class="corpo">
-
-<form id="formPalpite">
-
+<form id="formPalpite" action="https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec" method="POST" target="hidden_iframe">
 <label>Palpite</label>
-
 <div class="placar">
-
-<input
-type="number"
-id="placar_brasil"
-name="placar_brasil"
-min="0"
-required>
-
+<input type="number" id="placar_brasil" name="placar_brasil" min="0" required>
 <div class="x">X</div>
-
-<input
-type="number"
-id="placar_japao"
-name="placar_japao"
-min="0"
-required>
-
+<input type="number" id="placar_japao" name="placar_japao" min="0" required>
 </div>
-
 <label>Nome</label>
-
-<input
-type="text"
-id="nome"
-name="nome"
-required>
-
+<input type="text" id="nome" name="nome" required>
 <label>Contato</label>
-
-<input
-type="tel"
-id="contato"
-name="contato"
-required>
-
+<input type="tel" id="contato" name="contato" required>
 <div class="pix">
 <h2>💳 Aposta R$ 5,00</h2>
 <h4>Marcos PicPay</h4>
-<div class="chave">
-setamarcos@yahoo.com.br
+<div class="chave">setamarcos@yahoo.com.br</div>
+<button type="button" id="btnPix">📋 Copiar PIX</button>
 </div>
-<button
-type="button"
-id="btnPix">
-📋 Copiar PIX
-</button>
-</div>
-
-<button
-type="submit"
-id="btnEnviar">
-CONFIRMAR PALPITE
-</button>
-
+<button type="submit" id="btnEnviar">CONFIRMAR PALPITE</button>
 </form>
 
 <div class="resumo">
 <h2>Palpites da Família</h2>
-<table id="placares">
-<thead>
-<tr>
-<th>Palpite</th>
-<th>Qtd.</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th></tr></thead><tbody></tbody></table>
 </div>
+</div>
+</div>
+</div>
+<div id="toast" class="toast"></div>
 
-</div>
+<!-- iframe invisível pra mandar pro Google sem sair da página -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-</div>
-
-</div>
-
-<div
-id="toast"
-class="toast">
-</div>
 <script>
-// ===============================
-// URL DO APPS SCRIPT
-// ===============================
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
-const NUMERO_ZAP = "5531984821901"; // <-- Seu WhatsApp
+const NUMERO_ZAP = "5531984821901";
+let enviado = false;
 
-// ===============================
-// TOAST
-// ===============================
 function toast(msg){
     const t=document.getElementById("toast");
     t.innerHTML=msg;
     t.style.display="block";
-    setTimeout(()=>{
-        t.style.display="none";
-    },2500);
+    setTimeout(()=>{t.style.display="none";},2500);
 }
 
-// ===============================
-// COPIAR PIX
-// ===============================
-document
-.getElementById("btnPix")
-.addEventListener("click",()=>{
+document.getElementById("btnPix").addEventListener("click",()=>{
     navigator.clipboard.writeText("setamarcos@yahoo.com.br");
     toast("PIX copiado.");
 });
 
-// ===============================
-// ENVIAR PALPITE
-// ===============================
-document
-.getElementById("formPalpite")
-.addEventListener("submit",async(e)=>{
-e.preventDefault();
+// Lógica principal
+document.getElementById("formPalpite").addEventListener("submit",(e)=>{
+    if(enviado) { e.preventDefault(); return; } // Trava duplicata
+    
+    const btn = document.getElementById("btnEnviar");
+    btn.disabled = true;
+    btn.innerText = "Enviado!";
 
-const dados=new FormData(e.target);
+    const pb = document.getElementById('placar_brasil').value;
+    const pj = document.getElementById('placar_japao').value;
+    const nome = document.getElementById('nome').value;
+    const contato = document.getElementById('contato').value;
 
-// Pega os valores pra mandar no Zap
-const pb = dados.get('placar_brasil');
-const pj = dados.get('placar_japao');
-const nome = dados.get('nome');
-const contato = dados.get('contato');
+    // 1. Abre o Zap na hora do clique. Navegador deixa.
+    const texto = `BOLÃO DA FAMÍLIA\nBrasil x Japão\nMeu Palpite: ${pb}x${pj}\nNome: ${nome}\nContato: ${contato}`;
+    window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(texto), '_blank');
+    
+    toast("Palpite enviado! Confere no Zap.");
 
-try{
-const resposta=await fetch(URL_SCRIPT,{
-method:"POST",
-body:dados
-});
-const json=await resposta.json();
-if(json.ok){
-toast("Palpite enviado!");
-
-e.target.reset();
-carregarResumo();
-
-// 1. Chama o Zap em nova aba
-const texto = `BOLÃO DA FAMÍLIA\nBrasil x Japão\nMeu Palpite: ${pb}x${pj}\nNome: ${nome}\nContato: ${contato}`;
-const waUrl = "https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(texto);
-window.open(waUrl, '_blank');
-
-// 2. Atualiza a página em 1.2s
-setTimeout(()=>{
-    window.location.reload();
-}, 1200);
-
-}else{
-toast(json.erro || "Erro ao enviar.");
-}
-}catch{
-toast("Erro de conexão.");
-}
+    // 2. O form já vai pro Google sozinho por causa do 'action' + 'target'
+    
+    enviado = true; // Trava pra não enviar 2x
+    
+    // 3. Recarrega a página em 2s pra mostrar o novo palpite
+    setTimeout(()=>{ window.location.reload(); }, 2000);
 });
 
-// ===============================
-// CARREGAR PALPITES
-// ===============================
+// Carrega a tabela
 async function carregarResumo(){
-try{
-const resposta=await fetch(URL_SCRIPT);
-const dados=await resposta.json();
-const tbody=document.querySelector("#placares tbody");
-tbody.innerHTML="";
-// Caso o Apps Script devolva "placares"
-if(dados.placares){
-dados.placares
-.sort((a,b)=>b.qtd-a.qtd)
-.forEach(item=>{
-tbody.innerHTML+=`
-<tr>
-<td>${item.placar}</td>
-<td>${item.qtd}</td>
-</tr>
-`;
-});
+    try{
+        const resposta=await fetch("https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec?t=" + Date.now());
+        const dados=await resposta.json();
+        const tbody=document.querySelector("#placares tbody");
+        tbody.innerHTML="";
+        const lista = dados.placares || dados.resumo || [];
+        lista.sort((a,b)=>b.qtd-a.qtd).forEach(item=>{ tbody.innerHTML+=`<tr><td>${item.placar}</td><td>${item.qtd}</td></tr>`; });
+    }catch(err){ console.log(err); }
 }
-// Caso o Apps Script devolva "resumo"
-else if(dados.resumo){
-dados.resumo
-.sort((a,b)=>b.qtd-a.qtd)
-.forEach(item=>{
-tbody.innerHTML+=`
-<tr>
-<td>${item.placar}</td>
-<td>${item.qtd}</td>
-</tr>
-`;
-});
-}
-}catch(err){
-console.log(err);
-}
-}
-
-// ===============================
-// INICIALIZAÇÃO
-// ===============================
 carregarResumo();
 setInterval(carregarResumo,15000);
 </script>
+</body>
+</html>
