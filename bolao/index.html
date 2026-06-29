@@ -12,59 +12,34 @@
       --card:#ffffff;
       --muted:#666;
       --radius:12px;
-      --gap:12px;
       --pad:16px;
       --maxw:520px;
     }
-
     html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:linear-gradient(180deg,var(--green) 0%, #7fcf4a 45%, var(--yellow) 100%);-webkit-font-smoothing:antialiased;color:#111}
     .wrap{max-width:var(--maxw);margin:18px auto;padding:var(--pad);box-sizing:border-box}
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:0 6px 20px rgba(0,0,0,0.12);
-      overflow:hidden;
-    }
-    .header{
-      background:linear-gradient(90deg,var(--green),#2fa84a);
-      color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;
-    }
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 20px rgba(0,0,0,0.12);overflow:hidden;}
+    .header{background:linear-gradient(90deg,var(--green),#2fa84a);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;}
     .title{font-size:18px;font-weight:700;margin:0}
     .subtitle{font-size:12px;opacity:0.95;margin:0}
-
     .body{padding:18px}
     .row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
     .col{flex:1}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
-    input[type="text"], input[type="tel"], input[type="number"]{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;font-size:15px;box-sizing:border-box;
-    }
-
-    /* Inline groups (label + controls) */
+    input[type="text"], input[type="tel"], input[type="number"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;font-size:15px;box-sizing:border-box;}
     .inline{display:flex;align-items:center;gap:10px}
     .inline label{width:36%;text-align:right;margin:0;font-size:14px;color:#333}
     .inline .controls{width:64%;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-    /* Radio pill style */
     .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid #ddd;background:#fafafa;cursor:pointer;font-size:14px}
     .pill input{margin:0}
-
     .actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
-    .btn{
-      background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;
-      box-shadow:0 6px 14px rgba(11,122,63,0.18);
-    }
+    .btn{background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(11,122,63,0.18);}
     .btn.secondary{background:#f3f3f3;color:#333;box-shadow:none;border:1px solid #e6e6e6}
-
-    /* Resumo */
     .summary{margin-top:18px;padding:12px;border-top:1px solid #f0f0f0}
     .summary h3{margin:0 0 8px 0;font-size:15px;color:#222}
     .summary p{margin:0 0 8px 0;color:var(--muted)}
     table{width:100%;border-collapse:collapse;margin-top:8px}
     th,td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;font-size:14px}
     th{color:#333;background:transparent;font-weight:700}
-
-    /* Responsive tweaks */
     @media (max-width:420px){
       .inline label{width:40%;font-size:13px}
       .inline .controls{width:60%}
@@ -133,6 +108,13 @@
             </div>
           </div>
 
+          <div class="inline">
+            <label>Valor (opcional)</label>
+            <div class="controls">
+              <input id="valor" name="valor" type="text" placeholder="R$ 5,00 (opcional)" style="padding:8px;border-radius:8px;border:1px solid #e6e6e6;width:100px">
+            </div>
+          </div>
+
           <div class="actions">
             <button type="submit" class="btn">Confirmar Palpite</button>
             <button type="button" id="btnLimpar" class="btn secondary">Limpar</button>
@@ -154,12 +136,10 @@
   </div>
 
   <script>
-    // URL do seu WebApp (GET para resumo, POST para enviar)
+    // URL do seu WebApp (substitua pela URL que você informou)
     const urlScript = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
 
-    // Helpers
     const $ = sel => document.querySelector(sel);
-    const $$ = sel => document.querySelectorAll(sel);
 
     // Carregar resumo (GET)
     async function carregarResumo() {
@@ -181,58 +161,69 @@
       }
     }
 
-    // Enviar palpite (POST)
-    document.getElementById("formPalpite").addEventListener("submit", async function(e){
+    // Enviar palpite (usa sendBeacon quando disponível para não bloquear)
+    document.getElementById("formPalpite").addEventListener("submit", function(e){
       e.preventDefault();
       const fd = new FormData(this);
 
-      // Normaliza tipo/forma
-      let tipo = fd.get("tipo") || "Pago";
-      let forma = fd.get("forma") || "Pix";
-      let comprovante = fd.get("comprovante") || "Não";
+      // Normaliza campos
+      const tipoRadio = fd.get("tipo") || "Pago";
+      const forma = fd.get("forma") || "Pix";
+      const comprovante = fd.get("comprovante") || "Não";
+      const valor = fd.get("valor") || "";
 
-      // Monta params para Apps Script
+      // Monta payload
       const params = new URLSearchParams();
       params.append("nome", fd.get("nome") || "");
       params.append("contato", fd.get("contato") || "");
       params.append("placar_brasil", fd.get("placar_brasil") || "");
       params.append("placar_japao", fd.get("placar_japao") || "");
-      params.append("tipo", tipo === "Pago" ? (forma === "Pix" ? "Valor" : "Especie") : "Gratis");
+      // envia tipo e forma separadamente para o script entender
+      params.append("tipo", tipoRadio === "Pago" ? (forma === "Pix" ? "Valor" : "Especie") : "Gratis");
+      params.append("forma", forma);
       params.append("comprovante", comprovante);
+      if (valor) params.append("valor", valor.replace('R$', '').replace(/\s/g,'').replace(',', '.'));
 
-      try {
-        await fetch(urlScript, { method: "POST", body: params });
-      } catch (err) {
-        console.warn("Erro POST:", err);
+      // Envia em background com sendBeacon quando disponível (não bloqueante)
+      const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
+      if (navigator.sendBeacon) {
+        try {
+          navigator.sendBeacon(urlScript, blob);
+        } catch (err) {
+          // fallback para fetch se sendBeacon falhar
+          fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
+        }
+      } else {
+        // fallback: fire-and-forget fetch (não await)
+        fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
       }
 
-      // Atualiza resumo imediatamente
+      // Atualiza resumo localmente (não espera resposta)
       carregarResumo();
 
-      // Mensagem para WhatsApp (abre direto)
+      // Monta texto para WhatsApp
       const texto =
         "BOLÃO SETASOLUCOES\nBrasil x Japão\n\n" +
         "Palpite: " + (fd.get("placar_brasil") || "") + "x" + (fd.get("placar_japao") || "") + "\n" +
         "Nome: " + (fd.get("nome") || "") + "\n" +
         "Contato: " + (fd.get("contato") || "") + "\n" +
-        "Tipo aposta: " + (tipo === "Pago" ? forma : "Gratis") + "\n" +
+        "Tipo aposta: " + (tipoRadio === "Pago" ? forma : "Gratis") + "\n" +
         "Comprovante: " + comprovante;
 
-      // Abre WhatsApp (sem popup extra)
+      // Abre WhatsApp imediatamente (sem await) — reduz atraso percebido
       location.href = "https://wa.me/5531984821901?text=" + encodeURIComponent(texto);
     });
 
-    // Botão limpar (apenas limpa o formulário local)
+    // Botão limpar
     document.getElementById("btnLimpar").addEventListener("click", function(){
       document.getElementById("formPalpite").reset();
-      // mantém tipo Pago selecionado por padrão
       document.querySelector('input[name="tipo"][value="Pago"]').checked = true;
       document.querySelector('input[name="comprovante"][value="Não"]').checked = true;
     });
 
-    // Inicializa
+    // Inicializa resumo e polling
     carregarResumo();
-    setInterval(carregarResumo, 10000);
+    setInterval(carregarResumo, 5000); // atualiza a cada 5s
   </script>
 </body>
 </html>
