@@ -7,13 +7,12 @@
   <style>
     :root{
       --green:#0b7a3f;
-      --dark-green:#06602e;
       --yellow:#ffd400;
-      --card:#ffffff;
+      --card:#fff;
       --muted:#666;
       --radius:12px;
       --pad:16px;
-      --maxw:520px;
+      --maxw:640px;
     }
     html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:linear-gradient(180deg,var(--green) 0%, #7fcf4a 45%, var(--yellow) 100%);-webkit-font-smoothing:antialiased;color:#111}
     .wrap{max-width:var(--maxw);margin:18px auto;padding:var(--pad);box-sizing:border-box}
@@ -40,6 +39,7 @@
     table{width:100%;border-collapse:collapse;margin-top:8px}
     th,td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;font-size:14px}
     th{color:#333;background:transparent;font-weight:700}
+    .chart{width:100%;height:160px;margin-top:12px;background:#fff;border-radius:8px;padding:8px;box-sizing:border-box;overflow:auto}
     .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:rgba(0,0,0,0.8);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:9999}
     @media (max-width:420px){
       .inline label{width:40%;font-size:13px}
@@ -96,7 +96,7 @@
           <div id="pagamentoBlock" class="inline">
             <label>Pagamento</label>
             <div class="controls">
-              <label class="pill"><input type="radio" name="forma" value="Pix" required> Pix</label>
+              <label class="pill"><input type="radio" name="forma" value="Pix"> Pix</label>
               <label class="pill"><input type="radio" name="forma" value="Especie"> Espécie</label>
             </div>
           </div>
@@ -131,12 +131,16 @@
               <tbody></tbody>
             </table>
           </div>
+
+          <div class="chart" id="chartArea" aria-hidden="false">
+            <canvas id="placarChart" width="600" height="160"></canvas>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast">Palpite confirmado</div>
+  <div id="toast" class="toast">Palpite enviado</div>
 
   <script>
     const urlScript = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
@@ -151,11 +155,9 @@
       const valorBlock = document.getElementById('valorBlock');
 
       if (isGratis) {
-        // hide payment controls and clear required
         pagamentoBlock.style.display = 'none';
         comprovanteBlock.style.display = 'none';
         valorBlock.style.display = 'none';
-        // uncheck payment radios
         $$('input[name="forma"]').forEach(i => i.checked = false);
       } else {
         pagamentoBlock.style.display = '';
@@ -164,12 +166,45 @@
       }
     }
 
-    // Show toast
-    function showToast(msg = 'Palpite confirmado') {
+    function showToast(msg = 'Palpite enviado') {
       const t = $('#toast');
       t.textContent = msg;
       t.style.display = 'block';
       setTimeout(() => t.style.display = 'none', 2200);
+    }
+
+    // Normalize valor input to number string (dot decimal)
+    function normalizeValor(v) {
+      if (!v) return '';
+      return v.replace('R$', '').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
+    }
+
+    // Draw simple bar chart from placares data
+    function drawChart(placares) {
+      const canvas = document.getElementById('placarChart');
+      if (!canvas || !placares || placares.length === 0) {
+        // clear canvas
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        return;
+      }
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const padding = 10;
+      const w = canvas.width - padding*2;
+      const h = canvas.height - padding*2;
+      const max = Math.max(...placares.map(p => p.qtd), 1);
+      const barW = Math.max(20, Math.floor(w / placares.length) - 8);
+      placares.forEach((p, i) => {
+        const x = padding + i * (barW + 8);
+        const barH = Math.round((p.qtd / max) * (h - 20));
+        ctx.fillStyle = '#2fa84a';
+        ctx.fillRect(x, padding + (h - barH), barW, barH);
+        ctx.fillStyle = '#111';
+        ctx.font = '12px Arial';
+        ctx.fillText(p.placar, x, padding + h + 14);
+        ctx.fillText(p.qtd, x, padding + (h - barH) - 6);
+      });
     }
 
     // Carregar resumo (GET)
@@ -181,21 +216,17 @@
         $("#total").innerText = "Total de apostas: " + (dados.total ?? 0);
         const tbody = document.querySelector("#placares tbody");
         tbody.innerHTML = "";
-        (dados.placares || []).forEach(p => {
+        const placares = (dados.placares || []);
+        placares.forEach(p => {
           const tr = document.createElement("tr");
           tr.innerHTML = `<td>${p.placar}</td><td>${p.qtd}</td>`;
           tbody.appendChild(tr);
         });
+        drawChart(placares);
       } catch (err) {
         $("#total").innerText = "Erro ao carregar resumo.";
         console.warn("Erro resumo:", err);
       }
-    }
-
-    // Normalize valor input to number string (dot decimal)
-    function normalizeValor(v) {
-      if (!v) return '';
-      return v.replace('R$', '').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
     }
 
     // Submit handler: send in background, open WhatsApp in new tab (Android opens app)
@@ -214,16 +245,30 @@
         return;
       }
 
-      const tipoRadio = document.getElementById('tipo_gratis').checked ? 'Gratis' : 'Pago';
+      const isGratis = document.getElementById('tipo_gratis').checked;
       const forma = fd.get('forma') || '';
       const comprovante = fd.get('comprovante') || 'Não';
       const valorRaw = fd.get('valor') || '';
       const valor = normalizeValor(valorRaw);
 
       // If Pago, require forma (Pix/Especie)
-      if (tipoRadio === 'Pago' && !forma) {
+      if (!isGratis && !forma) {
         alert('Escolha forma de pagamento: Pix ou Espécie.');
         return;
+      }
+
+      // Determine status to send
+      let statusToSend = 'Pendente';
+      if (isGratis) {
+        statusToSend = 'Pendente'; // grátis não é pago
+      } else {
+        if (forma.toLowerCase() === 'especie') {
+          statusToSend = 'Pago';
+        } else if (forma.toLowerCase() === 'pix') {
+          statusToSend = (comprovante === 'Sim') ? 'Pago' : 'Pendente';
+        } else {
+          statusToSend = 'Pendente';
+        }
       }
 
       // Build params
@@ -232,10 +277,12 @@
       params.append("contato", contato);
       params.append("placar_brasil", pb);
       params.append("placar_japao", pj);
-      params.append("tipo", tipoRadio === "Pago" ? (forma.toLowerCase() === 'pix' ? 'Valor' : 'Especie') : 'Gratis');
+      params.append("tipo", isGratis ? 'Gratis' : (forma.toLowerCase() === 'pix' ? 'Valor' : 'Especie'));
       if (forma) params.append("forma", forma);
       params.append("comprovante", comprovante);
       if (valor) params.append("valor", valor);
+      // send status param (server may or may not use it; useful if server updated)
+      params.append("status", statusToSend);
 
       // Send in background: prefer sendBeacon
       const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
@@ -251,27 +298,32 @@
 
       // Update UI immediately
       carregarResumo();
-      showToast('Palpite enviado');
+      showToast(statusToSend === 'Pago' ? 'Palpite confirmado (Pago)' : 'Palpite enviado (Pendente)');
 
-      // Open WhatsApp in new tab (Android will open app)
+      // Open WhatsApp in new tab so Android routes to app
       const texto =
         "BOLÃO SETASOLUCOES\nBrasil x Japão\n\n" +
         "Palpite: " + pb + "x" + pj + "\n" +
         "Nome: " + nome + "\n" +
         "Contato: " + contato + "\n" +
-        "Tipo aposta: " + (tipoRadio === "Pago" ? forma : "Gratis") + "\n" +
-        "Comprovante: " + comprovante;
+        "Tipo aposta: " + (isGratis ? 'Gratis' : forma) + "\n" +
+        "Comprovante: " + comprovante + "\n" +
+        "Status: " + statusToSend;
 
       const waUrl = "https://wa.me/5531984821901?text=" + encodeURIComponent(texto);
-      // open in new tab/window so Android can route to app
       window.open(waUrl, '_blank');
+
+      // If status is Pago, force an extra refresh shortly to reflect confirmed state
+      if (statusToSend === 'Pago') {
+        setTimeout(() => carregarResumo(), 1200);
+      }
 
       // Clear form (keep Tipo default Pago)
       setTimeout(() => {
         form.reset();
         document.getElementById('tipo_pago').checked = true;
         updatePaymentVisibility();
-        carregarResumo(); // refresh again after short delay
+        carregarResumo();
       }, 800);
     });
 
@@ -289,7 +341,7 @@
     // Init
     updatePaymentVisibility();
     carregarResumo();
-    setInterval(carregarResumo, 4000); // polling 4s
+    setInterval(carregarResumo, 20000); // polling 20s
   </script>
 </body>
 </html>
