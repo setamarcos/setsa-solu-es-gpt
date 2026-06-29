@@ -40,6 +40,7 @@
     table{width:100%;border-collapse:collapse;margin-top:8px}
     th,td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;font-size:14px}
     th{color:#333;background:transparent;font-weight:700}
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:rgba(0,0,0,0.8);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:9999}
     @media (max-width:420px){
       .inline label{width:40%;font-size:13px}
       .inline .controls{width:60%}
@@ -87,12 +88,12 @@
           <div class="inline" style="margin-top:6px">
             <label>Tipo aposta</label>
             <div class="controls">
-              <label class="pill"><input type="radio" name="tipo" value="Pago" checked> Pago</label>
-              <label class="pill"><input type="radio" name="tipo" value="Gratis"> Grátis</label>
+              <label class="pill"><input id="tipo_pago" type="radio" name="tipo" value="Pago" checked> Pago</label>
+              <label class="pill"><input id="tipo_gratis" type="radio" name="tipo" value="Gratis"> Grátis</label>
             </div>
           </div>
 
-          <div class="inline">
+          <div id="pagamentoBlock" class="inline">
             <label>Pagamento</label>
             <div class="controls">
               <label class="pill"><input type="radio" name="forma" value="Pix" required> Pix</label>
@@ -100,7 +101,7 @@
             </div>
           </div>
 
-          <div class="inline">
+          <div id="comprovanteBlock" class="inline">
             <label>Comprovante</label>
             <div class="controls">
               <label class="pill"><input type="radio" name="comprovante" value="Sim"> Sim</label>
@@ -108,10 +109,10 @@
             </div>
           </div>
 
-          <div class="inline">
+          <div id="valorBlock" class="inline">
             <label>Valor (opcional)</label>
             <div class="controls">
-              <input id="valor" name="valor" type="text" placeholder="R$ 5,00 (opcional)" style="padding:8px;border-radius:8px;border:1px solid #e6e6e6;width:100px">
+              <input id="valor" name="valor" type="text" placeholder="R$ 5,00 (opcional)" style="padding:8px;border-radius:8px;border:1px solid #e6e6e6;width:120px">
             </div>
           </div>
 
@@ -135,11 +136,41 @@
     </div>
   </div>
 
-  <script>
-    // URL do seu WebApp (substitua pela URL que você informou)
-    const urlScript = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
+  <div id="toast" class="toast">Palpite confirmado</div>
 
+  <script>
+    const urlScript = "https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec";
     const $ = sel => document.querySelector(sel);
+    const $$ = sel => document.querySelectorAll(sel);
+
+    // Toggle payment controls when Gratis selected
+    function updatePaymentVisibility() {
+      const isGratis = document.getElementById('tipo_gratis').checked;
+      const pagamentoBlock = document.getElementById('pagamentoBlock');
+      const comprovanteBlock = document.getElementById('comprovanteBlock');
+      const valorBlock = document.getElementById('valorBlock');
+
+      if (isGratis) {
+        // hide payment controls and clear required
+        pagamentoBlock.style.display = 'none';
+        comprovanteBlock.style.display = 'none';
+        valorBlock.style.display = 'none';
+        // uncheck payment radios
+        $$('input[name="forma"]').forEach(i => i.checked = false);
+      } else {
+        pagamentoBlock.style.display = '';
+        comprovanteBlock.style.display = '';
+        valorBlock.style.display = '';
+      }
+    }
+
+    // Show toast
+    function showToast(msg = 'Palpite confirmado') {
+      const t = $('#toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 2200);
+    }
 
     // Carregar resumo (GET)
     async function carregarResumo() {
@@ -161,69 +192,104 @@
       }
     }
 
-    // Enviar palpite (usa sendBeacon quando disponível para não bloquear)
+    // Normalize valor input to number string (dot decimal)
+    function normalizeValor(v) {
+      if (!v) return '';
+      return v.replace('R$', '').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
+    }
+
+    // Submit handler: send in background, open WhatsApp in new tab (Android opens app)
     document.getElementById("formPalpite").addEventListener("submit", function(e){
       e.preventDefault();
-      const fd = new FormData(this);
+      const form = this;
+      const fd = new FormData(form);
 
-      // Normaliza campos
-      const tipoRadio = fd.get("tipo") || "Pago";
-      const forma = fd.get("forma") || "Pix";
-      const comprovante = fd.get("comprovante") || "Não";
-      const valor = fd.get("valor") || "";
+      // Validate required fields
+      const nome = (fd.get('nome') || '').trim();
+      const contato = (fd.get('contato') || '').trim();
+      const pb = fd.get('placar_brasil');
+      const pj = fd.get('placar_japao');
+      if (!nome || !contato || pb === null || pj === null || pb === '' || pj === '') {
+        alert('Preencha Nome, Contato e Palpite (placares).');
+        return;
+      }
 
-      // Monta payload
+      const tipoRadio = document.getElementById('tipo_gratis').checked ? 'Gratis' : 'Pago';
+      const forma = fd.get('forma') || '';
+      const comprovante = fd.get('comprovante') || 'Não';
+      const valorRaw = fd.get('valor') || '';
+      const valor = normalizeValor(valorRaw);
+
+      // If Pago, require forma (Pix/Especie)
+      if (tipoRadio === 'Pago' && !forma) {
+        alert('Escolha forma de pagamento: Pix ou Espécie.');
+        return;
+      }
+
+      // Build params
       const params = new URLSearchParams();
-      params.append("nome", fd.get("nome") || "");
-      params.append("contato", fd.get("contato") || "");
-      params.append("placar_brasil", fd.get("placar_brasil") || "");
-      params.append("placar_japao", fd.get("placar_japao") || "");
-      // envia tipo e forma separadamente para o script entender
-      params.append("tipo", tipoRadio === "Pago" ? (forma === "Pix" ? "Valor" : "Especie") : "Gratis");
-      params.append("forma", forma);
+      params.append("nome", nome);
+      params.append("contato", contato);
+      params.append("placar_brasil", pb);
+      params.append("placar_japao", pj);
+      params.append("tipo", tipoRadio === "Pago" ? (forma.toLowerCase() === 'pix' ? 'Valor' : 'Especie') : 'Gratis');
+      if (forma) params.append("forma", forma);
       params.append("comprovante", comprovante);
-      if (valor) params.append("valor", valor.replace('R$', '').replace(/\s/g,'').replace(',', '.'));
+      if (valor) params.append("valor", valor);
 
-      // Envia em background com sendBeacon quando disponível (não bloqueante)
+      // Send in background: prefer sendBeacon
       const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
       if (navigator.sendBeacon) {
         try {
           navigator.sendBeacon(urlScript, blob);
         } catch (err) {
-          // fallback para fetch se sendBeacon falhar
           fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
         }
       } else {
-        // fallback: fire-and-forget fetch (não await)
         fetch(urlScript, { method: 'POST', body: params }).catch(()=>{});
       }
 
-      // Atualiza resumo localmente (não espera resposta)
+      // Update UI immediately
       carregarResumo();
+      showToast('Palpite enviado');
 
-      // Monta texto para WhatsApp
+      // Open WhatsApp in new tab (Android will open app)
       const texto =
         "BOLÃO SETASOLUCOES\nBrasil x Japão\n\n" +
-        "Palpite: " + (fd.get("placar_brasil") || "") + "x" + (fd.get("placar_japao") || "") + "\n" +
-        "Nome: " + (fd.get("nome") || "") + "\n" +
-        "Contato: " + (fd.get("contato") || "") + "\n" +
+        "Palpite: " + pb + "x" + pj + "\n" +
+        "Nome: " + nome + "\n" +
+        "Contato: " + contato + "\n" +
         "Tipo aposta: " + (tipoRadio === "Pago" ? forma : "Gratis") + "\n" +
         "Comprovante: " + comprovante;
 
-      // Abre WhatsApp imediatamente (sem await) — reduz atraso percebido
-      location.href = "https://wa.me/5531984821901?text=" + encodeURIComponent(texto);
+      const waUrl = "https://wa.me/5531984821901?text=" + encodeURIComponent(texto);
+      // open in new tab/window so Android can route to app
+      window.open(waUrl, '_blank');
+
+      // Clear form (keep Tipo default Pago)
+      setTimeout(() => {
+        form.reset();
+        document.getElementById('tipo_pago').checked = true;
+        updatePaymentVisibility();
+        carregarResumo(); // refresh again after short delay
+      }, 800);
     });
 
-    // Botão limpar
+    // Limpar botão
     document.getElementById("btnLimpar").addEventListener("click", function(){
       document.getElementById("formPalpite").reset();
-      document.querySelector('input[name="tipo"][value="Pago"]').checked = true;
-      document.querySelector('input[name="comprovante"][value="Não"]').checked = true;
+      document.getElementById('tipo_pago').checked = true;
+      updatePaymentVisibility();
     });
 
-    // Inicializa resumo e polling
+    // Event listeners to toggle payment visibility
+    document.getElementById('tipo_gratis').addEventListener('change', updatePaymentVisibility);
+    document.getElementById('tipo_pago').addEventListener('change', updatePaymentVisibility);
+
+    // Init
+    updatePaymentVisibility();
     carregarResumo();
-    setInterval(carregarResumo, 5000); // atualiza a cada 5s
+    setInterval(carregarResumo, 4000); // polling 4s
   </script>
 </body>
 </html>
