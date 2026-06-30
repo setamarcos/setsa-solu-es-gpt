@@ -3,138 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolão da Família</title>
+<title>Bolão Oitavas Copa 2026</title>
 <style>
-:root{--verde:#137333;--verde2:#1faa59;--amarelo:#ffd54f;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0f6c35,#1faa59,#ffd54f);min-height:100vh;padding:20px;}
-.container{max-width:700px;margin:auto;}
-.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25);}
-.topo{background:var(--verde);color:#fff;text-align:center;padding:25px;}
-.topo h1{font-size:32px;margin-bottom:6px;}
-.topo h3{font-size:18px;font-weight:normal;margin-bottom:18px;}
-.partida{font-size:28px;font-weight:bold;}
-.rodada{margin-top:12px;font-size:17px;}
-.corpo{padding:25px;}
-label{display:block;margin-top:18px;margin-bottom:6px;font-weight:bold;}
-.placar{display:flex;align-items:center;gap:15px;}
-.placar input{width:100%;padding:14px;font-size:30px;font-weight:bold;text-align:center;border-radius:10px;border:1px solid #ccc;}
-.x{font-size:34px;font-weight:bold;}
-input[type=text],input[type=tel]{width:100%;padding:13px;border-radius:10px;border:1px solid #ccc;font-size:16px;}
-.pix{margin-top:25px;padding:18px;background:#eef9f0;border:2px solid var(--verde2);border-radius:12px;text-align:center;}
-.pix h2{font-size:22px;color:var(--verde);}
-.pix h4{margin-top:10px;font-size:20px;}
-.chave{margin-top:10px;font-size:20px;font-weight:bold;color:#0b7a3f;word-break:break-all;}
-button{width:100%;margin-top:18px;padding:15px;font-size:18px;border:none;border-radius:10px;cursor:pointer;}
-#btnPix{background:#1976d2;color:#fff;}
-#btnEnviar{background:var(--verde);color:#fff;}
-.resumo{margin-top:35px;}
-.resumo h2{text-align:center;margin-bottom:15px;}
-table{width:100%;border-collapse:collapse;}
-th{background:var(--verde);color:#fff;padding:12px;}
-td{padding:12px;text-align:center;border-bottom:1px solid #ddd;}
-.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 20px;border-radius:8px;}
-@media(max-width:600px){.topo h1{font-size:26px;}.partida{font-size:22px;}}
+:root{--verde:#0a5c2b;--verde-escuro:#1b5e20;--amarelo:#f9a825;--azul:#1976d2;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+body{background:linear-gradient(180deg,#fffbe6,#d4f1d4);min-height:100vh;padding:15px;}
+.card{max-width:420px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.2);border:3px solid var(--verde);}
+.topo{background:var(--verde);color:var(--amarelo);text-align:center;padding:18px;font-weight:bold;line-height:1.4;}
+.topo h1{font-size:20px;}
+.topo h2{font-size:18px;}
+.topo h3{font-size:16px;}
+.corpo{padding:18px;}
+label{display:block;margin:12px 0 6px;font-weight:bold;font-size:14px;}
+.placar{display:flex;align-items:center;gap:10px;}
+.placar input{flex:1;padding:12px;font-size:16px;font-weight:bold;text-align:center;border:1px solid #ccc;border-radius:8px;background:#fffde7;color:#000;}
+.placar input::placeholder{color:#aaa;font-weight:normal;}
+.x{font-size:22px;font-weight:bold;}
+input[type=text],input[type=tel]{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:15px;background:#f5f7ff;}
+.pix{margin-top:18px;padding:15px;background:#f0fff4;border:2px solid #b6e7c9;border-radius:10px;}
+.pix-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px;}
+.chave{font-weight:bold;color:var(--verde);word-break:break-all;}
+.btn-pix{width:100%;padding:12px;background:var(--azul);color:#fff;border:none;border-radius:6px;margin:10px 0;cursor:pointer;font-weight:bold;font-size:15px;line-height:1.3;}
+.botoes-pgto{display:flex;gap:8px;margin-top:12px;}
+.botoes-pgto button{flex:1;padding:14px 5px;border:2px solid transparent;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;line-height:1.2;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;transition:.2s;}
+.botoes-pgto button.ativo{box-shadow:0 0 0 3px #fff,inset 0 0 0 2px #000;}
+.btn-verde{background:#2e7d32;color:#fff;border-color:#2e7d32!important;}
+.btn-amarelo{background:#f9a825;color:#fff;border-color:#f9a825!important;}
+.btn-azul{background:#1976d2;color:#fff;border-color:#1976d2!important;}
+#btnEnviar{width:100%;padding:15px;margin-top:15px;background:var(--verde-escuro);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;}
+#btnEnviar:disabled{background:#aaa;cursor:not-allowed;}
+.resumo{margin-top:25px;}
+.resumo h2{text-align:center;margin-bottom:12px;font-size:18px;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{background:var(--verde);color:#fff;padding:10px;text-align:center;}
+td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
+.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:8px;font-size:14px;z-index:99;}
 </style>
 </head>
 <body>
-<div class="container">
 <div class="card">
 <div class="topo">
-<h1>🇧🇷 BOLÃO DA FAMÍLIA</h1>
-<h3>SEGUINDO A TRADIÇÃO</h3>
-<div class="partida">Brasil 🇧🇷 × 🇯🇵 Japão</div>
-<div class="rodada">Rodada 1 de 16</div>
+<h1>BOLÃO DAS OITAVAS</h1>
+<h2>COPA 2026</h2>
+<h3>UNICO PENTA ATE 2030</h3>
 </div>
 <div class="corpo">
-<form id="formPalpite" action="https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec" method="POST" target="hidden_iframe">
+<form id="formPalpite">
 <label>Palpite</label>
 <div class="placar">
-<input type="number" id="placar_brasil" name="placar_brasil" min="0" required>
+<input type="text" id="time1" name="time1" placeholder="PENTA CAMPEAO" inputmode="numeric" pattern="[0-9]*" required>
 <div class="x">X</div>
-<input type="number" id="placar_japao" name="placar_japao" min="0" required>
+<input type="text" id="time2" name="time2" placeholder="UNS E OUTROS" inputmode="numeric" pattern="[0-9]*" required>
 </div>
 <label>Nome</label>
 <input type="text" id="nome" name="nome" required>
 <label>Contato</label>
 <input type="tel" id="contato" name="contato" required>
 <div class="pix">
-<h2>💳 Aposta R$ 5,00</h2>
-<h4>Marcos PicPay</h4>
+<div class="pix-row"><span>📦 Aposta R$ 5,00</span><span>marcos picpay</span></div>
 <div class="chave">setamarcos@yahoo.com.br</div>
-<button type="button" id="btnPix">📋 Copiar PIX</button>
+<button type="button" class="btn-pix" id="btnCopiar">📋 Click aqui e depois cole no app seu banco<br>Fácil de fazer sua aposta</button>
+<div class="botoes-pgto">
+<button type="button" data-pgto="PIX FEITO" class="btn-verde">PIX FEITO</button>
+<button type="button" data-pgto="PG. ESPECIE" class="btn-amarelo">PG. ESPECIE</button>
+<button type="button" data-pgto="DEPOIS RESOLVO" class="btn-azul">DEPOIS RESOLVO</button>
+</div>
 </div>
 <button type="submit" id="btnEnviar">CONFIRMAR PALPITE</button>
 </form>
-
 <div class="resumo">
-<h2>Palpites da Família</h2>
-<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th></tr></thead><tbody></tbody></table>
-</div>
+<h2>Palpites da Familia</h2>
+<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th><th>%</th></tr></thead><tbody></tbody></table>
 </div>
 </div>
 </div>
 <div id="toast" class="toast"></div>
-
-<!-- iframe invisível pra mandar pro Google sem sair da página -->
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
 <script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwzlyjo5nYc2Ql4PxvX6jhMCDZtBNhS-eExrqZM_SEgDKNFgKI8vflEJkZEto_QD7JbcA/exec";
 const NUMERO_ZAP = "5531984821901";
+let statusPgto = "";
 let enviado = false;
 
 function toast(msg){
     const t=document.getElementById("toast");
-    t.innerHTML=msg;
+    t.innerText=msg;
     t.style.display="block";
-    setTimeout(()=>{t.style.display="none";},2500);
+    setTimeout(()=>{t.style.display="none";},3000);
 }
 
-document.getElementById("btnPix").addEventListener("click",()=>{
-    navigator.clipboard.writeText("setamarcos@yahoo.com.br");
-    toast("PIX copiado.");
+document.querySelectorAll('#time1, #time2').forEach(input=>{
+    input.addEventListener('input',(e)=>{
+        e.target.value = e.target.value.replace(/[^0-9]/g,'');
+    });
 });
 
-// Lógica principal
+document.getElementById("btnCopiar").addEventListener("click",()=>{
+    navigator.clipboard.writeText("setamarcos@yahoo.com.br");
+    toast("PIX copiado! Cole no seu banco.");
+});
+
+document.querySelectorAll(".botoes-pgto button").forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+        document.querySelectorAll(".botoes-pgto button").forEach(b=>b.classList.remove("ativo"));
+        e.target.classList.add("ativo");
+        statusPgto = e.target.dataset.pgto;
+    });
+});
+
 document.getElementById("formPalpite").addEventListener("submit",(e)=>{
-    if(enviado) { e.preventDefault(); return; } // Trava duplicata
-    
+    e.preventDefault();
+    if(enviado) return toast("Palpite já enviado.");
+
+    const nome = document.getElementById("nome").value.trim();
+    const contato = document.getElementById("contato").value.trim();
+    const t1 = document.getElementById("time1").value.trim();
+    const t2 = document.getElementById("time2").value.trim();
+
+    if(!nome ||!contato ||!t1 ||!t2) return toast("Preencha todos os campos.");
+    if(!statusPgto) return toast("Selecione: PIX FEITO, PG. ESPECIE ou DEPOIS RESOLVO.");
+
     const btn = document.getElementById("btnEnviar");
     btn.disabled = true;
-    btn.innerText = "Enviado!";
+    btn.innerText = "Enviando...";
 
-    const pb = document.getElementById('placar_brasil').value;
-    const pj = document.getElementById('placar_japao').value;
-    const nome = document.getElementById('nome').value;
-    const contato = document.getElementById('contato').value;
+    const palpite = `${t1} x ${t2}`;
+    const textoZap = `🏆 BOLAO DAS OITAVAS - COPA 2026\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\n\n🌐 www.setasolucoes.com.br/bolao`;
 
-    // 1. Abre o Zap na hora do clique. Navegador deixa.
-    const texto = `BOLÃO DA FAMÍLIA\nBrasil x Japão\nMeu Palpite: ${pb}x${pj}\nNome: ${nome}\nContato: ${contato}`;
-    window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(texto), '_blank');
-    
-    toast("Palpite enviado! Confere no Zap.");
+    window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
 
-    // 2. O form já vai pro Google sozinho por causa do 'action' + 'target'
-    
-    enviado = true; // Trava pra não enviar 2x
-    
-    // 3. Recarrega a página em 2s pra mostrar o novo palpite
-    setTimeout(()=>{ window.location.reload(); }, 2000);
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = WEBHOOK_URL;
+    form.target = 'hidden_iframe';
+    [['palpite',palpite],['nome',nome],['contato',contato],['status_pgto',statusPgto]].forEach(([k,v])=>{
+        const i = document.createElement('input'); i.type='hidden'; i.name=k; i.value=v; form.appendChild(i);
+    });
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    toast("Palpite enviado!");
+    enviado = true;
+    setTimeout(()=>window.location.reload(), 2500);
 });
 
-// Carrega a tabela
 async function carregarResumo(){
     try{
-        const resposta=await fetch("https://script.google.com/macros/s/AKfycbwEiIZeZWiHturFJ-oaGYCBm0JJI7fXd1HYURuUMPwKkt8VLBUXIh0Nwtneu6dm0BetYg/exec?t=" + Date.now());
-        const dados=await resposta.json();
-        const tbody=document.querySelector("#placares tbody");
-        tbody.innerHTML="";
-        const lista = dados.placares || dados.resumo || [];
-        lista.sort((a,b)=>b.qtd-a.qtd).forEach(item=>{ tbody.innerHTML+=`<tr><td>${item.placar}</td><td>${item.qtd}</td></tr>`; });
-    }catch(err){ console.log(err); }
+        const res = await fetch(WEBHOOK_URL + "?t=" + Date.now());
+        const dados = await res.json();
+        const tbody = document.querySelector("#placares tbody");
+        tbody.innerHTML = "";
+        const lista = dados.placares || [];
+        const total = lista.reduce((s,i)=>s+i.qtd,0);
+        lista.sort((a,b)=>b.qtd-a.qtd).forEach(item=>{
+            const perc = total? ((item.qtd/total)*100).toFixed(1) : 0;
+            tbody.innerHTML += `<tr><td>${item.placar}</td><td>${item.qtd}</td><td>${perc}%</td></tr>`;
+        });
+    }catch(err){console.log(err);}
 }
 carregarResumo();
-setInterval(carregarResumo,15000);
+setInterval(carregarResumo,20000);
 </script>
 </body>
 </html>
