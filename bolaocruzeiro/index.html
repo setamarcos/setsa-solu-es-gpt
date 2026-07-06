@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Cruzeiro x Flamengo - Mineirão</title>
+<style>
+:root{--azul:#0046AD;--azul2:#002F6C;--fundo:#e3f2fd;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+body{background:var(--fundo);min-height:100vh;padding:15px;}
+.card{max-width:420px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,.15);border:2px solid var(--azul);}
+.topo{background:var(--azul);color:#fff;text-align:center;padding:16px;font-weight:bold;}
+.topo h1{font-size:18px;margin-bottom:2px;}
+.topo h2{font-size:15px;}
+.topo h3{font-size:13px;font-weight:normal;}
+.corpo{padding:16px;}
+.aviso{background:#cce5ff;border:1px solid #b8daff;padding:10px;border-radius:8px;margin-bottom:12px;font-size:13px;text-align:center;font-weight:bold;}
+label{display:block;margin:10px 0 5px;font-weight:bold;font-size:14px;}
+.placar{display:flex;align-items:center;gap:8px;}
+.placar input{flex:1;padding:11px;font-size:16px;font-weight:bold;text-align:center;border:1px solid #ccc;border-radius:8px;background:#f5f9ff;}
+.placar input::placeholder{color:#999;font-weight:normal;}
+.x{font-size:20px;font-weight:bold;color:var(--azul);}
+input[type=text]{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:15px;background:#f5f9ff;}
+.pix{margin-top:15px;padding:14px;background:#e8f0ff;border:1px solid #90caf9;border-radius:10px;}
+.pix-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:14px;}
+.chave{font-weight:bold;color:var(--azul);word-break:break-all;font-size:14px;}
+.btn-pix{width:100%;padding:11px;background:var(--azul);color:#fff;border:none;border-radius:6px;margin:8px 0;cursor:pointer;font-weight:bold;font-size:14px;}
+.botoes-pgto{display:flex;gap:6px;margin-top:10px;}
+.botoes-pgto button{flex:1;padding:12px 4px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:13px;color:#fff;}
+.botoes-pgto button.ativo{outline:3px solid #000;}
+.btn-verde{background:#2e7d32;}
+.btn-amarelo{background:#f9a825;}
+.btn-azul{background:var(--azul);}
+#btnEnviar{width:100%;padding:14px;margin-top:14px;background:var(--azul2);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;}
+#btnEnviar:disabled{background:#aaa;cursor:not-allowed;}
+.resumo{margin-top:20px;}
+.resumo h2{text-align:center;margin-bottom:10px;font-size:17px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--azul);color:#fff;padding:9px;text-align:center;}
+td{padding:7px;text-align:center;border-bottom:1px solid #eee;}
+.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;z-index:99;}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="topo">
+<h1>LIBERTADORES 2026</h1>
+<h2>CRUZEIRO X FLAMENGO</h2>
+<h3>JOGO 1 - MINEIRÃO</h3>
+</div>
+<div class="corpo">
+<div class="aviso">⚠️ Só vale o jogo da IDA no Mineirão!</div>
+<form id="formPalpite">
+<label>Palpite</label>
+<div class="placar">
+<input type="text" id="time1" name="time1" placeholder="CRUZEIRO" inputmode="numeric" pattern="[0-9]*" required>
+<div class="x">X</div>
+<input type="text" id="time2" name="time2" placeholder="FLAMENGO" inputmode="numeric" pattern="[0-9]*" required>
+</div>
+<label>Nome</label>
+<input type="text" id="nome" name="nome" required>
+<label>Contato</label>
+<input type="text" id="contato" name="contato" required>
+<div class="pix">
+<div class="pix-row"><span>📦 Aposta R$ 5,00</span><span>marcos picpay</span></div>
+<div class="chave">setamarcos@yahoo.com.br</div>
+<button type="button" class="btn-pix" id="btnCopiar">📋 Copiar Chave PIX</button>
+<div class="botoes-pgto">
+<button type="button" data-pgto="PIX FEITO" class="btn-verde">PIX FEITO</button>
+<button type="button" data-pgto="PG. ESPECIE" class="btn-amarelo">PG. ESPECIE</button>
+<button type="button" data-pgto="DEPOIS RESOLVO" class="btn-azul">DEPOIS RESOLVO</button>
+</div>
+</div>
+<button type="submit" id="btnEnviar">CONFIRMAR PALPITE</button>
+</form>
+<div class="resumo">
+<h2>Palpites da Familia</h2>
+<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th><th>%</th></tr></thead><tbody></tbody></table>
+</div>
+</div>
+</div>
+<div id="toast" class="toast"></div>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+<script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxpn9Yic4Pold-CCGTlVdMRyxaM_bstwhVWtOHj-MhdTWggAtQ3pEOweyQPLRndsqur/exec";
+const NUMERO_ZAP = "5531984821901";
+let statusPgto = "";
+let enviado = false;
+
+function toast(msg){
+    const t=document.getElementById("toast");
+    t.innerText=msg;
+    t.style.display="block";
+    setTimeout(()=>{t.style.display="none";},3000);
+}
+
+document.querySelectorAll('#time1, #time2').forEach(input=>{
+    input.addEventListener('input',(e)=>{
+        e.target.value = e.target.value.replace(/[^0-9]/g,'');
+    });
+});
+
+document.getElementById("btnCopiar").addEventListener("click",()=>{
+    navigator.clipboard.writeText("setamarcos@yahoo.com.br");
+    toast("PIX copiado!");
+});
+
+document.querySelectorAll(".botoes-pgto button").forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+        document.querySelectorAll(".botoes-pgto button").forEach(b=>b.classList.remove("ativo"));
+        e.target.classList.add("ativo");
+        statusPgto = e.target.dataset.pgto;
+    });
+});
+
+document.getElementById("formPalpite").addEventListener("submit",(e)=>{
+    e.preventDefault();
+    if(enviado) return toast("Palpite já enviado.");
+
+    const nome = document.getElementById("nome").value.trim();
+    const contato = document.getElementById("contato").value.trim();
+    const t1 = document.getElementById("time1").value.trim();
+    const t2 = document.getElementById("time2").value.trim();
+
+    if(!nome ||!contato ||!t1 ||!t2) return toast("Preencha todos os campos.");
+    if(!statusPgto) return toast("Selecione o status do pagamento.");
+
+    const btn = document.getElementById("btnEnviar");
+    btn.disabled = true;
+    btn.innerText = "Enviando...";
+
+    const palpite = `${t1} x ${t2}`;
+    const textoZap = `🏆 LIBERTADORES - JOGO 1 MINEIRÃO\nCRUZEIRO X FLAMENGO\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}`;
+
+    window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = WEBHOOK_URL;
+    form.target = 'hidden_iframe';
+    [['palpite',palpite],['nome',nome],['contato',contato],['status_pgto',statusPgto]].forEach(([k,v])=>{
+        const i = document.createElement('input'); i.type='hidden'; i.name=k; i.value=v; form.appendChild(i);
+    });
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    toast("Palpite enviado!");
+    enviado = true;
+    setTimeout(()=>window.location.reload(), 2500);
+});
+
+async function carregarResumo(){
+    try{
+        const res = await fetch(WEBHOOK_URL + "?t=" + Date.now());
+        const dados = await res.json();
+        const tbody = document.querySelector("#placares tbody");
+        tbody.innerHTML = "";
+        const lista = dados.placares || [];
+        const total = lista.reduce((s,i)=>s+i.qtd,0);
+        lista.sort((a,b)=>b.qtd-a.qtd).forEach(item=>{
+            const perc = total? ((item.qtd/total)*100).toFixed(1) : 0;
+            tbody.innerHTML += `<tr><td>${item.placar}</td><td>${item.qtd}</td><td>${perc}%</td></tr>`;
+        });
+    }catch(err){console.log(err);}
+}
+carregarResumo();
+setInterval(carregarResumo,20000);
+</script>
+</body>
+</html>
