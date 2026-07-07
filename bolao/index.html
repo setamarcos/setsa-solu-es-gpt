@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolão Portugal x Espanha - Copa 2026</title>
+<title>Bolão Noruega x Inglaterra - Copa 2026</title>
 <style>
 :root{--verde:#0a5c2b;--verde-escuro:#1b5e20;--amarelo:#f9a825;--azul:#1976d2;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
@@ -43,17 +43,17 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 <body>
 <div class="card">
 <div class="topo">
-<h1>BOLÃO DAS OITAVAS</h1>
+<h1>BOLÃO DAS QUARTAS</h1>
 <h2>COPA 2026</h2>
-<h3>PORTUGAL X ESPANHA - HOJE 16:00</h3>
+<h3>NORUEGA X INGLATERRA - 11/07 18:00</h3>
 </div>
 <div class="corpo">
 <form id="formPalpite">
 <label>Palpite</label>
 <div class="placar">
-<input type="text" id="time1" name="time1" placeholder="PORTUGAL" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time1" name="time1" placeholder="NORUEGA" inputmode="numeric" pattern="[0-9]*" required>
 <div class="x">X</div>
-<input type="text" id="time2" name="time2" placeholder="ESPANHA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time2" name="time2" placeholder="INGLATERRA" inputmode="numeric" pattern="[0-9]*" required>
 </div>
 <label>Nome</label>
 <input type="text" id="nome" name="nome" required>
@@ -128,7 +128,7 @@ document.getElementById("formPalpite").addEventListener("submit",(e)=>{
     btn.innerText = "Enviando...";
 
     const palpite = `${t1} x ${t2}`;
-    const textoZap = `🏆 BOLAO DAS OITAVAS - COPA 2026\nPORTUGAL X ESPANHA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\n\n🌐 www.setasolucoes.com.br/bolao`;
+    const textoZap = `🏆 BOLAO DAS QUARTAS - COPA 2026\nNORUEGA X INGLATERRA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\n\n🌐 www.setasolucoes.com.br/bolao`;
 
     window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
 
