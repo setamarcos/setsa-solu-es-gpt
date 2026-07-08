@@ -6,12 +6,7 @@
 <title>CEDAF 2029 - Laura</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
-:root{
-  --seta-azul:#1a73e8;
-  --seta-verde:#34a853;
-  --seta-laranja:#ff8c00;
-  --fundo:#fffaf0;
-}
+:root{ --seta-azul:#1a73e8; --seta-verde:#34a853; --seta-laranja:#ff8c00; --fundo:#fffaf0; }
 body{font-family:'Segoe UI',Arial,sans-serif;max-width:950px;margin:0 auto;padding:16px;background:var(--fundo);color:#333}
 h1{color:var(--seta-azul);text-align:center;font-size:26px}
 .subtitulo{color:var(--seta-verde);text-align:center;font-weight:bold}
@@ -31,7 +26,6 @@ h1{color:var(--seta-azul);text-align:center;font-size:26px}
 .btn-voz{background:#673ab7;color:#fff;font-weight:bold}
 .btn-voz.escutando{background:#d32f2f;animation:pulseVoz 1.5s infinite}
 .conselho-box{background:#f8f9fa;border-left:4px solid var(--seta-laranja);padding:10px;margin:8px 0;border-radius:4px;font-size:14px}
-.conselho-estudado{border-left-color:var(--seta-azul)}
 .export-bar{margin-top:16px;text-align:center}
 @keyframes pulseVoz{0%{opacity:1}50%{opacity:0.6}100%{opacity:1}}
 @media print{body{background:#fff}.btn-topo,.btn-seta,.export-bar{display:none}}
@@ -40,305 +34,33 @@ h1{color:var(--seta-azul);text-align:center;font-size:26px}
 <body>
 <h1>CEDAF 2029 🎯</h1>
 <p class="subtitulo">Laura, 6º ano. Prova <span class="prova-num" id="numProva">1</span> de 20</p>
-
 <div style="text-align:center;margin:16px 0">
   <button class="btn-topo" id="btnTexto" onclick="modo('texto')">📝 Só Redação</button>
   <button class="btn-topo" id="btnProva" onclick="modo('prova')">❓ Só Questões</button>
   <button class="btn-topo ativo" id="btnAmbos" onclick="modo('ambos')">📝+❓ Os Dois</button>
 </div>
-
 <div id="areaProva" class="card"></div>
 <div id="resultadoFinal" class="card"></div>
-
 <script>
+const URL_CEDAF = "https://script.google.com/macros/s/AKfycbwpfA9dvM98fSP-emijLjgbCDPcnPxzI_JfXykfoCFKYkm-CayKxePAcQMECA-mu6tg/exec";
+let userName = 'Aluno';
 const poolQuestoes = [{"q":"Qual das palavras é um substantivo comum?","ops":["Brasil","Cachorro","Maria","São Paulo"],"gab":"b"},{"q":"Qual palavra é um adjetivo?","ops":["Bonito","Correr","Mesa","Rio"],"gab":"a"},{"q":"Qual das palavras é um verbo?","ops":["Correr","Alegria","Casa","Livro"],"gab":"a"},{"q":"Qual palavra é uma interjeição?","ops":["Ah!","Mesa","Correr","Bonito"],"gab":"a"},{"q":"Qual palavra é um substantivo próprio?","ops":["Cidade","Carro","João","Cachorro"],"gab":"c"},{"q":"Qual palavra é um advérbio?","ops":["Rapidamente","Mesa","Bonito","Rio"],"gab":"a"},{"q":"Qual palavra é uma conjunção?","ops":["E","Casa","Bonito","Rio"],"gab":"a"},{"q":"Qual palavra é uma preposição?","ops":["Em","Mesa","Bonito","Correr"],"gab":"a"},{"q":"Qual palavra é um pronome?","ops":["Ele","Mesa","Bonito","Rio"],"gab":"a"},{"q":"Qual palavra é uma onomatopeia?","ops":["Tic-tac","Mesa","Bonito","Rio"],"gab":"a"},{"q":"Qual palavra é oxítona?","ops":["Café","Mesa","Lápis","Copo"],"gab":"a"},{"q":"Qual palavra é paroxítona?","ops":["Mesa","Café","Lápis","Copo"],"gab":"a"},{"q":"Qual palavra é proparoxítona?","ops":["Lâmpada","Mesa","Café","Copo"],"gab":"a"},{"q":"Qual palavra tem acento agudo?","ops":["Café","Mesa","Rio","Copo"],"gab":"a"},{"q":"Qual palavra tem acento circunflexo?","ops":["Vôo","Mesa","Rio","Copo"],"gab":"a"},{"q":"Qual palavra não tem acento?","ops":["Mesa","Café","Lâmpada","Vôo"],"gab":"a"},{"q":"Qual palavra é plural?","ops":["Cachorros","Mesa","Café","Rio"],"gab":"a"},{"q":"Qual palavra é singular?","ops":["Mesa","Cachorros","Lâmpadas","Vôos"],"gab":"a"},{"q":"Qual palavra é aumentativo?","ops":["Cachorrão","Mesa","Café","Rio"],"gab":"a"},{"q":"Qual palavra é diminutivo?","ops":["Cachorrinho","Mesa","Café","Rio"],"gab":"a"},{"q":"Qual é a fração equivalente a 1/2?","ops":["2/4","3/4","4/5","5/6"],"gab":"a"},{"q":"Qual é 25% de 100?","ops":["25","50","75","100"],"gab":"a"},{"q":"Qual é a área de um quadrado de lado 4?","ops":["16","8","12","20"],"gab":"a"},{"q":"Qual é o perímetro de um quadrado de lado 5?","ops":["20","25","15","10"],"gab":"a"},{"q":"Qual é o múltiplo de 6?","ops":["12","7","5","9"],"gab":"a"},{"q":"Qual é o divisor de 12?","ops":["3","5","7","11"],"gab":"a"},{"q":"Qual é a razão entre 2 e 4?","ops":["1/2","2","4","8"],"gab":"a"},{"q":"Qual é a proporção de 3 para 6?","ops":["1/2","2","3","6"],"gab":"a"},{"q":"Qual é a fração equivalente a 3/6?","ops":["1/2","2/3","3/4","4/5"],"gab":"a"},{"q":"Qual é 10% de 200?","ops":["20","40","60","80"],"gab":"a"},{"q":"Qual é o dobro de 15?","ops":["30","25","20","10"],"gab":"a"},{"q":"Qual é a metade de 50?","ops":["25","20","15","10"],"gab":"a"},{"q":"Qual é o triplo de 7?","ops":["21","14","28","35"],"gab":"a"},{"q":"Qual é a soma de 12+8?","ops":["20","18","22","24"],"gab":"a"},{"q":"Qual é a diferença de 15-7?","ops":["8","7","9","10"],"gab":"a"},{"q":"Qual é o produto de 4x5?","ops":["20","15","25","30"],"gab":"a"},{"q":"Qual é o quociente de 20÷4?","ops":["5","4","6","7"],"gab":"a"},{"q":"Qual é a fração de 2/8 simplificada?","ops":["1/4","1/2","2/4","3/4"],"gab":"a"},{"q":"Qual é a porcentagem de 50 em 200?","ops":["25%","50%","75%","100%"],"gab":"a"},{"q":"Qual é a área de um retângulo de lados 3 e 6?","ops":["18","12","15","20"],"gab":"a"},{"q":"Qual é a menor unidade da vida?","ops":["Célula","Átomo","Molécula","Órgão"],"gab":"a"},{"q":"Qual órgão bombeia o sangue?","ops":["Coração","Pulmão","Fígado","Estômago"],"gab":"a"},{"q":"Qual sistema é responsável pela respiração?","ops":["Respiratório","Digestivo","Circulatório","Nervoso"],"gab":"a"},{"q":"Qual sistema é responsável pela digestão?","ops":["Digestivo","Respiratório","Circulatório","Nervoso"],"gab":"a"},{"q":"Qual sistema é responsável pelo transporte de sangue?","ops":["Circulatório","Digestivo","Respiratório","Nervoso"],"gab":"a"},{"q":"Qual sistema é responsável pelo controle do corpo?","ops":["Nervoso","Digestivo","Respiratório","Circulatório"],"gab":"a"},{"q":"Qual é o processo pelo qual plantas produzem alimento?","ops":["Fotossíntese","Respiração","Digestão","Fermentação"],"gab":"a"},{"q":"Qual é o gás essencial para respiração?","ops":["Oxigênio","Nitrogênio","Hidrogênio","Gás carbônico"],"gab":"a"},{"q":"Qual é o gás liberado pelas plantas na fotossíntese?","ops":["Oxigênio","Nitrogênio","Hidrogênio","Gás carbônico"],"gab":"a"},{"q":"Qual é o estado físico da água no gelo?","ops":["Sólido","Líquido","Gasoso","Plasma"],"gab":"a"},{"q":"Qual é o estado físico da água no vapor?","ops":["Gasoso","Líquido","Sólido","Plasma"],"gab":"a"},{"q":"Qual é o estado físico da água na chuva?","ops":["Líquido","Sólido","Gasoso","Plasma"],"gab":"a"},{"q":"Qual é a fonte de energia do Sol?","ops":["Fusão nuclear","Combustão","Eletricidade","Magnetismo"],"gab":"a"},{"q":"Qual é a camada mais externa da Terra?","ops":["Crosta","Manto","Núcleo","Atmosfera"],"gab":"a"},{"q":"Qual é a camada de ar que envolve a Terra?","ops":["Atmosfera","Crosta","Manto","Núcleo"],"gab":"a"},{"q":"Qual é o principal componente do ar?","ops":["Nitrogênio","Oxigênio","Hidrogênio","Gás carbônico"],"gab":"a"},{"q":"Qual é o principal componente da água?","ops":["H2O","O2","CO2","N2"],"gab":"a"},{"q":"Qual é o principal componente do solo fértil?","ops":["Húmus","Areia","Pedra","Argila"],"gab":"a"},{"q":"Qual é a fonte de energia elétrica mais comum?","ops":["Usina hidrelétrica","Usina nuclear","Usina térmica","Usina solar"],"gab":"a"},{"q":"Qual é o órgão responsável pela produção de insulina?","ops":["Pâncreas","Fígado","Estômago","Coração"],"gab":"a"},{"q":"Qual período vem antes da escrita?","ops":["Pré-história","Idade Média","Idade Moderna","Idade Contemporânea"],"gab":"a"},{"q":"Qual civilização construiu pirâmides?","ops":["Egípcia","Romana","Grega","Chinesa"],"gab":"a"},{"q":"Qual civilização criou a democracia?","ops":["Grega","Romana","Egípcia","Chinesa"],"gab":"a"},{"q":"Qual civilização construiu o Coliseu?","ops":["Romana","Grega","Egípcia","Chinesa"],"gab":"a"},{"q":"Qual civilização inventou o papel?","ops":["Chinesa","Egípcia","Romana","Grega"],"gab":"a"},{"q":"Qual civilização usava hieróglifos?","ops":["Egípcia","Romana","Grega","Chinesa"],"gab":"a"},{"q":"Qual civilização criou os Jogos Olímpicos?","ops":["Grega","Romana","Egípcia","Chinesa"],"gab":"a"},{"q":"Qual civilização construiu aquedutos?","ops":["Romana","Grega","Egípcia","Chinesa"],"gab":"a"},{"q":"Qual civilização usava papiro para escrever?","ops":["Egípcia","Romana","Grega","Chinesa"],"gab":"a"},{"q":"Qual civilização criou o calendário solar?","ops":["Egípcia","Romana","Grega","Chinesa"],"gab":"a"},{"q":"Qual civilização construiu a Muralha da China?","ops":["Chinesa","Romana","Grega","Egípcia"],"gab":"a"},{"q":"Qual civilização criou o Senado?","ops":["Romana","Grega","Egípcia","Chinesa"],"gab":"a"},{"q":"Quem chegou ao Brasil em 1500?","ops":["Pedro Álvares Cabral","Cristóvão Colombo","Dom Pedro II","Vasco da Gama"],"gab":"a"},{"q":"Quem já vivia no Brasil antes de 1500?","ops":["Indígenas","Portugueses","Franceses","Espanhóis"],"gab":"a"},{"q":"Qual produto os portugueses buscavam no Brasil?","ops":["Pau-brasil","Café","Milho","Arroz"],"gab":"a"},{"q":"Qual era a principal atividade econômica no início da colonização?","ops":["Extração do pau-brasil","Mineração","Agricultura","Pecuária"],"gab":"a"},{"q":"Qual povo habitava cavernas na Pré-história?","ops":["Homem das cavernas","Romanos","Egípcios","Gregos"],"gab":"a"},{"q":"Qual invenção marcou o fim da Pré-história?","ops":["Escrita","Fogo","Roda","Arado"],"gab":"a"},{"q":"Qual metal foi usado na Idade dos Metais?","ops":["Bronze","Madeira","Pedra","Argila"],"gab":"a"},{"q":"Qual civilização construiu templos como o Partenon?","ops":["Grega","Romana","Egípcia","Chinesa"],"gab":"a"},{"q":"Qual civilização criou o alfabeto que usamos hoje?","ops":["Fenícia","Romana","Egípcia","Grega"],"gab":"a"},{"q":"Qual civilização criou o conceito de cidadania?","ops":["Grega","Romana","Egípcia","Chinesa"],"gab":"a"},{"q":"O que são linhas imaginárias que dividem a Terra na vertical?","ops":["Meridianos","Paralelos","Trópicos","Equador"],"gab":"a"},{"q":"Qual é a linha imaginária que divide a Terra ao meio?","ops":["Equador","Meridiano de Greenwich","Trópico de Câncer","Trópico de Capricórnio"],"gab":"a"},{"q":"Qual clima predomina na Amazônia?","ops":["Equatorial","Tropical","Semiárido","Temperado"],"gab":"a"},{"q":"Qual é a forma de relevo plana e elevada?","ops":["Chapada","Montanha","Vale","Planície"],"gab":"a"},{"q":"Qual é a maior cidade do Brasil em população?","ops":["São Paulo","Rio de Janeiro","Salvador","Brasília"],"gab":"a"},{"q":"Qual região do Brasil é mais seca?","ops":["Nordeste","Sudeste","Sul","Norte"],"gab":"a"},{"q":"Qual é o rio mais extenso do Brasil?","ops":["Amazonas","São Francisco","Paraná","Tocantins"],"gab":"a"},{"q":"Qual bioma tem árvores de pequeno porte e solo pobre?","ops":["Cerrado","Mata Atlântica","Amazônia","Pampa"],"gab":"a"},{"q":"Qual é a capital do Brasil?","ops":["Brasília","Rio de Janeiro","São Paulo","Salvador"],"gab":"a"},{"q":"O que é urbanização?","ops":["Crescimento das cidades","Crescimento do campo","Desmatamento","Industrialização"],"gab":"a"},{"q":"Qual é o estado mais ao sul do Brasil?","ops":["Rio Grande do Sul","Santa Catarina","Paraná","São Paulo"],"gab":"a"},{"q":"Qual é o oceano que banha o Brasil?","ops":["Atlântico","Pacífico","Índico","Ártico"],"gab":"a"},{"q":"Qual é o nome do mapa que mostra o mundo todo?","ops":["Planisfério","Croqui","Perfil","Carta"],"gab":"a"},{"q":"Qual é o instrumento que indica direção usando o norte magnético?","ops":["Bússola","GPS","Mapa","Globo"],"gab":"a"},{"q":"Qual região do Brasil tem mais florestas?","ops":["Norte","Sudeste","Sul","Centro-Oeste"],"gab":"a"},{"q":"Qual é o clima predominante no sertão nordestino?","ops":["Semiárido","Equatorial","Polar","Temperado"],"gab":"a"},{"q":"Qual é o clima predominante no sul do Brasil?","ops":["Temperado","Equatorial","Semiárido","Polar"],"gab":"a"},{"q":"Qual é o relevo predominante na Amazônia?","ops":["Planície","Montanha","Deserto","Planalto"],"gab":"a"},{"q":"Qual é o relevo predominante no Pantanal?","ops":["Planície","Montanha","Deserto","Planalto"],"gab":"a"},{"q":"Qual é o relevo predominante na Serra do Mar?","ops":["Montanha","Planície","Deserto","Planalto"],"gab":"a"},{"q":"Qual é a região mais populosa do Brasil?","ops":["Sudeste","Sul","Norte","Centro-Oeste"],"gab":"a"},{"q":"Qual é a região menos populosa do Brasil?","ops":["Centro-Oeste","Sudeste","Sul","Nordeste"],"gab":"a"},{"q":"Qual é a região mais urbanizada do Brasil?","ops":["Sudeste","Sul","Norte","Centro-Oeste"],"gab":"a"}];
-
-const bancoProvas = [];
-for(let i=0;i<20;i++){
-  const nomeTema = ['Internet','Meio ambiente','Bullying','Leitura','Esporte','Alimentação','Tecnologia','Sustentabilidade','Respeito','Tempo livre','Água','Cultura','Dinheiro','Ciência','Cidadania','Arte','Saúde','Amizade','Estudo','Futuro'][i];
-  bancoProvas.push({
-    id:i+1,
-    tema:{
-      nomeClean: nomeTema,
-      titulo:`Tema ${i+1}: ${nomeTema}`,
-      comando:"Redija um texto dissertativo-argumentativo sobre o tema.",
-      textos:["Texto motivador 1","Texto motivador 2","Texto motivador 3"]
-    },
-    questoes: [...poolQuestoes].sort(()=>Math.random()-0.5).slice(0,10).map((q,idx)=>({
-      q:`${idx+1}. ${q.q}`,
-      ops:q.ops,
-      gab:q.gab
-    }))
-  });
-}
-
-let modoAtual = 'ambos';
-let provaAtual = null;
-let respostas = [];
-let recTitulo = null;
-let recDitado = null;
-let escutandoDitado = false;
-let temporizadorSilencio = null;
-let resultadoRedacaoHTML = '';
-let notaRedacao = 0;
-
-function modo(m){
-  modoAtual = m;
-  document.querySelectorAll('.btn-topo').forEach(b=>b.classList.remove('ativo'));
-  document.getElementById(`btn${m.charAt(0).toUpperCase()+m.slice(1)}`).classList.add('ativo');
-  if(provaAtual) montarProva();
-}
-
-function iniciar(){
-  const feitas = JSON.parse(localStorage.getItem('provasFeitas')||'[]');
-  const disponiveis = bancoProvas.filter(p=>!feitas.includes(p.id));
-  if(disponiveis.length===0){
-    alert('Parabéns! Você fez as 20 provas. Resetando...');
-    localStorage.removeItem('provasFeitas');
-    location.reload();
-    return;
-  }
-  provaAtual = disponiveis[Math.floor(Math.random()*disponiveis.length)];
-  document.getElementById('numProva').textContent = provaAtual.id;
-  respostas = Array(10).fill(null);
-  montarProva();
-}
-
-function alternarVozTitulo(){
-  const btn = document.getElementById('btnVozTitulo');
-  const campo = document.getElementById('textoRedacao');
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SpeechRecognition){alert('Transcrição de voz não suportada neste navegador.');return;}
-  if(recTitulo){recTitulo.stop();return;}
-  recTitulo = new SpeechRecognition();
-  recTitulo.lang = 'pt-BR';recTitulo.continuous=false;recTitulo.interimResults=false;
-  btn.classList.add('escutando');btn.innerHTML='🛑 Escutando Título...';
-  recTitulo.onresult=function(e){
-    let trecho=e.results[0][0].transcript.trim();
-    if(trecho.length>0){
-      trecho=trecho.charAt(0).toUpperCase()+trecho.slice(1);
-      campo.value=(campo.value.trim()==='')?trecho+"\n\n":trecho+"\n\n"+campo.value;
-    }
-  };
-  recTitulo.onend=function(){btn.classList.remove('escutando');btn.innerHTML='🎙️ Falar Botão Título';recTitulo=null;};
-  recTitulo.start();
-}
-
-function alternarDitado(){
-  const btn=document.getElementById('btnDitado');const campo=document.getElementById('textoRedacao');
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SpeechRecognition){alert('Transcrição de voz não suportada neste navegador.');return;}
-  if(recDitado&&escutandoDitado){fecharParagrafoPorSilencio();return;}
-  recDitado=new SpeechRecognition();recDitado.lang='pt-BR';recDitado.continuous=true;recDitado.interimResults=false;escutandoDitado=true;
-  btn.classList.add('escutando');btn.innerHTML='🛑 Escutando Parágrafo...';
-  recDitado.onresult=function(e){
-    clearTimeout(temporizadorSilencio);let trecho='';
-    for(let i=e.resultIndex;i<e.results.length;++i){if(e.results[i].isFinal)trecho+=e.results[i][0].transcript;}
-    if(trecho.trim().length>0){
-      trecho=trecho.trim();let atual=campo.value;
-      if(atual.trim()===''||atual.endsWith('\n\n')){trecho=trecho.charAt(0).toUpperCase()+trecho.slice(1);}
-      else{trecho=' '+trecho;}
-      campo.value+=trecho;temporizadorSilencio=setTimeout(fecharParagrafoPorSilencio,5000);
-    }
-  };
-  recDitado.onend=function(){
-    if(escutandoDitado){try{recDitado.start();}catch(err){}}
-    else{btn.classList.remove('escutando');btn.innerHTML='🎙️ Falar Botão Parágrafo';recDitado=null;}
-  };
-  recDitado.start();
-}
-
-function fecharParagrafoPorSilencio(){
-  const campo=document.getElementById('textoRedacao');let txt=campo.value.trim();
-  if(txt.length>0&&!txt.endsWith('.')&&!txt.endsWith('\n\n')){campo.value=txt+".\n\n";}
-}
-
-function montarProva(){
-  let html='';
-  if(modoAtual==='texto'||modoAtual==='ambos'){
-    html+=`<h3>Redação: ${provaAtual.tema.titulo}</h3>
-    <p><strong>Comando:</strong> ${provaAtual.tema.comando}</p>
-    <div style="margin:12px 0">
-      <button class="btn-seta btn-voz" id="btnVozTitulo" onclick="alternarVozTitulo()">🎙️ Falar Botão Título</button>
-      <button class="btn-seta btn-voz" id="btnDitado" onclick="alternarDitado()">🎙️ Falar Botão Parágrafo</button>
-    </div>
-    <p class="hint">Textos motivadores: ${provaAtual.tema.textos.join(' | ')}</p>
-    <textarea id="textoRedacao" class="textarea-redacao" placeholder="Escreva sua redação aqui..."></textarea>
-    <button class="btn-seta" onclick="corrigirRedacao()">📊 Corrigir Redação</button>
-    <div id="resultadoRedacao" style="display:none;margin-top:12px"></div><hr>`;
-  }
-  if(modoAtual==='prova'||modoAtual==='ambos'){
-    html+=`<h3>10 Questões - Marque 1 alternativa e confirme</h3>`;
-    provaAtual.questoes.forEach((q,i)=>{
-      html+=`<div class="questao" id="q${i}"><p><strong>${q.q}</strong></p>`;
-      q.ops.forEach((op,idx)=>{const letra=['a','b','c','d'][idx];html+=`<button class="btn-alt" id="alt${i}${letra}" onclick="selecionar(${i},'${letra}')">${letra}) ${op}</button>`;});
-      html+=`<div style="margin-top:8px;display:none" id="acoes${i}">
-        <button class="btn-seta" onclick="confirmar(${i},'estudado')">Já estudei</button>
-        <button class="btn-seta btn-chute" onclick="confirmar(${i},'chute')">Não estudei - chute</button>
-      </div></div><hr>`;
-    });
-    html+=`<button class="btn-seta" onclick="finalizar()" style="font-size:18px">📊 Finalizar Prova</button>`;
-  }
-  document.getElementById('areaProva').innerHTML=html;
-  if(resultadoRedacaoHTML){document.getElementById('resultadoRedacao').innerHTML=resultadoRedacaoHTML;document.getElementById('resultadoRedacao').style.display='block';}
-}
-
-function selecionar(idx,letra){
-  if(respostas[idx]&&respostas[idx].confirmado)return;
-  document.querySelectorAll(`#q${idx}.btn-alt`).forEach(b=>b.classList.remove('selecionada'));
-  document.getElementById(`alt${idx}${letra}`).classList.add('selecionada');
-  respostas[idx]={letra,tipo:null,confirmado:false};
-  document.getElementById(`acoes${idx}`).style.display='block';
-}
-
-function confirmar(idx,tipo){
-  if(!respostas[idx]||!respostas[idx].letra)return alert('Marque uma alternativa primeiro!');
-  respostas[idx].tipo=tipo;respostas[idx].confirmado=true;
-  document.getElementById(`acoes${idx}`).style.display='none';
-  document.querySelectorAll(`#q${idx}.btn-alt`).forEach(b=>b.classList.add('travada'));
-  document.getElementById(`q${idx}`).classList.add('questao-travada');
-}
-
-function corrigirRedacao(){
-  const texto=document.getElementById('textoRedacao').value;
-  if(texto.trim().length<10)return alert('Escreva a sua redação antes de corrigir!');
-  const linhasFicticiasPorPalavra=7;const palavras=texto.trim().split(/\s+/).length;
-  const listaParagrafos=texto.split(/\n\n/).filter(p=>p.trim().length>2);
-  const totalParagrafos=listaParagrafos.length;
-  const conectivos=(texto.match(/mas|porém|então|portanto|assim|além disso|porque/gi)||[]).length;
-  let primeiroBloco=listaParagrafos[0]||'';let palavraTema=provaAtual.tema.nomeClean.toLowerCase();
-  let possuiPertinenciaTematica=primeiroBloco.toLowerCase().includes(palavraTema);
-  let totalLinhasSimuladas=0;
-  listaParagrafos.forEach(p=>{let pals=p.trim().split(/\s+/).length;totalLinhasSimuladas+=Math.max(1,Math.ceil(pals/linhasFicticiasPorPalavra));});
-  const c1=Math.min(200,palavras>100?180:palavras>50?140:100);
-  const c2=possuiPertinenciaTematica?180:100;
-  const c3=conectivos>4?170:conectivos>2?150:130;
-  const c4=(totalParagrafos>=4&&totalParagrafos<=5)?170:130;
-  const c5=160;notaRedacao=c1+c2+c3+c4+c5;
-  let analiseEstrutural='';
-  if(totalParagrafos<4){analiseEstrutural+=`<li><strong>Déficit de Macroestrutura Block:</strong> Faltam ${4-totalParagrafos} parágrafo(s).</li>`;}
-  else if(totalParagrafos>5){analiseEstrutural+=`<li><strong>Excesso Estrutural:</strong> O texto apresenta ${totalParagrafos} parágrafos.</li>`;}
-  else{analiseEstrutural+=`<li><strong>Macroestrutura Nota 10:</strong> Excelente! ${totalParagrafos} parágrafos.</li>`;}
-  let linhasAlvo=totalParagrafos*5;
-  if(totalLinhasSimuladas<linhasAlvo){analiseEstrutural+=`<li><strong>Extensão:</strong> Faltam ${linhasAlvo-totalLinhasSimuladas} linhas.</li>`;}
-  else{analiseEstrutural+=`<li><strong>Densidade de Conteúdo:</strong> Ótimo volume.</li>`;}
-  if(!possuiPertinenciaTematica){analiseEstrutural+=`<li><strong>Alerta:</strong> Tema "${provaAtual.tema.nomeClean}" não explicitado.</li>`;}
-  else{analiseEstrutural+=`<li><strong>Pertinência Temática:</strong> Validada.</li>`;}
-  resultadoRedacaoHTML=`
-    <h4>Nota da Redação: ${notaRedacao}/1000</h4>
-    <p><strong>C1 Norma:</strong> ${c1} | <strong>C2 Tema:</strong> ${c2} | <strong>C3 Coesão:</strong> ${c3}</p>
-    <p><strong>C4 Estrutura:</strong> ${c4} | <strong>C5 Proposta:</strong> ${c5}</p>
-    <p class="hint">Métricas: ${palavras} palavras | ~${totalLinhasSimuladas} linhas | ${totalParagrafos} parágrafos</p>
-    <hr style="border:1px dashed #ddd">
-    <h5>📋 Parecer Técnico:</h5>
-    <ul style="padding-left:20px;font-size:14px;line-height:20px;color:#444">${analiseEstrutural}</ul>`;
-  document.getElementById('resultadoRedacao').innerHTML=resultadoRedacaoHTML;
-  document.getElementById('resultadoRedacao').style.display='block';
-}
-
-function obterConselhoInovador(tipoErro){
-  const tecnicasChute=["<strong>Alternativa Includente:</strong> A mais completa costuma ser a correta.",
-    "<strong>Eliminação de Absurdos:</strong> Descarte 'nunca','sempre'.",
-    "<strong>Raiz de Palavra:</strong> Quebre no radical.",
-    "<strong>Contexto Direto:</strong> Releia o enunciado.",
-    "<strong>Contraste de Opostos:</strong> Uma das duas opostas é a correta."];
-  const tecnicasEstudo=["<strong>Revisão Ativa:</strong> Explique a diferença entre sua resposta e a correta.",
-    "<strong>Pegadinha Sintática:</strong> Marque palavras-chave.",
-    "<strong>Engenharia Reversa:</strong> Reconstrua a regra em voz alta.",
-    "<strong>Velocidade vs Atenção:</strong> Gaste 15s relendo.",
-    "<strong>Aplicação Prática:</strong> Crie 2 frases novas com a regra."];
-  let randomIdx=Math.floor(Math.random()*5);
-  return tipoErro==='chute'?`<strong>💡 Chute Técnico:</strong><br>${tecnicasChute[randomIdx]}`:`<strong>🧠 Revisão Ativa:</strong><br>${tecnicasEstudo[randomIdx]}`;
-}
-
-function finalizar(){
-  if(modoAtual==='prova'||modoAtual==='ambos'){
-    let acertosTotal=0,acertosEstudado=0,acertosChute=0,totalEstudado=0,totalChute=0,respondidas=0;let listaErrosHtml='';
-    respostas.forEach((r,i)=>{
-      if(r&&r.confirmado){
-        respondidas++;const qCorreta=provaAtual.questoes[i];const acertou=r.letra===qCorreta.gab;
-        if(acertou){acertosTotal++;if(r.tipo==='estudado'){totalEstudado++;acertosEstudado++;}else{totalChute++;acertosChute++;}}
-        else{if(r.tipo==='estudado')totalEstudado++;else totalChute++;
-          let classeVozBox=r.tipo==='estudado'?'conselho-estudado':'';
-          let txtConselho=obterConselhoInovador(r.tipo);
-          let indGabarito=['a','b','c','d'].indexOf(qCorreta.gab);let textoAlternativaCerta=qCorreta.ops[indGabarito];
-          listaErrosHtml+=`<div class="conselho-box ${classeVozBox}">
-            <strong>Questão Errada:</strong> ${qCorreta.q}<br>
-            <span style="color:#d32f2f">Sua: ${r.letra.toUpperCase()}</span> |
-            <span style="color:#34a853">Gabarito: ${qCorreta.gab.toUpperCase()}) ${textoAlternativaCerta}</span><br>
-            <p style="margin:6px 0 0 0;color:#555">${txtConselho}</p></div>`;
-        }
-      }
-    });
-    if(respondidas===0)return alert('Responda e confirme pelo menos uma questão!');
-    const notaQ=Math.round((acertosTotal/10)*1000);
-    const feitas=JSON.parse(localStorage.getItem('provasFeitas')||'[]');feitas.push(provaAtual.id);
-    localStorage.setItem('provasFeitas',JSON.stringify(feitas));
-    let htmlResultado=`<h3>Resultado Final - Prova ${provaAtual.id}</h3>
-      <h2>Nota Questões: ${notaQ}/1000</h2>
-      <p><strong>Respondidas:</strong> ${respondidas}/10</p>
-      <p><strong>Total de Acertos:</strong> ${acertosTotal} de ${respondidas}</p>
-      <p><strong>No que você já estudou:</strong> ${acertosEstudado}/${totalEstudado}</p>
-      <p><strong>No chute:</strong> ${acertosChute}/${totalChute}</p>`;
-    if(listaErrosHtml!==''){htmlResultado+=`<hr style="border:1px dashed #ddd"><h4>📋 Mentoria:</h4>${listaErrosHtml}`;}
-    else{htmlResultado+=`<p style="color:var(--seta-verde);font-weight:bold">🎯 Desempenho excelente!</p>`;}
-    if(resultadoRedacaoHTML){htmlResultado+=`<hr style="border:1px dashed #ddd"><h4>📝 Correção da Redação:</h4>${resultadoRedacaoHTML}`;}
-    htmlResultado+=`<div class="export-bar">
-      <button class="btn-seta" onclick="exportarPDF(${notaQ})">📄 Exportar PDF</button>
-      <button class="btn-seta" onclick="exportarXLSX(${notaQ})">📊 Exportar XLSX</button>
-      <button class="btn-seta" onclick="exportarWhats(${notaQ})">📱 WhatsApp</button>
-      <button class="btn-seta" onclick="location.reload()">🎲 Nova Prova</button>
-    </div>`;
-    document.getElementById('resultadoFinal').innerHTML=htmlResultado;
-    document.getElementById('resultadoFinal').style.display='block';
-    document.getElementById('areaProva').style.display='none';
-  }else{alert('Redação corrigida acima!');}
-}
-
-function exportarPDF(notaQ){
-  const data = new Date().toISOString().split('T')[0];
-  const titulo = `CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');
-  document.title = `${titulo}_${data}`;
-  window.print();
-  setTimeout(()=>{document.title = 'CEDAF 2029 - Laura'}, 1000);
-}
-
-function exportarXLSX(notaQ){
-  const data = new Date().toLocaleDateString('pt-BR');
-  const titulo = `CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');
-
-  const wsResumo = XLSX.utils.aoa_to_sheet([
-    ['Data', data],
-    ['Prova', provaAtual.id],
-    ['Tema', provaAtual.tema.nomeClean],
-    ['Nota Prova', notaQ],
-    ['Nota Redação', notaRedacao]
-  ]);
-
-  const dadosQuestoes = [['Questao','Sua Resposta','Gabarito','Status','Tipo']];
-  respostas.forEach((r,i)=>{
-    if(r&&r.confirmado){
-      const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'Acerto':'Erro';
-      dadosQuestoes.push([i+1,r.letra.toUpperCase(),q.gab.toUpperCase(),acertou,r.tipo]);
-    }
-  });
-  const wsQuestoes = XLSX.utils.aoa_to_sheet(dadosQuestoes);
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, wsResumo, 'Resumo');
-  XLSX.utils.book_append_sheet(wb, wsQuestoes, 'Questoes');
-  XLSX.writeFile(wb, `${titulo}_${new Date().toISOString().split('T')[0]}.xlsx`);
-}
-
-function exportarWhats(notaQ){
-  const textoRedacao = document.getElementById('textoRedacao')?.value || '';
-  const primeiraLinha = textoRedacao.split('\n')[0].substring(0,40) || provaAtual.tema.nomeClean;
-  let texto=`*CEDAF 2029 - Laura*\nProva ${provaAtual.id}: ${provaAtual.tema.nomeClean}\nNota Prova: ${notaQ}/1000\nRedação: ${primeiraLinha}\nNota Redação: ${notaRedacao}/1000\n`;
-  respostas.forEach((r,i)=>{if(r&&r.confirmado){const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'✅':'❌';
-    texto+=`Q${i+1}: ${r.letra.toUpperCase()} ${acertou}\n`;}});
-  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank');
-}
-
+const bancoProvas = [];for(let i=0;i<20;i++){const nomeTema = ['Internet','Meio ambiente','Bullying','Leitura','Esporte','Alimentação','Tecnologia','Sustentabilidade','Respeito','Tempo livre','Água','Cultura','Dinheiro','Ciência','Cidadania','Arte','Saúde','Amizade','Estudo','Futuro'][i];bancoProvas.push({id:i+1,tema:{nomeClean:nomeTema,titulo:`Tema ${i+1}: ${nomeTema}`,comando:"Redija um texto dissertativo-argumentativo sobre o tema.",textos:["Texto motivador 1","Texto motivador 2","Texto motivador 3"]},questoes:[...poolQuestoes].sort(()=>Math.random()-0.5).slice(0,10).map((q,idx)=>({q:`${idx+1}. ${q.q}`,ops:q.ops,gab:q.gab}))});}
+let modoAtual='ambos';let provaAtual=null;let respostas=[];let recTitulo=null;let recDitado=null;let escutandoDitado=false;let temporizadorSilencio=null;let resultadoRedacaoHTML='';let notaRedacao=0;
+function modo(m){modoAtual=m;document.querySelectorAll('.btn-topo').forEach(b=>b.classList.remove('ativo'));document.getElementById(`btn${m.charAt(0).toUpperCase()+m.slice(1)}`).classList.add('ativo');if(provaAtual)montarProva();}
+function iniciar(){const feitas=JSON.parse(localStorage.getItem('provasFeitas')||'[]');const disponiveis=bancoProvas.filter(p=>!feitas.includes(p.id));if(disponiveis.length===0){alert('Parabéns! Você fez as 20 provas. Resetando...');localStorage.removeItem('provasFeitas');location.reload();return;}provaAtual=disponiveis[Math.floor(Math.random()*disponiveis.length)];document.getElementById('numProva').textContent=provaAtual.id;respostas=Array(10).fill(null);montarProva();}
+function alternarVozTitulo(){const btn=document.getElementById('btnVozTitulo');const campo=document.getElementById('textoRedacao');const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Transcrição não suportada.');return;}if(recTitulo){recTitulo.stop();return;}recTitulo=new SpeechRecognition();recTitulo.lang='pt-BR';recTitulo.continuous=false;recTitulo.interimResults=false;btn.classList.add('escutando');btn.innerHTML='🛑 Escutando...';recTitulo.onresult=function(e){let trecho=e.results[0][0].transcript.trim();if(trecho.length>0){trecho=trecho.charAt(0).toUpperCase()+trecho.slice(1);campo.value=(campo.value.trim()==='')?trecho+"\n\n":trecho+"\n\n"+campo.value;}};recTitulo.onend=function(){btn.classList.remove('escutando');btn.innerHTML='🎙️ Falar Título';recTitulo=null;};recTitulo.start();}
+function alternarDitado(){const btn=document.getElementById('btnDitado');const campo=document.getElementById('textoRedacao');const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Transcrição não suportada.');return;}if(recDitado&&escutandoDitado){fecharParagrafoPorSilencio();return;}recDitado=new SpeechRecognition();recDitado.lang='pt-BR';recDitado.continuous=true;recDitado.interimResults=false;escutandoDitado=true;btn.classList.add('escutando');btn.innerHTML='🛑 Escutando...';recDitado.onresult=function(e){clearTimeout(temporizadorSilencio);let trecho='';for(let i=e.resultIndex;i<e.results.length;++i){if(e.results[i].isFinal)trecho+=e.results[i][0].transcript;}if(trecho.trim().length>0){trecho=trecho.trim();let atual=campo.value;if(atual.trim()===''||atual.endsWith('\n\n')){trecho=trecho.charAt(0).toUpperCase()+trecho.slice(1);}else{trecho=' '+trecho;}campo.value+=trecho;temporizadorSilencio=setTimeout(fecharParagrafoPorSilencio,5000);}};recDitado.onend=function(){if(escutandoDitado){try{recDitado.start();}catch(err){}}else{btn.classList.remove('escutando');btn.innerHTML='🎙️ Falar Parágrafo';recDitado=null;}};recDitado.start();}
+function fecharParagrafoPorSilencio(){const campo=document.getElementById('textoRedacao');let txt=campo.value.trim();if(txt.length>0&&!txt.endsWith('.')&&!txt.endsWith('\n\n')){campo.value=txt+".\n\n";}}
+function montarProva(){let html='';if(modoAtual==='texto'||modoAtual==='ambos'){html+=`<h3>Redação: ${provaAtual.tema.titulo}</h3><p><strong>Comando:</strong> ${provaAtual.tema.comando}</p><div style="margin:12px 0"><button class="btn-seta btn-voz" id="btnVozTitulo" onclick="alternarVozTitulo()">🎙️ Falar Título</button><button class="btn-seta btn-voz" id="btnDitado" onclick="alternarDitado()">🎙️ Falar Parágrafo</button></div><p class="hint">Textos: ${provaAtual.tema.textos.join(' | ')}</p><textarea id="textoRedacao" class="textarea-redacao"></textarea><button class="btn-seta" onclick="corrigirRedacao()">📊 Corrigir Redação</button><div id="resultadoRedacao" style="display:none;margin-top:12px"></div><hr>`;}if(modoAtual==='prova'||modoAtual==='ambos'){html+=`<h3>10 Questões</h3>`;provaAtual.questoes.forEach((q,i)=>{html+=`<div class="questao" id="q${i}"><p><strong>${q.q}</strong></p>`;q.ops.forEach((op,idx)=>{const letra=['a','b','c','d'][idx];html+=`<button class="btn-alt" id="alt${i}${letra}" onclick="selecionar(${i},'${letra}')">${letra}) ${op}</button>`;});html+=`<div style="margin-top:8px;display:none" id="acoes${i}"><button class="btn-seta" onclick="confirmar(${i},'estudado')">Já estudei</button><button class="btn-seta btn-chute" onclick="confirmar(${i},'chute')">Chute</button></div></div><hr>`;});html+=`<button class="btn-seta" onclick="finalizar()" style="font-size:18px">📊 Finalizar Prova</button>`;}document.getElementById('areaProva').innerHTML=html;if(resultadoRedacaoHTML){document.getElementById('resultadoRedacao').innerHTML=resultadoRedacaoHTML;document.getElementById('resultadoRedacao').style.display='block';}}
+function selecionar(idx,letra){if(respostas[idx]&&respostas[idx].confirmado)return;document.querySelectorAll(`#q${idx}.btn-alt`).forEach(b=>b.classList.remove('selecionada'));document.getElementById(`alt${idx}${letra}`).classList.add('selecionada');respostas[idx]={letra,tipo:null,confirmado:false};document.getElementById(`acoes${idx}`).style.display='block';}
+function confirmar(idx,tipo){if(!respostas[idx]||!respostas[idx].letra)return alert('Marque uma alternativa!');respostas[idx].tipo=tipo;respostas[idx].confirmado=true;document.getElementById(`acoes${idx}`).style.display='none';document.querySelectorAll(`#q${idx}.btn-alt`).forEach(b=>b.classList.add('travada'));document.getElementById(`q${idx}`).classList.add('questao-travada');}
+function corrigirRedacao(){const texto=document.getElementById('textoRedacao').value;if(texto.trim().length<10)return alert('Escreva a redação!');const palavras=texto.trim().split(/\s+/).length;const listaParagrafos=texto.split(/\n\n/).filter(p=>p.trim().length>2);const totalParagrafos=listaParagrafos.length;const conectivos=(texto.match(/mas|porém|então|portanto|assim|além disso|porque/gi)||[]).length;let palavraTema=provaAtual.tema.nomeClean.toLowerCase();let possuiPertinenciaTematica=texto.toLowerCase().includes(palavraTema);const c1=Math.min(200,palavras>100?180:palavras>50?140:100);const c2=possuiPertinenciaTematica?180:100;const c3=conectivos>4?170:conectivos>2?150:130;const c4=(totalParagrafos>=4&&totalParagrafos<=5)?170:130;const c5=160;notaRedacao=c1+c2+c3+c4+c5;resultadoRedacaoHTML=`<h4>Nota da Redação: ${notaRedacao}/1000</h4><p><strong>C1:</strong> ${c1} | <strong>C2:</strong> ${c2} | <strong>C3:</strong> ${c3}</p><p><strong>C4:</strong> ${c4} | <strong>C5:</strong> ${c5}</p><p class="hint">${palavras} palavras | ${totalParagrafos} parágrafos</p>`;document.getElementById('resultadoRedacao').innerHTML=resultadoRedacaoHTML;document.getElementById('resultadoRedacao').style.display='block';}
+function finalizar(){if(modoAtual==='prova'||modoAtual==='ambos'){let acertosTotal=0,acertosEstudado=0,acertosChute=0,totalEstudado=0,totalChute=0,respondidas=0;respostas.forEach((r,i)=>{if(r&&r.confirmado){respondidas++;const qCorreta=provaAtual.questoes[i];const acertou=r.letra===qCorreta.gab;if(acertou){acertosTotal++;if(r.tipo==='estudado'){totalEstudado++;acertosEstudado++;}else{totalChute++;acertosChute++;}}else{if(r.tipo==='estudado')totalEstudado++;else totalChute++;}}});if(respondidas===0)return alert('Responda pelo menos uma questão!');const notaQ=Math.round((acertosTotal/10)*1000);const feitas=JSON.parse(localStorage.getItem('provasFeitas')||'[]');feitas.push(provaAtual.id);localStorage.setItem('provasFeitas',JSON.stringify(feitas));let htmlResultado=`<h3>Resultado Final - Prova ${provaAtual.id}</h3><h2>Nota Questões: ${notaQ}/1000</h2><p><strong>Respondidas:</strong> ${respondidas}/10</p><p><strong>Total de Acertos:</strong> ${acertosTotal}</p><p><strong>No que você já estudou:</strong> ${acertosEstudado}/${totalEstudado}</p><p><strong>No chute:</strong> ${acertosChute}/${totalChute}</p>`;if(resultadoRedacaoHTML){htmlResultado+=`<hr><h4>📝 Redação:</h4>${resultadoRedacaoHTML}`;}htmlResultado+=`<div class="export-bar"><button class="btn-seta" onclick="exportarPDF(${notaQ})">📄 PDF</button><button class="btn-seta" onclick="exportarXLSX(${notaQ})">📊 XLSX</button><button class="btn-seta" onclick="exportarWhats(${notaQ})">📱 WhatsApp</button><button class="btn-seta" style="background:#1a73e8" onclick="enviarParaCEDAF(${notaQ})">🚀 ENVIAR PARA CEDAF</button><button class="btn-seta" onclick="location.reload()">🎲 Nova Prova</button></div>`;document.getElementById('resultadoFinal').innerHTML=htmlResultado;document.getElementById('resultadoFinal').style.display='block';document.getElementById('areaProva').style.display='none';}else{alert('Redação corrigida acima!');}}
+function enviarParaCEDAF(notaQ){const agora=new Date();const data=agora.toLocaleDateString('pt-BR');const hora=agora.toLocaleTimeString('pt-BR');const textoRedacao=document.getElementById('textoRedacao')?.value||'Não fez';let acertos=0;respostas.forEach(r=>{if(r&&r.confirmado&&r.letra===provaAtual.questoes[respostas.indexOf(r)].gab)acertos++;});const payload={data:data,hora:hora,prova:provaAtual.id,tema:provaAtual.tema.nomeClean,nome:userName,notaProva:notaQ,notaRedacao:notaRedacao,acertos:acertos,tipo:modoAtual,textoRedacao:textoRedacao.substring(0,500)};fetch(URL_CEDAF,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}).then(()=>alert('✅ Enviado para o CEDAF!')).catch(err=>alert('❌ Erro: '+err));}
+function exportarPDF(notaQ){const data=new Date().toISOString().split('T')[0];const titulo=`CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');document.title=`${titulo}_${data}`;window.print();setTimeout(()=>{document.title='CEDAF 2029 - Laura'},1000);}
+function exportarXLSX(notaQ){const data=new Date().toLocaleDateString('pt-BR');const titulo=`CEDAF2029_Prova${provaAtual.id}_${provaAtual.tema.nomeClean}`.replace(/\s/g,'');const wsResumo=XLSX.utils.aoa_to_sheet([['Data',data],['Prova',provaAtual.id],['Tema',provaAtual.tema.nomeClean],['Nota Prova',notaQ],['Nota Redação',notaRedacao]]);const dadosQuestoes=[['Questao','Sua Resposta','Gabarito','Status','Tipo']];respostas.forEach((r,i)=>{if(r&&r.confirmado){const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'Acerto':'Erro';dadosQuestoes.push([i+1,r.letra.toUpperCase(),q.gab.toUpperCase(),acertou,r.tipo]);}});const wsQuestoes=XLSX.utils.aoa_to_sheet(dadosQuestoes);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,wsResumo,'Resumo');XLSX.utils.book_append_sheet(wb,wsQuestoes,'Questoes');XLSX.writeFile(wb,`${titulo}_${new Date().toISOString().split('T')[0]}.xlsx`);}
+function exportarWhats(notaQ){const textoRedacao=document.getElementById('textoRedacao')?.value||'';const primeiraLinha=textoRedacao.split('\n')[0].substring(0,40)||provaAtual.tema.nomeClean;let texto=`*CEDAF 2029 - Laura*\nProva ${provaAtual.id}: ${provaAtual.tema.nomeClean}\nNota Prova: ${notaQ}/1000\nRedação: ${primeiraLinha}\nNota Redação: ${notaRedacao}/1000\n`;respostas.forEach((r,i)=>{if(r&&r.confirmado){const q=provaAtual.questoes[i];const acertou=r.letra===q.gab?'✅':'❌';texto+=`Q${i+1}: ${r.letra.toUpperCase()} ${acertou}\n`;}});window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank');}
 iniciar();
 </script>
 </body>
