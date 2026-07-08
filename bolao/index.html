@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolão Noruega x Inglaterra - Copa 2026</title>
+<title>Bolão Final Betinense - NC x REN</title>
 <style>
-:root{--verde:#0a5c2b;--verde-escuro:#1b5e20;--amarelo:#f9a825;--azul:#1976d2;}
+:root{--verde:#006400;--verde-escuro:#004d00;--amarelo:#FFD700;--azul:#1976d2;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
-body{background:linear-gradient(180deg,#fffbe6,#d4f1d4);min-height:100vh;padding:15px;}
+body{background:linear-gradient(180deg,#e8f5e9,#c8e6c9);min-height:100vh;padding:15px;}
 .card{max-width:420px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.2);border:3px solid var(--verde);}
 .topo{background:var(--verde);color:var(--amarelo);text-align:center;padding:18px;font-weight:bold;line-height:1.4;}
 .topo h1{font-size:20px;}
@@ -37,28 +37,38 @@ input[type=text],input[type=tel]{width:100%;padding:12px;border:1px solid #ccc;b
 table{width:100%;border-collapse:collapse;font-size:14px;}
 th{background:var(--verde);color:#fff;padding:10px;text-align:center;}
 td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
+.obs-premio{background:#fff8e1;border-left:4px solid var(--amarelo);padding:10px;margin:12px 0;font-size:13px;text-align:left;}
 .toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:8px;font-size:14px;z-index:99;}
 </style>
 </head>
 <body>
 <div class="card">
 <div class="topo">
-<h1>BOLÃO DAS QUARTAS</h1>
-<h2>COPA 2026</h2>
-<h3>NORUEGA X INGLATERRA - 11/07 18:00</h3>
+<h1>BOLÃO DA FINAL</h1>
+<h2>CAMPEONATO BETINENSE 2026</h2>
+<h3>NOVO CRISTINA X RENASCENÇA - 12/07 09:30</h3>
 </div>
 <div class="corpo">
 <form id="formPalpite">
 <label>Palpite</label>
 <div class="placar">
-<input type="text" id="time1" name="time1" placeholder="NORUEGA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time1" name="time1" placeholder="NOVO CRISTINA" inputmode="numeric" pattern="[0-9]*" required>
 <div class="x">X</div>
-<input type="text" id="time2" name="time2" placeholder="INGLATERRA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time2" name="time2" placeholder="RENASCENÇA" inputmode="numeric" pattern="[0-9]*" required>
 </div>
 <label>Nome</label>
 <input type="text" id="nome" name="nome" required>
 <label>Contato</label>
 <input type="tel" id="contato" name="contato" required>
+
+<div class="obs-premio">
+<b>🏆 REGRAS:</b><br>
+1. PRÊMIO MAIOR: Placar Exato do NOVO CRISTINA<br>
+2. PRÊMIO TAMBÉM: Placar Exato do RENASCENÇA<br>
+3. BÔNUS: Acertar só o vencedor<br>
+<b>Apoie o time do bairro! Cota R$ 5,00</b>
+</div>
+
 <div class="pix">
 <div class="pix-row"><span>📦 Aposta R$ 5,00</span><span>marcos picpay</span></div>
 <div class="chave">setamarcos@yahoo.com.br</div>
@@ -72,8 +82,8 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 <button type="submit" id="btnEnviar">CONFIRMAR PALPITE</button>
 </form>
 <div class="resumo">
-<h2>Palpites da Familia</h2>
-<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th><th>%</th></tr></thead><tbody></tbody></table>
+<h2>Palpites da Galera</h2>
+<table id="placares"><thead><tr><th>Palpite</th><th>Qtd.</th></tr></thead><tbody></tbody></table>
 </div>
 </div>
 </div>
@@ -128,7 +138,7 @@ document.getElementById("formPalpite").addEventListener("submit",(e)=>{
     btn.innerText = "Enviando...";
 
     const palpite = `${t1} x ${t2}`;
-    const textoZap = `🏆 BOLAO DAS QUARTAS - COPA 2026\nNORUEGA X INGLATERRA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\n\n🌐 www.setasolucoes.com.br/bolao`;
+    const textoZap = `🏆 BOLAO DA FINAL - BETINENSE 2026\nNOVO CRISTINA X RENASCENÇA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\n\n🌐 Final na Arena Urbsan 12/07 09:30`;
 
     window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
 
@@ -155,10 +165,8 @@ async function carregarResumo(){
         const tbody = document.querySelector("#placares tbody");
         tbody.innerHTML = "";
         const lista = dados.placares || [];
-        const total = lista.reduce((s,i)=>s+i.qtd,0);
         lista.sort((a,b)=>b.qtd-a.qtd).forEach(item=>{
-            const perc = total? ((item.qtd/total)*100).toFixed(1) : 0;
-            tbody.innerHTML += `<tr><td>${item.placar}</td><td>${item.qtd}</td><td>${perc}%</td></tr>`;
+            tbody.innerHTML += `<tr><td>${item.placar}</td><td>${item.qtd}</td></tr>`;
         });
     }catch(err){console.log(err);}
 }
