@@ -7,11 +7,11 @@
     <title>Painel de Crônicas - Seta</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #e3f2fd; padding: 20px; margin: 0; }
-      .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-      .btn-voice { width: 100%; padding: 15px; margin: 10px 0; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px; transition: 0.3s; }
-      .btn-voice.recording { background: #dc3545; box-shadow: 0 0 10px rgba(220, 53, 69, 0.5); }
-      .btn-save { width: 100%; padding: 15px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px; margin-top: 10px; }
-      .btn-save:disabled { background: #6c757d; }
+     .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+     .btn-voice { width: 100%; padding: 15px; margin: 10px 0; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px; transition: 0.3s; }
+     .btn-voice.recording { background: #dc3545; box-shadow: 0 0 10px rgba(220, 53, 69, 0.5); }
+     .btn-save { width: 100%; padding: 15px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px; margin-top: 10px; }
+     .btn-save:disabled { background: #6c757d; cursor: not-allowed; }
         textarea { width: 100%; height: 300px; margin-bottom: 10px; background-color: #f9f9f9; padding: 15px; box-sizing: border-box; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; line-height: 1.5; }
         input { width: 100%; padding: 15px; margin-bottom: 10px; box-sizing: border-box; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
         h2 { color: #0d47a1; text-align: center; margin-bottom: 20px; }
@@ -32,18 +32,18 @@
         let campoAtivo = null;
         let isRecording = false;
         let textoAcumulado = "";
-        let timerParagrafo = null;
+        let timerParagrafo = null; // Timer de 5s
 
-        function formatarInicial(texto) {
-            if (!texto) return "";
-            return texto.trim().charAt(0).toUpperCase() + texto.trim().slice(1);
+        function formatarTexto(texto) {
+            // Coloca maiúscula após.!? ou no início
+            return texto.replace(/(^\s*\w|[.!?]\s*\w)/g, function(c){ return c.toUpperCase(); });
         }
 
         function toggleVoz(campoId, cumulativo) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { alert("Microfone só funciona em HTTPS. Suba pro Github pra testar."); return; }
+            if (!SpeechRecognition) { alert("Seu navegador não suporta reconhecimento de voz."); return; }
 
-            // SE JÁ ESTÁ GRAVANDO: PARA. ISSO TRAVA O BUG DO VERMELHO
+            // Se já está gravando, clica pra parar
             if (isRecording) {
                 pararGravacao();
                 return;
@@ -51,8 +51,8 @@
 
             recognition = new SpeechRecognition();
             recognition.lang = 'pt-BR';
-            recognition.continuous = true;
-            recognition.interimResults = true;
+            recognition.continuous = true; // Fica ouvindo
+            recognition.interimResults = true; // Mostra na hora
 
             campoAtivo = campoId;
             isRecording = true;
@@ -67,51 +67,62 @@
             }
 
             btn.classList.add('recording');
-            btn.innerText = "🔴 Gravando... (Clique para Parar / Pause 5s)";
+            btn.innerText = "🔴 Gravando... (Pausa 5s = Novo Parágrafo)";
 
             recognition.onresult = (event) => {
-                clearTimeout(timerParagrafo);
+                clearTimeout(timerParagrafo); // Zera o timer a cada palavra
+
                 let textoNovo = "";
                 for (let i = event.resultIndex; i < event.results.length; i++) {
-                    textoNovo += event.results[i][0].transcript;
+                    if(event.results[i].isFinal){
+                        textoNovo += event.results[i][0].transcript + " ";
+                    }
                 }
-                let textoCompleto = textoAcumulado + textoNovo;
-                campo.value = formatarInicial(textoCompleto);
+                
+                if(textoNovo){
+                    textoAcumulado += textoNovo;
+                }
 
-                // REGRA HUMANA: PAUSA 5S = PONTO + 2 ENTERS
+                // Mostra tudo formatado
+                campo.value = formatarTexto(textoAcumulado);
+                campo.scrollTop = campo.scrollHeight;
+
+                // ARMA O TIMER DE 5s: Se ficar 5s calado, faz parágrafo
                 timerParagrafo = setTimeout(() => {
                     let val = campo.value.trim();
-                    if (val &&!val.endsWith('.')) val += ".";
-                    campo.value = val + "\n\n";
-                    textoAcumulado = campo.value; // Trava o parágrafo
+                    if (val &&!/[.!?]$/.test(val)) val += "."; // Põe ponto se não tiver
+                    campo.value = val + "\n\n"; // Pula 2 linhas
+                    textoAcumulado = campo.value; // Atualiza o acumulado
                 }, 5000);
             };
 
             recognition.onend = () => {
-                // Isso aqui só roda em HTTPS. Em local ele ignora
-                pararGravacao();
+                // Só para se o usuário clicar. Se o google derrubar, religa
+                if(isRecording) recognition.start();
             };
+
+            recognition.onerror = () => pararGravacao();
             recognition.start();
         }
 
         function pararGravacao() {
             if (recognition) {
+                isRecording = false;
                 recognition.stop();
                 recognition = null;
             }
             clearTimeout(timerParagrafo);
-            isRecording = false;
 
             const btn = document.getElementById('btn-' + campoAtivo);
             if(btn) {
                 btn.classList.remove('recording');
                 btn.innerText = campoAtivo === 'conteudo'? "🎙 Falar Texto (Gravação Contínua)" : "🎙 Falar Título (Novo)";
             }
-            // Garante ponto final
+            // Garante ponto final ao parar
             let campo = document.getElementById(campoAtivo);
             if(campo && campo.value.trim()) {
                 let val = campo.value.trim();
-                if (!val.endsWith('.') &&!val.endsWith('!') &&!val.endsWith('?')) campo.value = val + ".";
+                if (!/[.!?]$/.test(val)) campo.value = val + ".";
             }
             campoAtivo = null;
         }
@@ -120,20 +131,20 @@
             if(isRecording) pararGravacao();
             const t = document.getElementById('titulo').value;
             const c = document.getElementById('conteudo').value;
-            if (t.length < 3 || c.length < 10) { alert("Preencha título e texto."); return; }
+            if (t.length < 3 || c.length < 10) { alert("Necessário preencher título e ter texto suficiente na crônica."); return; }
 
             const url_api = "https://script.google.com/macros/s/AKfycbx0LF6BodLz3Q2LkUAm-yWvByBiTYHthkoo5tmUXv64WtwtWB6g2lHJV1dW7OmBgiA5LQ/exec";
             const btnSalvar = document.querySelector('.btn-save');
             btnSalvar.innerText = "⏳ Salvando no motor..."; btnSalvar.disabled = true;
 
             fetch(url_api, { method: 'POST', body: JSON.stringify({ titulo: t, conteudo: c }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }})
-         .then(res => res.json())
-         .then(data => {
-                if(data.status === "sucesso") { alert('Crônica guardada com sucesso na sua base!'); document.getElementById('titulo').value = ''; document.getElementById('conteudo').value = ''; }
-                else { alert('Falha no motor: ' + data.detalhe); }
+          .then(res => res.json())
+          .then(data => {
+                if(data.status === "sucesso") { alert('Crônica guardada com sucesso na sua base!'); document.getElementById('titulo').value = ''; document.getElementById('conteudo').value = ''; textoAcumulado = ""; }
+                else { alert('Houve uma falha no motor: ' + data.detalhe); }
             })
-         .catch(err => alert("Erro de comunicação com a base."))
-         .finally(() => { btnSalvar.innerText = "💾 Salvar na Base de Dados"; btnSalvar.disabled = false; });
+          .catch(err => alert("Erro de comunicação com a base de dados."))
+          .finally(() => { btnSalvar.innerText = "💾 Salvar na Base de Dados"; btnSalvar.disabled = false; });
         }
     </script>
 </body>
