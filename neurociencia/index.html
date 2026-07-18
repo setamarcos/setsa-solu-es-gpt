@@ -3,249 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagnóstico Direto 5.5 - Seta Soluções</title>
+  <title>Neurociência IA 9.3 - Seta Soluções</title>
   <style>
     body { margin:0; font-family: Arial, sans-serif; background:#003366; color:#fff; padding-bottom: 30px; }
-   .container { background:#fff; color:#000; max-width:600px; margin:20px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.container { background:#fff; color:#000; max-width:600px; margin:20px auto; padding:20px; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     h1 { text-align:center; color:#003366; font-size:22px; margin-bottom:5px; }
-   .subtitle { text-align:center; color:#ff6600; font-size:13px; font-weight:bold; margin-bottom:20px; }
+.subtitle { text-align:center; color:#ff6600; font-size:13px; font-weight:bold; margin-bottom:20px; }
     #login { margin-bottom: 20px; }
     label { display: block; font-size:14px; font-weight:bold; margin-top: 15px; color: #003366; }
     textarea, select, input { width:100%; padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc; margin-bottom:10px; box-sizing: border-box; }
     textarea { min-height: 70px; }
-   .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-   .checkbox-btn { background:#e2e8f0; color:#334155; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:bold; cursor:pointer; user-select:none; }
-   .checkbox-btn.active { background:#ff6600; color:#fff; }
-   .btn-audio { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-   .btn-audio.gravando { background:#cc0000; animation: piscar 1s infinite; }
-   .button-row { display:flex; gap:6px; margin-top:15px; flex-wrap: wrap; }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.checkbox-btn { background:#e2e8f0; color:#334155; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:bold; cursor:pointer; user-select:none; }
+.checkbox-btn.active { background:#ff6600; color:#fff; }
+.btn-audio { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-audio.gravando { background:#cc0000; animation: piscar 1s infinite; }
+.button-row { display:flex; gap:6px; margin-top:15px; flex-wrap: wrap; }
     button.action-btn { flex:1; min-width: 120px; background:#ff6600; color:#fff; border:none; padding:12px; font-size:13px; border-radius:6px; cursor:pointer; font-weight:bold; }
-   .prompt-output { background:#f1f5f9; padding:12px; margin-top:15px; border-radius:6px; font-size:13px; border-left:4px solid #ff6600; white-space:pre-wrap; display:none; color:#000; }
-   .status-tag { display: inline-block; background: #ca8a04; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; }
-   .ia-response-box { margin-top:20px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1; }
-   .feedback-buttons { display:flex; gap:8px; margin-top:10px; }
-   .fb-btn { flex:1; padding:8px; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; color:#fff; }
-   .fb-btn.yes { background:#16a34a; }
-   .fb-btn.no { background:#dc2626; }
-   .fb-btn.missing { background:#ca8a04; }
-   .footer-btn { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-top:10px; }
-    @media print {
-      body { background: #fff; color: #000; }
-     .container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; }
-     .btn-audio,.button-row, input[type="file"],.feedback-buttons,.footer-btn { display: none!important; }
-      textarea, select { border: none; background: transparent; padding: 0; }
-     .prompt-output { display: block!important; border: 1px solid #ccc; }
-    }
-    @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+.prompt-output { background:#f1f5f9; padding:12px; margin-top:15px; border-radius:6px; font-size:13px; border-left:4px solid #ff6600; white-space:pre-wrap; display:none; color:#000; }
+.status-tag { display: inline-block; background: #ca8a04; color: #fff; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; }
+.ia-response-box { margin-top:20px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1; }
+.feedback-buttons { display:flex; gap:8px; margin-top:10px; }
+.fb-btn { flex:1; padding:8px; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; color:#fff; }
+.fb-btn.yes { background:#16a34a; }
+.fb-btn.no { background:#dc2626; }
+.fb-btn.missing { background:#ca8a04; }
+.footer-btn { background:#002244; color:#fff; border:none; padding:10px; font-size:13px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold; margin-top:10px; }
+    @media print { body { background: #fff; color: #000; }.container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; }.btn-audio,.button-row, input[type="file"],.feedback-buttons,.footer-btn { display: none!important; } textarea, select { border: none; background: transparent; padding: 0; }.prompt-output { display: block!important; border: 1px solid #ccc; }
+    @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Estamos juntos nisso.</h1>
-    <div class="subtitle">Refine sua intenção: Garanta respostas precisas da IA eliminando alucinações e desvios de escopo.</div>
-
+    <h1>Neurociência: Humano x IA</h1>
+    <div class="subtitle">Fale com a IA como fala com uma pessoa. Simples, direto e sem erro.</div>
     <div id="login"></div>
-
-    <label for="solicitacao">1. Sua Solicitação (O que você quer que a IA faça?)</label>
-    <button id="mic-solicitacao" class="btn-audio" type="button" onclick="gerenciarAudio('solicitacao', this)">🎤 Gravar Solicitação por Áudio</button>
-    <textarea id="solicitacao" placeholder="Ex: Escreva uma mensagem curta de incentivo para minha filha..."></textarea>
-
-    <label for="detalhe">2. O que deseja detalhar? (Contexto ou Histórico adicional)</label>
-    <button id="mic-detalhe" class="btn-audio" type="button" onclick="gerenciarAudio('detalhe', this)">🎤 Gravar Detalhes por Áudio</button>
-    <textarea id="detalhe" placeholder="Adicione fatos ou dados extras que ajudam a clarear o cenário atual..."></textarea>
-
-    <label>3. O que você quer EVITAR? (Assim você evitará respostas sem sentido)</label>
+    <label for="solicitacao">1. O que você quer que a IA faça?</label>
+    <button id="mic-solicitacao" class="btn-audio" type="button" onclick="gerenciarAudio('solicitacao', this)">🎤 Gravar por Áudio</button>
+    <textarea id="solicitacao" placeholder="Ex: Explique como a memória funciona para uma criança de 10 anos..."></textarea>
+    <label for="detalhe">2. Dê mais detalhes para ajudar</label>
+    <button id="mic-detalhe" class="btn-audio" type="button" onclick="gerenciarAudio('detalhe', this)">🎤 Gravar Detalhes</button>
+    <textarea id="detalhe" placeholder="Ex: Ela está estudando para a prova de ciências..."></textarea>
+    <label>3. O que a IA deve EVITAR?</label>
     <div class="checkbox-group">
       <div class="checkbox-btn" onclick="toggleFiltro(this, 'Não quero texto longo ou enrolação.')">⬜ Sem enrolação</div>
       <div class="checkbox-btn" onclick="toggleFiltro(this, 'Evite teoria excessiva, foque em passos práticos.')">⬜ Foco Prático</div>
       <div class="checkbox-btn" onclick="toggleFiltro(this, 'A solução não deve depender de computador, opero apenas via celular.')">⬜ Uso no Celular</div>
       <div class="checkbox-btn" onclick="toggleFiltro(this, 'Não traga termos técnicos complexos, simplifique a linguagem.')">⬜ Linguagem Simples</div>
     </div>
-    <textarea id="evitar" placeholder="Escreva o que está fora de cogitação..."></textarea>
-
-    <label for="imagem">4. Se quiser inserir imagem (Print de tela ou Notícia):</label>
+    <textarea id="evitar" placeholder="Escreva aqui outras coisas para evitar..."></textarea>
+    <label for="imagem">4. Anexar Imagem:</label>
     <input type="file" id="imagem" accept="image/*" style="display:none;" onchange="processarEClassificarImagem(this)">
-    <button class="btn-audio" type="button" style="background:#e2e8f0; color:#000; border:2px dashed #cbd5e1;" onclick="document.getElementById('imagem').click()">Toque aqui para selecionar uma imagem do seu Android</button>
+    <button class="btn-audio" type="button" style="background:#e2e8f0; color:#000; border:2px dashed #cbd5e1;" onclick="document.getElementById('imagem').click()">Toque para selecionar imagem do Android</button>
     <div id="img-status"></div>
-
-    <label for="objetivo_imagem">Qual o objetivo desse print/imagem?</label>
+    <label for="objetivo_imagem">Qual o objetivo dessa imagem?</label>
     <select id="objetivo_imagem">
-      <option value="conversar">É o print de uma conversa (Quero uma resposta/retorno)</option>
-      <option value="erro">É o print de um erro de sistema (Quero solução)</option>
-      <option value="dados">Contém dados e tabelas para análise</option>
+      <option value="conversar">Print de uma conversa</option>
+      <option value="erro">Print de um erro de sistema</option>
+      <option value="dados">Dados e tabelas para análise</option>
     </select>
-
     <div class="button-row">
-      <button class="action-btn" type="button" onclick="gerarPromptEstruturado()">Me ajuda com isso</button>
+      <button class="action-btn" type="button" onclick="gerarPromptEstruturado()">Gerar Prompt Final</button>
       <button class="action-btn" type="button" onclick="copiarPromptGerado()">Copiar Prompt</button>
       <button class="action-btn" type="button" onclick="exportarDadosPlanilha()">Exportar CSV</button>
       <button class="action-btn" type="button" style="background:#0284c7;" onclick="gerarRelatorioPDF()">Gerar PDF</button>
     </div>
-
     <div class="prompt-output" id="prompt-final"></div>
-
     <div class="ia-response-box">
       <label for="resposta_ia" style="margin-top:0;">5. Cole aqui o retorno que a IA te deu:</label>
-      <textarea id="resposta_ia" placeholder="Cole a resposta gerada pelo ChatGPT, Gemini ou Copilot para registrar o feedback..."></textarea>
-
+      <textarea id="resposta_ia" placeholder="Cole a resposta do Gemini, ChatGPT ou Copilot..."></textarea>
       <div class="feedback-buttons">
-        <button class="fb-btn yes" type="button" onclick="executarFeedback('Acertou')">👍 Acertou o Escopo</button>
-        <button class="fb-btn no" type="button" onclick="executarFeedback('Errou')">👎 Errou (Enrolou/Alucinou)</button>
+        <button class="fb-btn yes" type="button" onclick="executarFeedback('Acertou')">👍 Acertou</button>
+        <button class="fb-btn no" type="button" onclick="executarFeedback('Errou')">👎 Errou</button>
         <button class="fb-btn missing" type="button" onclick="executarFeedback('Faltou Contexto')">⚠️ Faltou Contexto</button>
       </div>
-
-      <button class="footer-btn" type="button" onclick="copiarRelatorioFeedback()">Copiar Relatório de Feedback</button>
-      <button class="footer-btn" type="button" style="background:#0284c7;" onclick="window.location.reload()">Continuar interação</button>
+      <button class="footer-btn" type="button" onclick="copiarRelatorioFeedback()">Copiar Relatório</button>
+      <button class="footer-btn" type="button" style="background:#0284c7;" onclick="executarFeedback('Continuar')">Continuar interação</button>
     </div>
-
   </div>
-
   <script src="google.js"></script>
   <script src="script.js"></script>
-
   <script>
-    let reconhecimentoAudio;
-    let campoGravandoId = null;
-    let imagemBase64 = "";
-    let classificacaoAuto = "Geral (Sem imagem anexada)";
-
+    let reconhecimentoAudio; let campoGravandoId = null; let imagemBase64 = ""; let classificacaoAuto = "Geral (Sem imagem anexada)";
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
-      reconhecimentoAudio = new SpeechGen();
-      reconhecimentoAudio.continuous = false;
-      reconhecimentoAudio.lang = 'pt-BR';
-
+      reconhecimentoAudio = new SpeechGen(); reconhecimentoAudio.continuous = false; reconhecimentoAudio.lang = 'pt-BR';
       reconhecimentoAudio.onresult = function(event) {
         if (campoGravandoId) {
           const resultadoTexto = event.results[0][0].transcript;
           const campoTarget = document.getElementById(campoGravandoId);
-          campoTarget.value += (campoTarget.value? " : "") + resultadoTexto;
+          campoTarget.value += (campoTarget.value? "\n" : "") + resultadoTexto; // CORRIGIDO AQUI
         }
       };
-      reconhecimentoAudio.onend = pararGravacaoUI;
-      reconhecimentoAudio.onerror = pararGravacaoUI;
+      reconhecimentoAudio.onend = pararGravacaoUI; reconhecimentoAudio.onerror = pararGravacaoUI;
     }
-
-    function gerenciarAudio(idCampo, botao) {
-      if (!reconhecimentoAudio) {
-        alert("O reconhecimento de voz não é suportado ou precisa de permissão neste navegador.");
-        return;
-      }
-      if (campoGravandoId === idCampo) {
-        reconhecimentoAudio.stop();
-      } else {
-        pararGravacaoUI();
-        campoGravandoId = idCampo;
-        botao.classList.add('gravando');
-        botao.innerText = "🛑 Gravando áudio... Toque para fechar";
-        reconhecimentoAudio.start();
-      }
-    }
-
-    function pararGravacaoUI() {
-      document.querySelectorAll('.btn-audio').forEach(btn => {
-        btn.classList.remove('gravando');
-        if(btn.id === 'mic-solicitacao') btn.innerText = "🎤 Gravar Solicitação por Áudio";
-        if(btn.id === 'mic-detalhe') btn.innerText = "🎤 Gravar Detalhes por Áudio";
-      });
-      campoGravandoId = null;
-    }
-
+    function gerenciarAudio(idCampo, botao) { if (!reconhecimentoAudio) { alert("Voz não suportada neste navegador."); return; } if (campoGravandoId === idCampo) { reconhecimentoAudio.stop(); } else { pararGravacaoUI(); campoGravandoId = idCampo; botao.classList.add('gravando'); botao.innerText = "🛑 Gravando... Toque para parar"; reconhecimentoAudio.start(); }
+    function pararGravacaoUI() { document.querySelectorAll('.btn-audio').forEach(btn => { btn.classList.remove('gravando'); if(btn.id === 'mic-solicitacao') btn.innerText = "🎤 Gravar por Áudio"; if(btn.id === 'mic-detalhe') btn.innerText = "🎤 Gravar Detalhes"; }); campoGravandoId = null; }
     function toggleFiltro(elemento, texto) {
       elemento.classList.toggle('active');
       const campoEvitar = document.getElementById('evitar');
       if (elemento.classList.contains('active')) {
-        campoEvitar.value += (campoEvitar.value? "\n" : "") + texto;
+        campoEvitar.value += (campoEvitar.value? "\n" : "") + texto; // CORRIGIDO AQUI
         elemento.innerText = elemento.innerText.replace('⬜', '✅');
       } else {
-        campoEvitar.value = campoEvitar.value.replace(texto, "").replace(/^\s*[\r\n]/gm, "").trim();
+        campoEvitar.value = campoEvitar.value.replace(texto, "").trim();
         elemento.innerText = elemento.innerText.replace('✅', '⬜');
       }
     }
-
-    function processarEClassificarImagem(input) {
-      const indicador = document.getElementById('img-status');
-      if (input.files && input.files[0]) {
-        const arquivo = input.files[0];
-        const nomeLimpo = arquivo.name.toLowerCase();
-
-        if (nomeLimpo.includes('screenshot') || nomeLimpo.includes('wa') || /^\d+/.test(nomeLimpo)) {
-          classificacaoAuto = "Conversa / Mensagem de Texto Recortada";
-          document.getElementById('objetivo_imagem').value = 'conversar';
-          indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Autodetectado: Print de Conversa</span>`;
-        } else {
-          classificacaoAuto = "Evidência de Sistema / Dados Técnicos";
-          document.getElementById('objetivo_imagem').value = 'erro';
-          indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📊 Autodetectado: Print de Tela ou Erro</span>`;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) { imagemBase64 = "Injetada (Base64)"; };
-        reader.readAsDataURL(arquivo);
-      }
-    }
-
-    function gerarPromptEstruturado() {
-      let prompt = `CONTEXTO E DIRETRIZ DE ENTRADA:\n`;
-      prompt += `Solicitação Principal: ${document.getElementById('solicitacao').value}\n`;
-      prompt += `Contexto Adicional: ${document.getElementById('detalhe').value}\n\n`;
-      prompt += `RESTRIÇÕES DA INTERAÇÃO (O QUE EVITAR):\n${document.getElementById('evitar').value || "Nenhuma restrição informada."}\n\n`;
-      prompt += `TRATAMENTO DE MÍDIA INTEGRADO:\nIntenção do Print/Imagem: Classificado como [${classificacaoAuto}].\n\n`;
-      prompt += `DIRETRIZ DE SAÍDA EXECUTIVA:\nResponder de forma coesa, direta, aplicando o método de resolução limpa, sem fragmentação ou respostas em pedaços.`;
-
-      let painel = document.getElementById('prompt-final');
-      painel.innerText = prompt;
-      painel.style.display = 'block';
-    }
-
-    function copiarPromptGerado() {
-      let texto = document.getElementById('prompt-final').innerText;
-      if(!texto) { alert('Clique em "Me ajuda com isso" primeiro!'); return; }
-      navigator.clipboard.writeText(texto);
-      alert('Prompt estruturado copiado para a área de transferência!');
-    }
-
-    function exportarDadosPlanilha() {
-      if(window.salvarNoGoogleSheets) {
-        window.salvarNoGoogleSheets();
-      } else {
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFFData,Solicitacao,Classificacao\n";
-        csvContent += `"${new Date().toLocaleString()}","${document.getElementById('solicitacao').value.replace(/\n/g, ')}","${classificacaoAuto}"\n`;
-        let encodedUri = encodeURI(csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "historico_diagnostico.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    }
-
-    function executarFeedback(status) {
-      let respostaTexto = document.getElementById('resposta_ia').value;
-      let relatorioFeedback = `ANÁLISE DE FEEDBACK E CAUSA RAIZ (NÍVEL ALTO):\nStatus da Interação: [${status.toUpperCase()}]\n\nCONTEÚDO ANALISADO DA IA:\n${respostaTexto || "Nenhum texto colado."}`;
-
-      document.getElementById('prompt-final').innerText = relatorioFeedback;
-      document.getElementById('prompt-final').style.display = 'block';
-      window.ultimoFeedbackGerado = relatorioFeedback;
-
-      if(window.enviarFeedbackPlanilha) {
-        window.enviarFeedbackPlanilha(status);
-      } else {
-        alert('Feedback processado e exibido no painel de saída.');
-      }
-    }
-
-    function copiarRelatorioFeedback() {
-      if(!window.ultimoFeedbackGerado) { alert('Gere um feedback clicando em um dos botões de avaliação primeiro.'); return; }
-      navigator.clipboard.writeText(window.ultimoFeedbackGerado);
-      alert('Relatório de causa raiz copiado!');
-    }
-
-    function gerarRelatorioPDF() {
-      window.print();
-    }
+    function processarEClassificarImagem(input) { const indicador = document.getElementById('img-status'); if (input.files && input.files[0]) { const arquivo = input.files[0]; const nomeLimpo = arquivo.name.toLowerCase(); if (nomeLimpo.includes('screenshot') || nomeLimpo.includes('wa') || /^\d+/.test(nomeLimpo)) { classificacaoAuto = "Conversa / Print de Texto"; document.getElementById('objetivo_imagem').value = 'conversar'; indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Print de Conversa Detectado</span>`; } else { classificacaoAuto = "Print de Tela / Erro Técnico"; document.getElementById('objetivo_imagem').value = 'erro'; indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📊 Print Técnico Detectado</span>`; } const reader = new FileReader(); reader.onload = function(e) { imagemBase64 = "Injetada (Base64)"; }; reader.readAsDataURL(arquivo); } }
+    function gerarPromptEstruturado() { const solicitacao = document.getElementById('solicitacao').value; const detalhe = document.getElementById('detalhe').value; const evitar = document.getElementById('evitar').value; const objetivoImg = document.getElementById('objetivo_imagem').value; if (!solicitacao) { alert('Preencha primeiro: "O que você quer que a IA faça?"'); return; } let prompt = solicitacao; if (detalhe) { prompt += ` Para contextualizar: ${detalhe}`; } if (classificacaoAuto!== "Geral (Sem imagem anexada)") { prompt += ` Estou anexando uma imagem que é ${objetivoImg === 'conversar'? 'um print de conversa' : 'um print técnico'}.`; } if (evitar) { prompt += ` Importante: ${evitar}`; } prompt += ` Por favor, responda de forma direta, sem enrolação e usando linguagem simples.`; let painel = document.getElementById('prompt-final'); painel.innerText = prompt; painel.style.display = 'block'; }
+    function copiarPromptGerado() { let texto = document.getElementById('prompt-final').innerText; if(!texto) { alert('Clique em "Gerar Prompt Final" primeiro!'); return; } navigator.clipboard.writeText(texto); alert('Prompt copiado!'); }
+    function exportarDadosPlanilha() { if(window.salvarNoGoogleSheets) { window.salvarNoGoogleSheets(); } else { let csvContent = "data:text/csv;charset=utf-8,\uFEFFData,Solicitacao,Classificacao\n"; csvContent += `"${new Date().toLocaleString()}","${document.getElementById('solicitacao').value.replace(/\n/g, ')}","${classificacaoAuto}"\n`; let encodedUri = encodeURI(csvContent); let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "historico_neurociencia.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
+    function executarFeedback(status) { let respostaTexto = document.getElementById('resposta_ia').value; let solicitacaoOriginal = document.getElementById('solicitacao').value; let sugestao = ""; if(status === 'Errou') { sugestao = `Sugestão para continuar: A IA errou o foco. Tente perguntar: "Resuma isso em 3 tópicos simples: ${solicitacaoOriginal}"`; } if(status === 'Faltou Contexto') { sugestao = `Sugestão para continuar: Faltou detalhe. Volte no campo 2 e adicione mais informações, depois pergunte de novo.`; } if(status === 'Acertou') { sugestao = `Sugestão para continuar: Deu certo! Agora pergunte: "Me dê 3 exemplos práticos disso no dia a dia."`; } if(status === 'Continuar') { sugestao = `Sugestão para continuar: Baseado na última resposta, pergunte: "Explique isso como se eu tivesse 5 anos."`; } let relatorioFeedback = `FEEDBACK: ${status.toUpperCase()}\n\nRESPOSTA DA IA:\n${respostaTexto || "Nenhum texto colado."}\n\n${sugestao}`; document.getElementById('prompt-final').innerText = relatorioFeedback; document.getElementById('prompt-final').style.display = 'block'; window.ultimoFeedbackGerado = relatorioFeedback; if(window.enviarFeedbackPlanilha) { window.enviarFeedbackPlanilha(status); }
+    function copiarRelatorioFeedback() { if(!window.ultimoFeedbackGerado) { alert('Gere um feedback primeiro.'); return; } navigator.clipboard.writeText(window.ultimoFeedbackGerado); alert('Relatório copiado!'); }
+    function gerarRelatorioPDF() { window.print(); }
   </script>
 </body>
 </html>
