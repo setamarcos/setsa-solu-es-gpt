@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolão Final Betinense - NC x REN</title>
+<title>Bolão 3º Lugar - Copa 2026</title>
 <style>
 :root{--verde:#006400;--verde-escuro:#004d00;--amarelo:#FFD700;--azul:#1976d2;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
@@ -44,17 +44,17 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 <body>
 <div class="card">
 <div class="topo">
-<h1>BOLÃO DA FINAL</h1>
-<h2>CAMPEONATO BETINENSE 2026</h2>
-<h3>NOVO CRISTINA X RENASCENÇA - 12/07 09:30</h3>
+<h1>BOLÃO 3º LUGAR</h1>
+<h2>COPA DO MUNDO 2026</h2>
+<h3>ESPANHA X FRANÇA - 18/07</h3>
 </div>
 <div class="corpo">
 <form id="formPalpite">
 <label>Palpite</label>
 <div class="placar">
-<input type="text" id="time1" name="time1" placeholder="NOVO CRISTINA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time1" name="time1" placeholder="ESPANHA" inputmode="numeric" pattern="[0-9]*" required>
 <div class="x">X</div>
-<input type="text" id="time2" name="time2" placeholder="RENASCENÇA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time2" name="time2" placeholder="FRANÇA" inputmode="numeric" pattern="[0-9]*" required>
 </div>
 <label>Nome</label>
 <input type="text" id="nome" name="nome" required>
@@ -63,14 +63,14 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 
 <div class="obs-premio">
 <b>🏆 REGRAS:</b><br>
-1. PRÊMIO MAIOR: Placar Exato do NOVO CRISTINA<br>
-2. PRÊMIO TAMBÉM: Placar Exato do RENASCENÇA<br>
+1. PRÊMIO MAIOR: Placar Exato da ESPANHA<br>
+2. PRÊMIO TAMBÉM: Placar Exato da FRANÇA<br>
 3. BÔNUS: Acertar só o vencedor<br>
-<b>Apoie o time do bairro! Cota R$ 20,00</b>
+<b>Apoie o time do bairro! Cota R$ 10,00</b>
 </div>
 
 <div class="pix">
-<div class="pix-row"><span>📦 Aposta R$ 20,00</span><span>marcos picpay</span></div>
+<div class="pix-row"><span>📦 Aposta R$ 10,00</span><span>marcos picpay</span></div>
 <div class="chave">setamarcos@yahoo.com.br</div>
 <button type="button" class="btn-pix" id="btnCopiar">📋 Click aqui e depois cole no app seu banco<br>Fácil de fazer sua aposta</button>
 <div class="botoes-pgto">
@@ -138,7 +138,7 @@ document.getElementById("formPalpite").addEventListener("submit",(e)=>{
     btn.innerText = "Enviando...";
 
     const palpite = `${t1} x ${t2}`;
-    const textoZap = `🏆 BOLAO DA FINAL - BETINENSE 2026\nNOVO CRISTINA X RENASCENÇA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\nValor: R$20,00\n🌐 Final na Arena Urbsan 12/07 09:30`;
+    const textoZap = `🏆 BOLAO 3º LUGAR - COPA 2026\nESPANHA X FRANÇA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\nValor: R$10,00`;
 
     window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
 
