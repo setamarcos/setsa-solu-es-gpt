@@ -46,15 +46,15 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 <div class="topo">
 <h1>BOLÃO 3º LUGAR</h1>
 <h2>COPA DO MUNDO 2026</h2>
-<h3>ESPANHA X FRANÇA - 18/07</h3>
+<h3>FRANÇA X INGLATERRA - 18/07</h3>
 </div>
 <div class="corpo">
 <form id="formPalpite">
 <label>Palpite</label>
 <div class="placar">
-<input type="text" id="time1" name="time1" placeholder="ESPANHA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time1" name="time1" placeholder="FRANÇA" inputmode="numeric" pattern="[0-9]*" required>
 <div class="x">X</div>
-<input type="text" id="time2" name="time2" placeholder="FRANÇA" inputmode="numeric" pattern="[0-9]*" required>
+<input type="text" id="time2" name="time2" placeholder="INGLATERRA" inputmode="numeric" pattern="[0-9]*" required>
 </div>
 <label>Nome</label>
 <input type="text" id="nome" name="nome" required>
@@ -63,8 +63,8 @@ td{padding:8px;text-align:center;border-bottom:1px solid #eee;}
 
 <div class="obs-premio">
 <b>🏆 REGRAS:</b><br>
-1. PRÊMIO MAIOR: Placar Exato da ESPANHA<br>
-2. PRÊMIO TAMBÉM: Placar Exato da FRANÇA<br>
+1. PRÊMIO MAIOR: Placar Exato da FRANÇA<br>
+2. PRÊMIO TAMBÉM: Placar Exato da INGLATERRA<br>
 3. BÔNUS: Acertar só o vencedor<br>
 <b>Apoie o time do bairro! Cota R$ 10,00</b>
 </div>
@@ -138,7 +138,7 @@ document.getElementById("formPalpite").addEventListener("submit",(e)=>{
     btn.innerText = "Enviando...";
 
     const palpite = `${t1} x ${t2}`;
-    const textoZap = `🏆 BOLAO 3º LUGAR - COPA 2026\nESPANHA X FRANÇA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\nValor: R$10,00`;
+    const textoZap = `🏆 BOLAO 3º LUGAR - COPA 2026\nFRANÇA X INGLATERRA\nPalpite: ${palpite}\nNome: ${nome}\nContato: ${contato}\nStatus Pagto: ${statusPgto}\nValor: R$10,00`;
 
     window.open("https://wa.me/" + NUMERO_ZAP + "?text=" + encodeURIComponent(textoZap), '_blank');
 
