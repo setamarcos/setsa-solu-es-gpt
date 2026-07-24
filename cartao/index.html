@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Cartões Pro - v27</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root { 
+    --card-w: 88mm; 
+    --card-h: 47mm; 
+    --card-bg: #FFFFFF; 
+    --card-color: #000000;
+    --guide-color: #000000; 
+    --global-line-spacing: 1.15;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+@media print {
+    body { background: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
+    .controls-wrapper { display: none !important; }
+    #a4-page { box-shadow: none !important; background: #FFFFFF !important; padding: 0.4cm 0 !important; transform: none !important; width: 21cm !important; min-height: 29.7cm !important; position: static !important; }
+    .card { border: 1px dashed #999 !important; page-break-inside: avoid; }
+    @page { size: A4; margin: 0.4cm; }
+}
+
+body { background: #e9ecef; padding: 15px; font-family: Arial, sans-serif; color: #333; }
+
+.main-container { max-width: 1450px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+.workstation { display: grid; grid-template-columns: 1fr 360px; gap: 15px; align-items: start; }
+
+.controls { 
+    background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
+}
+.controls h2 { 
+    margin: 3px 0; font-size: 12px; border-bottom: 2px solid #0056b3; 
+    padding-bottom: 2px; grid-column: span 3; color: #0056b3; text-transform: uppercase; font-weight: bold;
+}
+
+.sidebar-right { display: flex; flex-direction: column; gap: 15px; position: sticky; top: 15px; }
+
+.preview-single-box {
+    background: white; padding: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.preview-single-box h3 { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.preview-a4-mini-box {
+    background: white; padding: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.preview-a4-mini-box h3 { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.field-control { 
+    border: 1px dashed #ccc; padding: 6px; border-radius: 5px; background: #fafafa; 
+    grid-column: span 1; display: flex; flex-direction: column; gap: 3px;
+}
+.field-control legend { font-size: 10px; font-weight: bold; padding: 0 4px; color: #444; }
+
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 10px; font-weight: bold; margin-bottom: 2px; color: #333; }
+.form-group input, .form-group select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; }
+
+.form-row { display: flex; gap: 4px; align-items: center; }
+.form-row input[type="text"], .form-row select { width: 100%; padding: 3px; font-size: 10px; border: 1px solid #ccc; border-radius: 3px; }
+.form-row input[type="number"] { width: 40px; padding: 3px; font-size: 10px; }
+.form-row input[type="color"] { width: 26px; height: 22px; padding: 0; border: 1px solid #ccc; cursor: pointer; }
+.form-row label { font-size: 10px; font-weight: bold; display: flex; align-items: center; gap: 2px; cursor: pointer; white-space: nowrap; }
+
+.color-swatches { display: flex; gap: 3px; margin-left: 2px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid #aaa; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.swatch:hover { transform: scale(1.1); }
+
+.panel-section { border: 1px solid #e0e0e0; padding: 8px; border-radius: 5px; background: #fdfdfd; grid-column: span 1; display: flex; flex-direction: column; gap: 6px; }
+.matrix-container { display: flex; justify-content: space-around; background: #f1f3f5; padding: 4px; border-radius: 4px; border: 1px solid #ddd; }
+.matrix-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.matrix-col span { font-size: 8px; font-weight: bold; color: #555; }
+.matrix-col label { font-size: 8px; display: flex; align-items: center; gap: 2px; cursor: pointer; }
+
+.action-area { grid-column: span 1; display: flex; flex-direction: column; gap: 6px; justify-content: space-between; }
+.print-warning { background: #fff3cd; color: #856404; padding: 6px; border-left: 3px solid #ffeeba; font-size: 9px; border-radius: 4px; line-height: 1.2; }
+.export-actions { display: flex; flex-direction: column; gap: 5px; }
+button.btn-action { background: #0056b3; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 10px; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; width: 100%; }
+button.btn-action:hover { background: #004494; transform: translateY(-1px); }
+button.btn-action.secondary { background: #28a745; }
+button.btn-action.secondary:hover { background: #218838; }
+button.btn-action.whatsapp { background: #25d366; color: #fff; }
+button.btn-action.whatsapp:hover { background: #1ebe57; }
+
+/* Página A4 Real (Oculta da visualização direta, usada apenas para impressão e captura) */
+#a4-page { width: 21cm; min-height: 29.7cm; background: #FFFFFF; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; padding: 0.8cm 0.4cm; gap: 6mm 5mm; position: absolute; left: -9999px; top: 0; }
+
+/* Miniatura da Página A4 exibida na interface */
+#a4-mini-preview { width: 320px; height: 452px; background: #FFFFFF; border: 1px solid #ccc; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); overflow: hidden; position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; padding: 12px 6px; gap: 4px 3px; transform-origin: top center; }
+
+.card { width: var(--card-w); height: var(--card-h); background: var(--card-bg); color: var(--card-color); border: 1px dashed var(--guide-color); position: relative; overflow: hidden; padding: 3mm; display: flex; }
+.card-mini { width: calc(var(--card-w) * 0.36); height: calc(var(--card-h) * 0.36); border: 0.5px dashed #aaa; position: relative; overflow: hidden; padding: 1px; display: flex; background: var(--card-bg); }
+.card-mini * { font-size: 3px !important; line-height: 1.0 !important; }
+.card-mini img { max-width: 40px !important; }
+
+.text-line { display: block; word-break: break-word; }
+</style>
+</head>
+<body>
+
+<div class="main-container controls-wrapper">
+    <div class="workstation">
+        <div class="controls">
+            <h2>1. Dados e Design</h2>
+            
+            <div class="field-control">
+                <legend>NOME</legend>
+                <input type="text" id="nome" value="Marcos Paulo" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="nome_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="nome_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="nome_size" value="13" min="8" max="24" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="nome_bold" checked onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="nome_color" value="#0056b3" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('nome_color', '#000000')"></div>
+                        <div class="swatch" style="background:#0056b3;" onclick="setCor('nome_color', '#0056b3')"></div>
+                        <div class="swatch" style="background:#28a745;" onclick="setCor('nome_color', '#28a745')"></div>
+                        <div class="swatch" style="background:#dc3545;" onclick="setCor('nome_color', '#dc3545')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="nome_margin" value="0" min="0" max="30" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <div class="field-control">
+                <legend>CARGO / SERVIÇO 1</legend>
+                <input type="text" id="cargo1" value="Eletricista | CFTV | Redes | Câmeras e Alarmes" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="cargo1_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="cargo1_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="cargo1_size" value="8" min="6" max="14" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="cargo1_bold" checked onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="cargo1_color" value="#0056b3" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('cargo1_color', '#000000')"></div>
+                        <div class="swatch" style="background:#0056b3;" onclick="setCor('cargo1_color', '#0056b3')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="cargo1_margin" value="0" min="0" max="30" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <div class="field-control">
+                <legend>CARGO / SERVIÇO 2</legend>
+                <input type="text" id="cargo2" value="Seta Soluções Inteligentes" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="cargo2_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="cargo2_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="cargo2_size" value="8" min="6" max="14" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="cargo2_bold" onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="cargo2_color" value="#0056b3" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('cargo2_color', '#000000')"></div>
+                        <div class="swatch" style="background:#0056b3;" onclick="setCor('cargo2_color', '#0056b3')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="cargo2_margin" value="4" min="0" max="40" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <div class="field-control">
+                <legend>TELEFONE</legend>
+                <input type="text" id="tel" value="Tel: (31) 98402-1901" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="tel_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="tel_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="tel_size" value="9" min="6" max="14" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="tel_bold" checked onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="tel_color" value="#000000" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('tel_color', '#000000')"></div>
+                        <div class="swatch" style="background:#0056b3;" onclick="setCor('tel_color', '#0056b3')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="tel_margin" value="2" min="0" max="30" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <div class="field-control">
+                <legend>SITE</legend>
+                <input type="text" id="site" value="www.setasolucoes.com.br" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="site_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="site_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="site_size" value="9" min="6" max="14" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="site_bold" onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="site_color" value="#0056b3" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('site_color', '#000000')"></div>
+                        <div class="swatch" style="background:#0056b3;" onclick="setCor('site_color', '#0056b3')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="site_margin" value="2" min="0" max="30" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <div class="field-control">
+                <legend>E-MAIL</legend>
+                <input type="text" id="email" value="setamarcos@yahoo.com.br" oninput="gerarCartoes()">
+                <div class="form-row">
+                    <select id="email_layout" onchange="gerarCartoes()"><option value="left">Esq</option><option value="center" selected>Centro</option><option value="right">Dir</option></select>
+                    <select id="email_fonte" onchange="gerarCartoes()">
+                        <option>Arial</option><option>Helvetica</option><option>Tahoma</option><option>Verdana</option><option>Trebuchet MS</option><option>Century Gothic</option><option>Times New Roman</option><option>Georgia</option><option>Garamond</option><option>Monotype Corsiva</option><option>Brush Script MT</option><option>Impact</option>
+                    </select>
+                    <input type="number" id="email_size" value="9" min="6" max="14" oninput="gerarCartoes()">
+                    <label><input type="checkbox" id="email_bold" onchange="gerarCartoes()"> B</label>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <input type="color" id="email_color" value="#000000" oninput="gerarCartoes()">
+                    <div class="color-swatches">
+                        <div class="swatch" style="background:#000000;" onclick="setCor('email_color', '#000000')"></div>
+                        <div class="swatch" style="background:#333333;" onclick="setCor('email_color', '#333333')"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:3px;">
+                    <label style="font-size:9px;">Afastar (px):</label>
+                    <input type="number" id="email_margin" value="0" min="0" max="30" oninput="gerarCartoes()">
+                </div>
+            </div>
+
+            <h2>2. Configurações de Fundo e Exportação</h2>
+            
+            <div class="panel-section">
+                <div class="form-group">
+                    <label>Carregar Logo / Imagem:</label>
+                    <input type="file" id="logoUpload" accept="image/*">
+                </div>
+                
+                <div class="form-group">
+                    <label>Escala da Imagem (1 a 100):</label>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="range" id="logoSize" min="1" max="100" value="100" oninput="updateSizeVal(this.value)" style="width: 100%;">
+                        <span id="sizeVal" style="font-size: 10px; font-weight: bold;">100</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Aplicação:</label>
+                    <div class="form-row" style="gap:10px; margin-top:2px;">
+                        <label><input type="radio" name="logoType" value="fixed" onchange="gerarCartoes()"> Logo Fixa</label>
+                        <label><input type="radio" name="logoType" value="watermark" checked onchange="gerarCartoes()"> Marca d'Água</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Alinhamento Matriz (3x3):</label>
+                    <div class="matrix-container">
+                        <div class="matrix-col">
+                            <span>DIREITA</span>
+                            <label><input type="radio" name="posMat" value="top-right" onchange="gerarCartoes()"> alto</label>
+                            <label><input type="radio" name="posMat" value="center-right" onchange="gerarCartoes()"> meio</label>
+                            <label><input type="radio" name="posMat" value="bottom-right" onchange="gerarCartoes()"> baixo</label>
+                        </div>
+                        <div class="matrix-col">
+                            <span>CENTRO</span>
+                            <label><input type="radio" name="posMat" value="top-center" onchange="gerarCartoes()"> alto</label>
+                            <label><input type="radio" name="posMat" value="center-center" checked onchange="gerarCartoes()"> meio</label>
+                            <label><input type="radio" name="posMat" value="bottom-center" onchange="gerarCartoes()"> baixo</label>
+                        </div>
+                        <div class="matrix-col">
+                            <span>ESQUERDA</span>
+                            <label><input type="radio" name="posMat" value="top-left" onchange="gerarCartoes()"> alto</label>
+                            <label><input type="radio" name="posMat" value="center-left" onchange="gerarCartoes()"> meio</label>
+                            <label><input type="radio" name="posMat" value="bottom-left" onchange="gerarCartoes()"> baixo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="form-group">
+                    <label>Ajuste Geral de Entrelinha:</label>
+                    <input type="range" id="lineSpacing" min="1.0" max="2.0" step="0.05" value="1.15" oninput="gerarCartoes()">
+                </div>
+                <div class="form-group">
+                    <label>Opacidade (Marca d'água):</label>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="range" id="watermarkRange" min="0" max="100" value="40" oninput="updateRangeVal(this.value)" style="width: 100%;">
+                        <span id="rangeVal" style="font-size: 10px; font-weight: bold;">40%</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cartões por Página (A4):</label>
+                    <select id="qtdCartoes" onchange="gerarCartoes()">
+                        <option value="10" selected>10 Cartões</option>
+                        <option value="8">8 Cartões</option>
+                        <option value="6">6 Cartões</option>
+                        <option value="4">4 Cartões</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dimensões Exatas (mm):</label>
+                    <div style="display: flex; gap: 4px;">
+                        <input type="number" id="inW" value="88" oninput="gerarCartoes()">
+                        <input type="number" id="inH" value="47" oninput="gerarCartoes()">
+                        <input type="color" id="cardColor" value="#FFFFFF" title="Cor de Fundo" oninput="gerarCartoes()" style="height:22px; padding:0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Saída posicionados ao lado do bloco logo -->
+            <div class="action-area">
+                <div class="print-warning">
+                    ⚠️ Na impressão, configure a <strong>"Escala"</strong> para <strong>100%</strong>.
+                </div>
+                <div class="export-actions">
+                    <button class="btn-action" onclick="acaoImprimirPDF()">1. Imprimir PDF (A4)</button>
+                    <button class="btn-action secondary" onclick="acaoExportarImagem()">2. Baixar Imagem (PNG)</button>
+                    <button class="btn-action whatsapp" onclick="acaoEnviarWhatsApp()">3. Enviar WhatsApp</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-right">
+            <div class="preview-single-box">
+                <h3>Visualização / Exportação (PNG)</h3>
+                <div id="single-card-container"></div>
+            </div>
+
+            <div class="preview-a4-mini-box">
+                <h3>Página A4 (Miniatura)</h3>
+                <div id="a4-mini-preview"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="a4-page"></div>
+
+<script>
+const a4page = document.getElementById('a4-page');
+const a4MiniPreview = document.getElementById('a4-mini-preview');
+const singleCardContainer = document.getElementById('single-card-container');
+let logoDataUrl = '';
+
+function setCor(inputId, hexColor) {
+    document.getElementById(inputId).value = hexColor;
+    gerarCartoes();
+}
+
+function enviarParaPlanilha(tipoRegistro) {
+    const nome = document.getElementById('nome').value || "Cartao";
+    const cargo1 = document.getElementById('cargo1').value || "";
+    const cargo2 = document.getElementById('cargo2').value || "";
+    const cargo = cargo1 + (cargo2 ? " | " + cargo2 : "");
+    const tel = document.getElementById('tel').value || "";
+    const email = document.getElementById('email').value || "";
+    
+    const isWatermark = document.querySelector('input[name="logoType"]:checked').value === 'watermark';
+    const tipoModelo = isWatermark ? 'Marca d\'Água' : 'Logo Fixa';
+
+    const dadosPayload = {
+        "item": "",
+        "descricao": `${nome} - ${cargo} (${tipoRegistro})`,
+        "modeloCartaoImg": tipoModelo,
+        "contato": tel,
+        "email": email,
+        "whatsapp": tel
+    };
+
+    const urlWebAppData = "https://script.google.com/macros/s/AKfycbw3go8wDrKQ8UjS9lm9dEWVOO7HxUarobOCyQgq1O220d4ohZXw8BkP-hTk3G1G4zo/exec";
+
+    fetch(urlWebAppData, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosPayload)
+    }).catch(e => console.log(e));
+}
+
+function acaoImprimirPDF() {
+    enviarParaPlanilha("Impressão A4/PDF");
+    setTimeout(() => { window.print(); }, 400);
+}
+
+async function acaoExportarImagem() {
+    enviarParaPlanilha("Exportação de Imagem (PNG)");
+    const cardElement = document.querySelector('#single-card-container .card');
+    const nomePessoa = document.getElementById('nome').value.replace(/[^a-zA-Z0-9]/g, '_') || "Cartao";
+    
+    try {
+        const canvas = await html2canvas(cardElement, { scale: 3, useCORS: true, backgroundColor: null });
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `CARTAO_${nomePessoa}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, "image/png");
+    } catch (error) {
+        alert("Erro ao gerar a imagem.");
+    }
+}
+
+async function acaoEnviarWhatsApp() {
+    enviarParaPlanilha("Envio WhatsApp");
+    const nomePessoa = document.getElementById('nome').value || "Cliente";
+    const textoMsg = encodeURIComponent(`Olá! Segue o cartão de visita de ${nomePessoa} gerado pela Seta Soluções.`);
+    window.open(`https://api.whatsapp.com/send?text=${textoMsg}`, '_blank');
+}
+
+document.getElementById('logoUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = function(event) { logoDataUrl = event.target.result; gerarCartoes(); }
+        reader.readAsDataURL(file);
+    }
+});
+
+function updateRangeVal(val) { document.getElementById('rangeVal').innerText = val + '%'; gerarCartoes(); }
+function updateSizeVal(val) { document.getElementById('sizeVal').innerText = val; gerarCartoes(); }
+
+function gerarLinha(id, padraoLayout) {
+    const txt = document.getElementById(id).value;
+    if(!txt) return '';
+    const layout = document.getElementById(id+'_layout')?.value || padraoLayout;
+    const fonte = document.getElementById(id+'_fonte')?.value || 'Arial';
+    const size = (document.getElementById(id+'_size')?.value || '8') + 'pt';
+    const color = document.getElementById(id+'_color')?.value || '#000';
+    const bold = document.getElementById(id+'_bold')?.checked ? 'bold' : 'normal';
+    const margin = (document.getElementById(id+'_margin')?.value || '0') + 'px';
+    
+    return `<span class="text-line" style="font-family:'${fonte}', sans-serif; font-size:${size}; color:${color}; font-weight:${bold}; text-align:${layout}; margin-bottom:${margin}; line-height: var(--global-line-spacing);">${txt}</span>`;
+}
+
+function criarElementoCartao(isPrintVersion = false, isMini = false) {
+    const isWatermark = document.querySelector('input[name="logoType"]:checked').value === 'watermark';
+    const matPos = document.querySelector('input[name="posMat"]:checked')?.value || 'center-center';
+    const rawOpacity = parseInt(document.getElementById('watermarkRange').value) / 100;
+    const logoScale = document.getElementById('logoSize').value;
+    
+    const card = document.createElement('div');
+    card.className = isMini ? 'card-mini' : 'card';
+    
+    if(isPrintVersion && !isMini) { card.style.border = "1px dashed #999"; }
+    
+    let cardFlexStyle = 'flex-direction: column; align-items: center; justify-content: center;';
+    let textContainerWidth = '100%';
+    let logoHtml = '';
+    
+    if(logoDataUrl) {
+        let logoStyle = `width: ${logoScale}%; height: auto; object-fit: contain; opacity: ${rawOpacity};`;
+
+        if (isWatermark) {
+            logoStyle += ` position: absolute; z-index: 0;`;
+            let translateStr = '';
+
+            if (matPos.includes('top')) logoStyle += ' top: 3px;';
+            if (matPos.includes('bottom')) logoStyle += ' bottom: 3px;';
+            if (matPos.includes('center') && !matPos.includes('top') && !matPos.includes('bottom')) {
+                logoStyle += ' top: 50%;'; translateStr += ' translateY(-50%)';
+            }
+
+            if (matPos.includes('left')) logoStyle += ' left: 4px;';
+            if (matPos.includes('right')) logoStyle += ' right: 4px;';
+            if (matPos.includes('center') && !matPos.includes('left') && !matPos.includes('right')) {
+                logoStyle += ' left: 50%;';
+                if (translateStr) translateStr = ' translate(-50%, -50%)';
+                else translateStr += ' translateX(-50%)';
+            }
+            if (translateStr) logoStyle += ` transform:${translateStr};`;
+
+            logoHtml = `<img src="${logoDataUrl}" style="${logoStyle}">`;
+        } else {
+            logoStyle += ` position: relative; z-index: 1; flex-shrink: 0;`;
+            
+            if (matPos.includes('left')) {
+                cardFlexStyle = 'flex-direction: row; align-items: center; justify-content: center; gap: 6px;';
+                textContainerWidth = `calc(100% - ${logoScale}% - 6px)`;
+            } else if (matPos.includes('right')) {
+                cardFlexStyle = 'flex-direction: row-reverse; align-items: center; justify-content: center; gap: 6px;';
+                textContainerWidth = `calc(100% - ${logoScale}% - 6px)`;
+            } else {
+                textContainerWidth = '100%';
+                if (matPos === 'bottom-center') {
+                    cardFlexStyle = 'flex-direction: column-reverse; align-items: center; justify-content: center; gap: 3px;';
+                } else {
+                    cardFlexStyle = 'flex-direction: column; align-items: center; justify-content: center; gap: 3px;';
+                }
+            }
+            logoHtml = `<img src="${logoDataUrl}" style="${logoStyle}">`;
+        }
+    }
+    
+    card.style.cssText += cardFlexStyle;
+    
+    const contentHtml = `
+        <div style="position: relative; z-index: 1; width: ${textContainerWidth}; display: flex; flex-direction: column; justify-content: center;">
+            ${gerarLinha('nome', 'center')}
+            ${gerarLinha('cargo1', 'center')}
+            ${gerarLinha('cargo2', 'center')}
+            ${gerarLinha('tel', 'center')}
+            ${gerarLinha('site', 'center')}
+            ${gerarLinha('email', 'center')}
+        </div>`;
+
+    card.innerHTML = logoHtml + contentHtml;
+    return card;
+}
+
+function gerarCartoes() {
+    const nomeVal = document.getElementById('nome').value || "Cartao";
+    document.title = `CARTAO_${nomeVal.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+    a4page.innerHTML = '';
+    a4MiniPreview.innerHTML = '';
+    singleCardContainer.innerHTML = '';
+    
+    const w = document.getElementById('inW').value + 'mm';
+    const h = document.getElementById('inH').value + 'mm';
+    const spacing = document.getElementById('lineSpacing').value;
+    
+    document.documentElement.style.setProperty('--card-w', w);
+    document.documentElement.style.setProperty('--card-h', h);
+    document.documentElement.style.setProperty('--global-line-spacing', spacing);
+    document.documentElement.style.setProperty('--card-bg', document.getElementById('cardColor').value);
+    
+    // Cartão individual principal (topo da coluna direita)
+    singleCardContainer.appendChild(criarElementoCartao(false, false));
+    
+    const qtd = parseInt(document.getElementById('qtdCartoes').value) || 10;
+    
+    // Versão A4 real (impressão) e Miniatura A4 (tela)
+    for(let i = 0; i < qtd; i++) { 
+        a4page.appendChild(criarElementoCartao(true, false));
+        a4MiniPreview.appendChild(criarElementoCartao(false, true));
+    }
+}
+
+gerarCartoes();
+</script>
+</body>
+</html>
