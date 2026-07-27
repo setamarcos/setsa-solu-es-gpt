@@ -338,8 +338,6 @@ function setarCabecalhoEspaco(){
   document.getElementById('relex-txt').innerText = '"' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].frase + '" — ' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].autor;
 }
 
-const endpoint = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
-
 function salvarAtendimento() {
   const dados = {
     nome: document.getElementById('input-cliente').value.trim(),
@@ -375,6 +373,18 @@ function salvarAtendimento() {
   });
 }
 
+
+function limparForm(){
+  document.getElementById('input-cliente').value='';
+  document.getElementById('input-valor').value='';
+  document.getElementById('input-tempo').value='';
+  document.getElementById('input-niver').value='';
+  document.getElementById('input-endereco').value='';
+  document.getElementById('input-obs').value='';
+  document.querySelectorAll('.pgto').forEach(cb=>cb.checked=false);
+  definirMomentoDoDia();
+}
+
 function carregarPlanilha() {
   fetch(endpoint)
   .then(r => r.json())
@@ -385,6 +395,10 @@ function carregarPlanilha() {
       tbody.innerHTML = "<tr><td colspan='10'>Nenhum atendimento ainda.</td></tr>";
       return;
     }
+    let totalMes = 0;
+    let qtdeMes = 0;
+    const mesAtual = (new Date().getMonth() + 1).toString().padStart(2, '0');
+
     dados.forEach((reg,i) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -400,54 +414,20 @@ function carregarPlanilha() {
         <td>${reg.obs || '-'}</td>
       `;
       tbody.appendChild(tr);
+
+      // cálculo dos totais do mês
+      const dataAtend = reg.data ? String(reg.data) : '';
+      if(dataAtend.includes(`/${mesAtual}/`)){
+        qtdeMes++;
+        totalMes += parseFloat(String(reg.valor).replace(',', '.')) || 0;
+      }
     });
+
+    document.getElementById('total-mes').innerText = `Atend. Mês: ${qtdeMes}`;
+    document.getElementById('valor-mes').innerText = `Total R$ Mês: R$ ${totalMes.toFixed(2)}`;
   });
 }
 
-
-function limparForm(){
-  document.getElementById('input-cliente').value='';
-  document.getElementById('input-valor').value='';
-  document.getElementById('input-tempo').value='';
-  document.getElementById('input-niver').value='';
-  document.getElementById('input-endereco').value='';
-  document.getElementById('input-obs').value='';
-  document.querySelectorAll('.pgto').forEach(cb=>cb.checked=false);
-  definirMomentoDoDia();
-}
-
-function carregarPlanilha() {
-  google.script.run.withSuccessHandler(function(res){
-    var tbody = document.getElementById('tabela-corpo'); 
-    tbody.innerHTML=''; 
-    if(!res || res.length < 2){
-      tbody.innerHTML=`<tr><td colspan="8">Nenhum atendimento ainda.</td></tr>`; 
-      return;
-    }
-    var dados = res.slice(1); 
-    var totalMesValorCalc = 0;
-    var qtdeMes = 0;
-    var mesAtualStr = (new Date().getMonth() + 1).toString().padStart(2, '0');
-
-    dados.forEach((r,i)=>{
-      var dataAtendStr = r[3] ? String(r[3]) : '';
-      var valNum = parseFloat(String(r[5]).replace(',', '.')) || 0;
-
-      if(dataAtendStr.includes(`-${mesAtualStr}-`) || dataAtendStr.includes(`/${mesAtualStr}/`)){
-        qtdeMes++;
-        totalMesValorCalc += valNum;
-      }
-
-      var tr=document.createElement('tr');
-      tr.innerHTML=`<td>${i+1}</td><td style="text-align:left">${r[1] || ''}</td><td>${dataAtendStr}</td><td>${r[4] || ''}</td><td>R$ ${valNum.toFixed(2).replace('.', ',')}</td><td>${r[6] || ''}</td><td style="text-align:left">${r[9] || ''}</td><td><button class="btn-acao btn-excluir" onclick="excluir(${i+2})">X</button></td>`;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('tot-atend-mes').innerText = qtdeMes;
-    document.getElementById('tot-valor-mes').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
-    document.getElementById('tot-valor-ano').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
-  }).buscarDaPlanilha();
-}
 
 function excluir(linha){ 
   if(confirm("Excluir este registro?")){ 
