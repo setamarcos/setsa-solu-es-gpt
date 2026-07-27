@@ -209,7 +209,7 @@ Com carinho,<br>
   <button class="btn-gravar" onclick="salvarAtendimento()">Salvar Cliente / Atendimento</button>
 </div>
 
-<!-- REGISTRO DO MÊS (Colocado Acima dos Totais para manter a lógica e consistência) -->
+<!-- REGISTRO DO MÊS -->
 <div class="painel-card" style="padding: 6px;">
   <div class="painel-card-title" style="padding: 2px;">📊 REGISTRO DO MÊS (CRESCE AUTOMATICAMENTE)</div>
   <div class="tabela-container">
@@ -231,7 +231,7 @@ Com carinho,<br>
   </div>
 </div>
 
-<!-- Resumos Financeiros / Cards Pequenos (Posicionados Logo Abaixo da Tabela) -->
+<!-- Resumos Financeiros -->
 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
   <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
   <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
@@ -340,39 +340,26 @@ function setarCabecalhoEspaco(){
 
 function salvarAtendimento() {
   const dados = {
-    nome: document.getElementById('input-cliente').value.trim(),
-    data: document.getElementById('input-data').value,
+    nome: document.getElementById('input-cliente').value, 
+    data: document.getElementById('input-data').value, 
     retorno: document.getElementById('input-retorno').value,
-    valor: document.getElementById('input-valor').value.trim(),
-    tempo: document.getElementById('input-tempo').value.trim(),
+    valor: document.getElementById('input-valor').value, 
+    tempo: document.getElementById('input-tempo').value, 
     niver: document.getElementById('input-niver').value,
-    endereco: document.getElementById('input-endereco').value.trim(),
-    obs: document.getElementById('input-obs').value.trim(),
-    pgto: document.getElementById('input-pgto').value
+    endereco: document.getElementById('input-endereco').value, 
+    obs: document.getElementById('input-obs').value,
+    pgto: Array.from(document.querySelectorAll('.pgto:checked')).map(cb=>cb.value).join(', ')
   };
-
-  if(!dados.nome || !dados.valor || !dados.data){
-    alert("Preencha Cliente, Data e Valor.");
-    return;
-  }
-
-  fetch(endpoint, {
-    method: "POST",
-    body: JSON.stringify(dados)
-  })
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "Sucesso") {
-      document.querySelectorAll('.form-input').forEach(i => i.value = '');
-      carregarPlanilha();
-    }
-    document.getElementById('feedback-salvar').innerText = res.mensagem || "Registro atualizado!";
-  })
-  .catch(() => {
-    document.getElementById('feedback-salvar').innerText = "Erro ao salvar 😕";
-  });
+  if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
+  
+  let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+  listaAtendimentos.push(dados);
+  localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
+  
+  alert(dados.nome + ' salvo com sucesso!');
+  limparForm();
+  carregarPlanilha();
 }
-
 
 function limparForm(){
   document.getElementById('input-cliente').value='';
@@ -386,58 +373,90 @@ function limparForm(){
 }
 
 function carregarPlanilha() {
-  fetch(endpoint)
-  .then(r => r.json())
-  .then(dados => {
-    const tbody = document.getElementById('tabela-corpo');
-    tbody.innerHTML = "";
-    if(dados.length === 0) {
-      tbody.innerHTML = "<tr><td colspan='10'>Nenhum atendimento ainda.</td></tr>";
-      return;
-    }
-    let totalMes = 0;
-    let qtdeMes = 0;
-    const mesAtual = (new Date().getMonth() + 1).toString().padStart(2, '0');
+  let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+  var tbody = document.getElementById('tabela-corpo'); 
+  tbody.innerHTML=''; 
+  
+  if(listaAtendimentos.length === 0){
+    tbody.innerHTML=`<tr><td colspan="8">Nenhum atendimento ainda.</td></tr>`;
+    document.getElementById('tot-atend-mes').innerText = '0';
+    document.getElementById('tot-valor-mes').innerText = 'R$ 0,00';
+    document.getElementById('tot-valor-ano').innerText = 'R$ 0,00';
+    document.getElementById('tot-melhor-mes').innerText = '-';
+    document.getElementById('tot-pior-mes').innerText = '-';
+    document.getElementById('tot-media-mes').innerText = 'R$ 0,00';
+    return;
+  }
+  
+  var totalMesValorCalc = 0;
+  var totalAnoValorCalc = 0;
+  var qtdeMes = 0;
+  var agora = new Date();
+  var mesAtual = agora.getMonth();
+  var anoAtual = agora.getFullYear();
+  
+  var mesesTotais = {};
 
-    dados.forEach((reg,i) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${i+1}</td>
-        <td>${reg.cliente}</td>
-        <td>${reg.aniversario || '-'}</td>
-        <td>${reg.data}</td>
-        <td>${reg.retorno}</td>
-        <td>R$ ${reg.valor}</td>
-        <td>${reg.pgto || '-'}</td>
-        <td>${reg.tempo}</td>
-        <td>${reg.endereco || '-'}</td>
-        <td>${reg.obs || '-'}</td>
-      `;
-      tbody.appendChild(tr);
+  listaAtendimentos.forEach((r, i) => {
+    var valNum = parseFloat(String(r.valor).replace(',', '.')) || 0;
+    var dataParts = r.data ? r.data.split('-') : [];
+    var anoAtend = dataParts.length === 3 ? parseInt(dataParts[0]) : anoAtual;
+    var mesAtend = dataParts.length === 3 ? parseInt(dataParts[1]) - 1 : mesAtual;
 
-      // cálculo dos totais do mês
-      const dataAtend = reg.data ? String(reg.data) : '';
-      if(dataAtend.includes(`/${mesAtual}/`)){
+    if (anoAtend === anoAtual) {
+      totalAnoValorCalc += valNum;
+      if (mesAtend === mesAtual) {
         qtdeMes++;
-        totalMes += parseFloat(String(reg.valor).replace(',', '.')) || 0;
+        totalMesValorCalc += valNum;
       }
-    });
+    }
 
-    document.getElementById('total-mes').innerText = `Atend. Mês: ${qtdeMes}`;
-    document.getElementById('valor-mes').innerText = `Total R$ Mês: R$ ${totalMes.toFixed(2)}`;
+    var chaveMes = `${anoAtend}-${String(mesAtend+1).padStart(2, '0')}`;
+    mesesTotais[chaveMes] = (mesesTotais[chaveMes] || 0) + valNum;
+
+    var tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td style="text-align:left">${r.nome || ''}</td>
+      <td>${r.data ? r.data.split('-').reverse().join('/') : ''}</td>
+      <td>${r.retorno ? r.retorno.split('-').reverse().join('/') : ''}</td>
+      <td>R$ ${valNum.toFixed(2).replace('.', ',')}</td>
+      <td>${r.tempo || ''}</td>
+      <td style="text-align:left">${r.obs || ''}</td>
+      <td><button class="btn-acao btn-excluir" onclick="excluir(${i})">X</button></td>
+    `;
+    tbody.appendChild(tr);
   });
+
+  var valoresMesesArr = Object.values(mesesTotais);
+  var melhorMesVal = valoresMesesArr.length > 0 ? Math.max(...valoresMesesArr) : 0;
+  var piorMesVal = valoresMesesArr.length > 0 ? Math.min(...valoresMesesArr) : 0;
+  var mediaMesVal = valoresMesesArr.length > 0 ? (valoresMesesArr.reduce((a, b) => a + b, 0) / valoresMesesArr.length) : 0;
+
+  document.getElementById('tot-atend-mes').innerText = qtdeMes;
+  document.getElementById('tot-valor-mes').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
+  document.getElementById('tot-valor-ano').innerText = 'R$ ' + totalAnoValorCalc.toFixed(2).replace('.', ',');
+  document.getElementById('tot-melhor-mes').innerText = melhorMesVal > 0 ? 'R$ ' + melhorMesVal.toFixed(2).replace('.', ',') : '-';
+  document.getElementById('tot-pior-mes').innerText = piorMesVal > 0 ? 'R$ ' + piorMesVal.toFixed(2).replace('.', ',') : '-';
+  document.getElementById('tot-media-mes').innerText = 'R$ ' + mediaMesVal.toFixed(2).replace('.', ',');
 }
 
-
-function excluir(linha){ 
+function excluir(index){ 
   if(confirm("Excluir este registro?")){ 
-    google.script.run.withSuccessHandler(carregarPlanilha).excluirLinha(linha); 
+    let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+    listaAtendimentos.splice(index, 1);
+    localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
+    carregarPlanilha();
   } 
 }
 
 window.onload = function() {
   definirMomentoDoDia();
   setarCabecalhoEspaco();
+
+  if (!sessionStorage.setItem && !sessionStorage.getItem('veronica_ja_abriu')) {
+    // fallback
+  }
 
   if (!sessionStorage.getItem('veronica_ja_abriu')) {
     sessionStorage.setItem('veronica_ja_abriu', 'true');
@@ -477,3 +496,4 @@ window.onload = function() {
 </script>
 </body>
 </html>
+"""
