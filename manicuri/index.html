@@ -178,15 +178,12 @@ Com carinho,<br>
 <div id="painel-privado">
 <div class="painel-header">
   <div style="width: 50px;"></div>
-  <div class="painel-titulo-box">
+  <div class="painel-titulo-box" style="line-height: 1.3;">
     <div class="painel-titulo">Meu Espaço 🌸</div>
+    <div id="espaco-data" style="font-size:10px; font-weight:600; color:var(--azul-suave); text-transform:capitalize;"></div>
+    <div id="espaco-comemora" style="font-size:10.5px; color:var(--texto-principal);"></div>
   </div>
   <button class="btn-sair" onclick="sairPainel()">Sair</button>
-</div>
-
-<div class="painel-card" style="background:var(--rosa-fundo); text-align:center; padding:8px;">
-  <div id="espaco-data" style="font-size:11px; font-weight:600; color:var(--azul-suave); text-transform:capitalize;"></div>
-  <div id="espaco-comemora" style="font-size:11.5px; color:var(--texto-principal);"></div>
 </div>
 
 <div class="painel-card">
@@ -209,7 +206,19 @@ Com carinho,<br>
   <button class="btn-gravar" onclick="salvarAtendimento()">Salvar Cliente / Atendimento</button>
 </div>
 
-<!-- REGISTRO DO MÊS -->
+<!-- Resumos Financeiros -->
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total Ano</div><div id="tot-valor-ano" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Melhor Mês</div><div id="tot-melhor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Pior Mês</div><div id="tot-pior-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Média Mensal</div><div id="tot-media-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+</div>
+
+<div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
+
+<!-- REGISTRO DO MÊS (POR ÚLTIMO) -->
 <div class="painel-card" style="padding: 6px;">
   <div class="painel-card-title" style="padding: 2px;">📊 REGISTRO DO MÊS (CRESCE AUTOMATICAMENTE)</div>
   <div class="tabela-container">
@@ -231,17 +240,6 @@ Com carinho,<br>
   </div>
 </div>
 
-<!-- Resumos Financeiros -->
-<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total Ano</div><div id="tot-valor-ano" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Melhor Mês</div><div id="tot-melhor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Pior Mês</div><div id="tot-pior-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Média Mensal</div><div id="tot-media-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-</div>
-
-<div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
 </div>
 
 <!-- Modal de Senha -->
@@ -352,13 +350,31 @@ function salvarAtendimento() {
   };
   if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
   
+  // Salvar no localStorage (mantendo funcionalidade local original)
   let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
   listaAtendimentos.push(dados);
   localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
   
-  alert(dados.nome + ' salvo com sucesso!');
-  limparForm();
-  carregarPlanilha();
+  // Exportar para a Planilha do Google via Apps Script
+  const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
+  
+  fetch(urlScript, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dados)
+  }).then(() => {
+    alert(dados.nome + ' salvo e exportado para a planilha com sucesso!');
+    limparForm();
+    carregarPlanilha();
+  }).catch(err => {
+    console.error("Erro ao exportar:", err);
+    alert(dados.nome + ' salvo localmente, mas houve um erro ao enviar para a planilha.');
+    limparForm();
+    carregarPlanilha();
+  });
 }
 
 function limparForm(){
@@ -454,10 +470,6 @@ window.onload = function() {
   definirMomentoDoDia();
   setarCabecalhoEspaco();
 
-  if (!sessionStorage.setItem && !sessionStorage.getItem('veronica_ja_abriu')) {
-    // fallback
-  }
-
   if (!sessionStorage.getItem('veronica_ja_abriu')) {
     sessionStorage.setItem('veronica_ja_abriu', 'true');
     
@@ -496,4 +508,3 @@ window.onload = function() {
 </script>
 </body>
 </html>
-"""
