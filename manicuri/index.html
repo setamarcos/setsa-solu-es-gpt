@@ -338,6 +338,8 @@ function setarCabecalhoEspaco(){
   document.getElementById('relex-txt').innerText = '"' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].frase + '" — ' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].autor;
 }
 
+const endpoint = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
+
 function salvarAtendimento() {
   const dados = {
     nome: document.getElementById('input-cliente').value.trim(),
@@ -347,7 +349,7 @@ function salvarAtendimento() {
     tempo: document.getElementById('input-tempo').value.trim(),
     niver: document.getElementById('input-niver').value,
     endereco: document.getElementById('input-endereco').value.trim(),
-    obs: document.getElementById('input-obs') ? document.getElementById('input-obs').value.trim() : "",
+    obs: document.getElementById('input-obs').value.trim(),
     pgto: document.getElementById('input-pgto').value
   };
 
@@ -356,9 +358,7 @@ function salvarAtendimento() {
     return;
   }
 
-  document.getElementById('feedback-salvar').innerText = "Salvando com carinho...";
-
-  fetch("https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec", {
+  fetch(endpoint, {
     method: "POST",
     body: JSON.stringify(dados)
   })
@@ -367,12 +367,40 @@ function salvarAtendimento() {
     if(res.status === "Sucesso") {
       document.querySelectorAll('.form-input').forEach(i => i.value = '');
       carregarPlanilha();
-      mostrarPiadinha();
     }
     document.getElementById('feedback-salvar').innerText = res.mensagem || "Registro atualizado!";
   })
   .catch(() => {
-    document.getElementById('feedback-salvar').innerText = "Erro ao salvar 😢";
+    document.getElementById('feedback-salvar').innerText = "Erro ao salvar 😕";
+  });
+}
+
+function carregarPlanilha() {
+  fetch(endpoint)
+  .then(r => r.json())
+  .then(dados => {
+    const tbody = document.getElementById('tabela-corpo');
+    tbody.innerHTML = "";
+    if(dados.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='10'>Nenhum atendimento ainda.</td></tr>";
+      return;
+    }
+    dados.forEach((reg,i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td>${reg.cliente}</td>
+        <td>${reg.aniversario || '-'}</td>
+        <td>${reg.data}</td>
+        <td>${reg.retorno}</td>
+        <td>R$ ${reg.valor}</td>
+        <td>${reg.pgto || '-'}</td>
+        <td>${reg.tempo}</td>
+        <td>${reg.endereco || '-'}</td>
+        <td>${reg.obs || '-'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
   });
 }
 
