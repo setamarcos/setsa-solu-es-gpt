@@ -28,6 +28,7 @@ body {
   min-height: 100vh;
 }
 
+/* --- TELA DE ABERTURA --- */
 #tela-abertura {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -44,6 +45,7 @@ body {
   margin: 10px 0; text-align: center;
 }
 
+/* --- CONTEÚDO PRINCIPAL (Vitrine) --- */
 #conteudo-principal {
   width: 100%; max-width: 480px; margin: auto;
   background: var(--branco); min-height: 100vh;
@@ -53,6 +55,7 @@ body {
   display: flex; flex-direction: column; padding-bottom: 40px;
 }
 
+/* --- PAINEL PRIVADO --- */
 #painel-privado {
   display: none; width: 100%; max-width: 480px; margin: auto;
   background: var(--branco); min-height: 100vh;
@@ -82,6 +85,7 @@ tr:nth-child(even) { background-color: #f9fafb; }
 .btn-acao { padding: 2px 5px; font-size: 9px; border: none; border-radius: 4px; cursor: pointer; color: #fff; }
 .btn-excluir { background: #e74c3c; }
 
+/* Cabeçalho Perfil Vitrine */
 .header-perfil { text-align: center; padding: 40px 24px 16px; }
 .foto-container { width: 120px; height: 120px; margin: 0 auto 14px; position: relative; }
 .foto-perfil { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 15%; border: 4px solid var(--rosa-suave); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
@@ -121,6 +125,7 @@ tr:nth-child(even) { background-color: #f9fafb; }
 </head>
 <body>
 
+<!-- Tela de Abertura -->
 <div id="tela-abertura">
 <div class="texto-abertura" id="txt1">🌸</div>
 <div class="texto-abertura" id="txt2">Olá!</div>
@@ -128,6 +133,7 @@ tr:nth-child(even) { background-color: #f9fafb; }
 <div class="texto-abertura" id="txt4">Seja muito bem-vinda ao meu espaço.</div>
 </div>
 
+<!-- Conteúdo Principal / Vitrine -->
 <div id="conteudo-principal">
 <header class="header-perfil">
 <div class="foto-container"><img src="veronica.jpg" alt="Verônica Castro" class="foto-perfil"></div>
@@ -168,6 +174,7 @@ Com carinho,<br>
 </footer>
 </div>
 
+<!-- Painel Privado -->
 <div id="painel-privado">
 <div class="painel-header">
   <div style="width: 50px;"></div>
@@ -199,6 +206,7 @@ Com carinho,<br>
   <button class="btn-gravar" onclick="salvarAtendimento()">Salvar Cliente / Atendimento</button>
 </div>
 
+<!-- Resumos Financeiros -->
 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
   <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
   <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
@@ -210,6 +218,7 @@ Com carinho,<br>
 
 <div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
 
+<!-- REGISTRO DO MÊS (POR ÚLTIMO) -->
 <div class="painel-card" style="padding: 6px;">
   <div class="painel-card-title" style="padding: 2px;">📊 REGISTRO DO MÊS (CRESCE AUTOMATICAMENTE)</div>
   <div class="tabela-container">
@@ -233,6 +242,7 @@ Com carinho,<br>
 
 </div>
 
+<!-- Modal de Senha -->
 <div id="modal-senha">
   <div class="modal-box">
     <div style="font-size: 24px; margin-bottom: 6px;">🌷</div>
@@ -252,8 +262,6 @@ var momentosDoAno = [
   { frase: "O que a memória ama, fica eterno.", autor: "Adélia Prado" },
   { frase: "Tempo pra si é acalmar a alma.", autor: "Lya Luft" }
 ];
-
-const urlScript = "COLOQUE_AQUI_A_URL_DO_SEU_WEB_APP";
 
 function obterDiaDoAno(data) {
   var inicio = new Date(data.getFullYear(), 0, 0);
@@ -304,7 +312,6 @@ function validarSenha() {
     fecharModal();
     document.getElementById('conteudo-principal').style.display = 'none';
     document.getElementById('painel-privado').style.display = 'flex';
-    setarCabecalhoEspaco();
     carregarPlanilha();
   } else {
     alert("Senha incorreta.");
@@ -343,14 +350,20 @@ function salvarAtendimento() {
   };
   if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
   
+  // Salvar no localStorage (mantendo funcionalidade local original)
   let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
   listaAtendimentos.push(dados);
   localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
   
+  // Exportar para a Planilha do Google via Apps Script
+  const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
+  
   fetch(urlScript, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(dados)
   }).then(() => {
     alert(dados.nome + ' salvo e exportado para a planilha com sucesso!');
@@ -397,6 +410,7 @@ function carregarPlanilha() {
   var agora = new Date();
   var mesAtual = agora.getMonth();
   var anoAtual = agora.getFullYear();
+  
   var mesesTotais = {};
 
   listaAtendimentos.forEach((r, i) => {
@@ -446,31 +460,26 @@ function carregarPlanilha() {
 function excluir(index){ 
   if(confirm("Excluir este registro?")){ 
     let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
-    var itemRemovido = listaAtendimentos[index];
-    
     listaAtendimentos.splice(index, 1);
     localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
     carregarPlanilha();
-
-    fetch(urlScript, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ acao: "excluir", nome: itemRemovido.nome, data: itemRemovido.data })
-    }).then(() => {
-      console.log("Comando de exclusão enviado à planilha.");
-    }).catch(err => {
-      console.error("Erro ao excluir na planilha:", err);
-    });
   } 
 }
 
 window.onload = function() {
   definirMomentoDoDia();
+  setarCabecalhoEspaco();
 
   if (!sessionStorage.getItem('veronica_ja_abriu')) {
     sessionStorage.setItem('veronica_ja_abriu', 'true');
-    const txts = [document.getElementById('txt1'), document.getElementById('txt2'), document.getElementById('txt3'), document.getElementById('txt4')];
+    
+    const txts = [
+      document.getElementById('txt1'),
+      document.getElementById('txt2'),
+      document.getElementById('txt3'),
+      document.getElementById('txt4')
+    ];
+    
     txts.forEach((txt, index) => {
       setTimeout(() => {
         txt.style.opacity = '1';
