@@ -346,34 +346,33 @@ function salvarAtendimento() {
     niver: document.getElementById('input-niver').value,
     endereco: document.getElementById('input-endereco').value, 
     obs: document.getElementById('input-obs').value,
-    pgto: Array.from(document.querySelectorAll('.pgto:checked')).map(cb=>cb.value).join(', ')
+    pgto: Array.from(document.querySelectorAll('.pgto:checked')).map(cb => cb.value).join(', ')
   };
-  if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
-  
-  // Salvar no localStorage (mantendo funcionalidade local original)
-  let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
-  listaAtendimentos.push(dados);
-  localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
-  
-  // Exportar para a Planilha do Google via Apps Script
+
+  if (!dados.nome || !dados.valor || !dados.data) { 
+    alert("Preencha Cliente, Data e Valor."); 
+    return; 
+  }
+
   const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
-  
+
+  // Disparo direto para o Apps Script e salvamento local unificado
   fetch(urlScript, {
     method: 'POST',
     mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dados)
   }).then(() => {
-    alert(dados.nome + ' salvo e exportado para a planilha com sucesso!');
+    let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+    listaAtendimentos.push(dados);
+    localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
+
+    alert(dados.nome + ' salvo e enviado com sucesso!');
     limparForm();
     carregarPlanilha();
   }).catch(err => {
-    console.error("Erro ao exportar:", err);
-    alert(dados.nome + ' salvo localmente, mas houve um erro ao enviar para a planilha.');
-    limparForm();
-    carregarPlanilha();
+    console.error("Erro no envio:", err);
+    alert("Erro de conexão ao enviar para a planilha.");
   });
 }
 
