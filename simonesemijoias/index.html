@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simone Empreendimentos | Joias Exclusivas</title>
+<style>
+:root {
+  --fundo-pagina: #121212;
+  --fundo-card: #1e1e1e;
+  --texto-principal: #ffffff;
+  --texto-suave: #aaaaaa;
+  --amarelo-destaque: #f39c12;
+  --amarelo-hover: #e08e0b;
+  --verde-whatsapp: #25d366;
+  --borda: #333333;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--fundo-pagina);
+  color: var(--texto-principal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* --- TELA DE ABERTURA --- */
+#tela-abertura {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: var(--fundo-pagina);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  z-index: 9999; padding: 20px;
+}
+
+.texto-abertura {
+  font-size: 20px; color: var(--amarelo-destaque);
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+  margin: 8px 0; text-align: center;
+  font-weight: 500;
+}
+
+/* --- CONTEÚDO PRINCIPAL --- */
+#conteudo-principal {
+  width: 100%; max-width: 480px; height: 100vh; max-height: 900px;
+  background: var(--fundo-pagina);
+  box-shadow: 0 0 30px rgba(0,0,0,0.8);
+  opacity: 0; visibility: hidden;
+  transition: opacity 1s ease;
+  display: flex; flex-direction: column;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* --- PAINEL PRIVADO (ESPAÇO SIMONE) --- */
+#painel-privado {
+  display: none; width: 100%; max-width: 580px; height: 100vh; max-height: 980px;
+  background: var(--fundo-pagina);
+  box-shadow: 0 0 30px rgba(0,0,0,0.8);
+  padding: 14px; flex-direction: column;
+  overflow-y: auto;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+}
+
+#painel-privado::-webkit-scrollbar { width: 4px; }
+#painel-privado::-webkit-scrollbar-thumb { background: var(--borda); border-radius: 4px; }
+
+.painel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--borda); }
+.painel-titulo-box { text-align: center; flex-grow: 1; margin: 0 8px; }
+.painel-titulo { font-size: 15px; font-weight: 600; color: var(--amarelo-destaque); }
+.btn-sair { background: #e74c3c; border: none; padding: 4px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; color: #fff; font-weight: 700; }
+
+.painel-card { background: var(--fundo-card); border: 1px solid var(--borda); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+.painel-card-title { font-size: 10px; font-weight: 600; color: var(--amarelo-destaque); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+.form-grid { display: flex; gap: 6px; margin-bottom: 6px; }
+.form-group { margin-bottom: 4px; flex: 1; }
+.form-label { display: block; font-size: 9.5px; color: var(--texto-suave); margin-bottom: 2px; font-weight: 500; }
+.form-input, .form-select { width: 100%; padding: 5px 7px; border: 1px solid var(--borda); border-radius: 6px; font-size: 11px; outline: none; background: #2a2a2a; color: #fff; font-family: inherit; }
+.btn-gravar { background: var(--amarelo-destaque); color: #121212; border: none; padding: 7px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 700; width: 100%; margin-top: 4px; }
+.btn-gravar:hover { background: var(--amarelo-hover); }
+
+/* BLOCO DE TOTAIS AJUSTADO EM LINHAS (L1, L2, L3) */
+.totais-bloco { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.totais-linha { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.indicador-box { background: var(--fundo-card); border: 1px solid var(--borda); border-radius: 6px; padding: 5px 3px; text-align: center; }
+.indicador-label { font-size: 7.5px; color: var(--texto-suave); text-transform: uppercase; margin-bottom: 2px; line-height: 1.1; font-weight: 600; }
+.indicador-valor { font-size: 10px; font-weight: 700; color: var(--amarelo-destaque); }
+
+.tabela-container { width: 100%; max-height: 130px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--borda); border-radius: 6px; background: #181818; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 9px; text-align: left; white-space: nowrap; }
+th { background-color: var(--amarelo-destaque); color: #121212; padding: 3px; font-weight: 600; font-size: 8.5px; text-align: center; border: 1px solid #d0850b; position: sticky; top: 0; z-index: 2; }
+td { padding: 3px; border: 1px solid var(--borda); color: var(--texto-principal); text-align: center; }
+tr:nth-child(even) { background-color: #1a1a1a; }
+.btn-acao { padding: 2px 4px; font-size: 8px; border: none; border-radius: 4px; cursor: pointer; color: #fff; font-weight: 600; }
+.btn-excluir { background: #e74c3c; }
+
+/* --- BLOCOS DA VITRINE --- */
+.header-perfil { height: 25%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 8px; text-align: center; }
+.foto-container { width: 55px; height: 55px; margin: 0 auto 4px; position: relative; }
+.foto-perfil { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center; border: 2px solid var(--amarelo-destaque); box-shadow: 0 4px 15px rgba(243, 156, 18, 0.2); cursor: pointer; }
+.nome { font-size: 15px; color: var(--amarelo-destaque); font-weight: 600; margin-bottom: 2px; cursor: pointer; }
+.subtitulo { font-size: 9px; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; margin-bottom: 4px; }
+.msg-motivacional { font-size: 9.5px; color: #ddd; font-style: italic; }
+
+.categorias-bloco { height: 10%; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--borda); background: #181818; }
+.linha-categorias { display: flex; justify-content: center; gap: 6px; width: 100%; }
+.aba-categoria { background: var(--fundo-card); color: var(--texto-suave); border: 1px solid var(--borda); padding: 3px 8px; border-radius: 12px; font-size: 9.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; text-align: center; flex: 1; }
+.aba-categoria.ativo { background: var(--amarelo-destaque); color: #121212; border-color: var(--amarelo-destaque); }
+
+.produtos-bloco { height: 50%; padding: 10px 16px; overflow-y: auto; }
+.produtos-bloco::-webkit-scrollbar { width: 3px; }
+.produtos-bloco::-webkit-scrollbar-thumb { background: var(--borda); border-radius: 3px; }
+
+.produtos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.produto-card { background: var(--fundo-card); border: 1px solid var(--borda); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; height: 175px; }
+.produto-img { width: 100%; height: 85px; object-fit: cover; background: #2a2a2a; }
+.produto-info { padding: 6px 8px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+.produto-nome { font-size: 10.5px; font-weight: 600; color: var(--texto-principal); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.produto-preco { font-size: 11px; font-weight: 700; color: var(--amarelo-destaque); }
+.btn-pedir { background: var(--verde-whatsapp); color: #fff; border: none; padding: 4px; border-radius: 4px; font-size: 9.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; text-decoration: none; }
+.btn-pedir:hover { background: #20ba5a; }
+
+.rodape { height: 15%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background-color: #151515; font-size: 10px; color: var(--texto-suave); border-top: 1px solid var(--borda); }
+.rodape-assina { font-weight: 600; color: var(--amarelo-destaque); }
+
+#modal-senha { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 20px; }
+.modal-box { background: var(--fundo-card); padding: 24px; border-radius: 16px; width: 100%; max-width: 280px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--borda); }
+.modal-input { width: 100%; padding: 10px; margin: 12px 0; border: 1px solid var(--borda); border-radius: 8px; font-size: 14px; text-align: center; outline: none; background: #2a2a2a; color: #fff; }
+.modal-btn { background: var(--amarelo-destaque); color: #121212; border: none; padding: 9px; border-radius: 14px; font-size: 12px; cursor: pointer; font-weight: 700; width: 100%; }
+</style>
+</head>
+<body>
+
+<div id="tela-abertura">
+<div class="texto-abertura" id="txt1">✨</div>
+<div class="texto-abertura" id="txt2">Olá, Simone!</div>
+<div class="texto-abertura" id="txt3">Simone Empreendimentos.</div>
+<div class="texto-abertura" id="txt4">Atendimento Exclusivo & Joias Rommanel.</div>
+</div>
+
+<div id="conteudo-principal">
+  <header class="header-perfil">
+    <div class="foto-container"><img src="simone.png" alt="Simone" class="foto-perfil" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'" onclick="solicitarSenha()" title="Acessar Espaço Simone"></div>
+    <h1 class="nome" onclick="solicitarSenha()" title="Acessar Espaço Simone">Simone</h1>
+    <p class="subtitulo">Joias • Atendimento Exclusivo</p>
+    <div class="msg-motivacional" id="msg-data-motivacional">Brilhe com elegância hoje. Cada detalhe conta sua história.</div>
+  </header>
+
+  <div class="categorias-bloco">
+    <div class="linha-categorias">
+      <button class="aba-categoria ativo" onclick="filtrarCategoria('Anéis', this)">Anéis</button>
+      <button class="aba-categoria" onclick="filtrarCategoria('Brincos', this)">Brincos</button>
+      <button class="aba-categoria" onclick="filtrarCategoria('Colares', this)">Colares</button>
+      <button class="aba-categoria" onclick="filtrarCategoria('Pulseiras', this)">Pulseiras</button>
+      <button class="aba-categoria" onclick="filtrarCategoria('Conjuntos', this)">Conjuntos</button>
+    </div>
+    <div class="linha-categorias" style="max-width: 70%; margin: 0 auto;">
+      <button class="aba-categoria" onclick="filtrarCategoria('Lançamentos', this)">Lançamentos</button>
+      <button class="aba-categoria" onclick="filtrarCategoria('Ofertas', this)">Ofertas</button>
+    </div>
+  </div>
+
+  <div class="produtos-bloco">
+    <div class="produtos-grid" id="vitrine-produtos"></div>
+  </div>
+
+  <footer class="rodape">
+    Com carinho,<br>
+    <span class="rodape-assina">Simone Empreendimentos</span>
+  </footer>
+</div>
+
+<div id="painel-privado">
+<div class="painel-header">
+  <div style="width: 40px;"></div>
+  <div class="painel-titulo-box" style="line-height: 1.2;">
+    <div class="painel-titulo">Espaço Simone 🌟</div>
+    <div id="espaco-data" style="font-size:9.5px; font-weight:600; color:var(--amarelo-destaque); text-transform:capitalize;"></div>
+  </div>
+  <button class="btn-sair" onclick="sairPainel()">Sair</button>
+</div>
+
+<!-- BLOCO DE TOTAIS REORGANIZADO EM 3 LINHAS EXATAS -->
+<div class="totais-bloco">
+  <!-- L1: Vendas Totais, Qtde Peças Vendidas, Total R$ À Vista Recebido, Total de Parcelas a Receber R$ -->
+  <div class="totais-linha">
+    <div class="indicador-box"><div class="indicador-label">L1: Vendas Totais</div><div id="ind-vendas-totais" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label">L1: Qtde Peças Vendidas</div><div id="ind-qtde-pecas-vendidas" class="indicador-valor">0</div></div>
+    <div class="indicador-box"><div class="indicador-label">L1: Total R$ À Vista</div><div id="ind-total-avista" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label">L1: Total Parc. a Receber</div><div id="ind-total-parc-receber" class="indicador-valor">R$ 0,00</div></div>
+  </div>
+  <!-- L2: Peças Estoque, Saldo Adquirido-Vendas, Total Líquido Vendas, Total Investido Ano -->
+  <div class="totais-linha">
+    <div class="indicador-box"><div class="indicador-label">L2: Peças Estoque</div><div id="ind-pecas-estoque" class="indicador-valor">0</div></div>
+    <div class="indicador-box"><div class="indicador-label">L2: Saldo Adquirido - Vendas</div><div id="ind-saldo-adq-vendas" class="indicador-valor">0</div></div>
+    <div class="indicador-box"><div class="indicador-label">L2: Total Líquido Vendas</div><div id="ind-total-liquido" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label">L2: Total Investido Ano</div><div id="ind-total-investido-ano" class="indicador-valor">R$ 0,00</div></div>
+  </div>
+  <!-- L3: Próximo Mês Automático (Agosto, Setembro, Outubro...) -->
+  <div class="totais-linha" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="indicador-box"><div class="indicador-label" id="lbl-mes-1">L3: Próx. Mês</div><div id="ind-mes-1" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label" id="lbl-mes-2">L3: Próx. Mês +1</div><div id="ind-mes-2" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label" id="lbl-mes-3">L3: Próx. Mês +2</div><div id="ind-mes-3" class="indicador-valor">R$ 0,00</div></div>
+    <div class="indicador-box"><div class="indicador-label" id="lbl-mes-4">L3: Próx. Mês +3</div><div id="ind-mes-4" class="indicador-valor">R$ 0,00</div></div>
+  </div>
+</div>
+
+<!-- BLOCO DE CADASTRO COM A LINHA 3 AJUSTADA -->
+<div class="painel-card">
+  <div class="painel-card-title">💰 Registrar Cliente, Peça & Condições de Pagamento</div>
+  
+  <!-- L1: Cliente, Contato, Peça Adquirida -->
+  <div class="form-grid">
+    <div class="form-group" style="flex: 2;"><label class="form-label">L1: Cliente *</label><input type="text" id="venda-cliente" class="form-input" placeholder="Nome da Cliente"></div>
+    <div class="form-group"><label class="form-label">Contato / WhatsApp</label><input type="text" id="venda-contato" class="form-input" placeholder="31999999999"></div>
+    <div class="form-group" style="flex: 2;"><label class="form-label">Peça Adquirida *</label><input type="text" id="venda-peca" class="form-input" placeholder="Nome do Produto"></div>
+  </div>
+
+  <!-- L2: Qtde Peças, Valor Proposto, Valor Vendido -->
+  <div class="form-grid">
+    <div class="form-group"><label class="form-label">L2: Qtde Peças</label><input type="text" id="venda-qtde" class="form-input" placeholder="Ex: 1"></div>
+    <div class="form-group"><label class="form-label">Valor Proposto (R$)</label><input type="text" id="venda-val-proposto" class="form-input" placeholder="150,00"></div>
+    <div class="form-group"><label class="form-label">Valor Vendido (R$) *</label><input type="text" id="venda-val-vendido" class="form-input" placeholder="140,00" oninput="calcularValoresParcelas()"></div>
+  </div>
+
+  <!-- L3 SOLICITADA: Forma de Pagamento, Parcelas, Valor Entrada, Valor Parcela -->
+  <div class="form-grid">
+    <div class="form-group"><label class="form-label">L3: Forma de Pagamento</label><select id="venda-forma-pgto" class="form-select" onchange="atualizarFormaPagamento()"><option value="À Vista">À Vista</option><option value="Parcelado">Parcelado</option></select></div>
+    <div class="form-group"><label class="form-label">L3: Parcelas</label><select id="venda-parcelas" class="form-select" onchange="atualizarCamposParcelas()"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option></select></div>
+    <div class="form-group"><label class="form-label">L3: Vl. Entrada (R$)</label><input type="text" id="venda-entrada" class="form-input" placeholder="0,00" oninput="calcularValoresParcelas()"></div>
+    <div class="form-group"><label class="form-label">L3: Vl. Parcela (R$)</label><input type="text" id="venda-val-parcela" class="form-input" placeholder="0,00" disabled style="background:#222; color:#f39c12; font-weight:700;"></div>
+  </div>
+
+  <!-- L4: Datas das Parcelas (1ª até 5ª corrigidas individualmente) -->
+  <div class="form-grid">
+    <div class="form-group"><label class="form-label">Data Venda</label><input type="text" id="venda-data" class="form-input" placeholder="DD/MM/AAAA"></div>
+    <div class="form-group"><label class="form-label">1ª Parc. (Ajustável)</label><input type="text" id="venda-p1" class="form-input" placeholder="DD/MM/AAAA" onchange="ajustarDemaisParcelas()"></div>
+    <div class="form-group"><label class="form-label">2ª Parc.</label><input type="text" id="venda-p2" class="form-input" placeholder="DD/MM/AAAA" disabled style="background:#222; color:#777;"></div>
+    <div class="form-group"><label class="form-label">3ª Parc.</label><input type="text" id="venda-p3" class="form-input" placeholder="DD/MM/AAAA" disabled style="background:#222; color:#777;"></div>
+    <div class="form-group"><label class="form-label">4ª Parc.</label><input type="text" id="venda-p4" class="form-input" placeholder="DD/MM/AAAA" disabled style="background:#222; color:#777;"></div>
+    <div class="form-group"><label class="form-label">5ª Parc.</label><input type="text" id="venda-p5" class="form-input" placeholder="DD/MM/AAAA" disabled style="background:#222; color:#777;"></div>
+  </div>
+
+  <!-- L5: Observações -->
+  <div class="form-group"><label class="form-label">L5: Observações</label><input type="text" id="venda-obs" class="form-input" placeholder="Ex: Entregue com embalagem de presente"></div>
+
+  <!-- L6: Peças Adquiridas (Estoque/Aquisição) -->
+  <div class="form-grid">
+    <div class="form-group"><label class="form-label">L6: Peças Adquiridas (Qtde)</label><input type="text" id="venda-pecas-adquiridas" class="form-input" placeholder="Ex: 5"></div>
+    <div class="form-group"><label class="form-label">Valor Peças (R$)</label><input type="text" id="venda-valor-pecas" class="form-input" placeholder="500,00"></div>
+    <div class="form-group"><label class="form-label">Data Aquisição</label><input type="text" id="venda-data-aquisicao" class="form-input" placeholder="DD/MM/AAAA"></div>
+    <div class="form-group"><label class="form-label">Data Pagamento</label><input type="text" id="venda-data-pagamento" class="form-input" placeholder="DD/MM/AAAA"></div>
+  </div>
+
+  <button class="btn-gravar" onclick="salvarVenda()">Salvar Venda & Gerar Parcelas</button>
+</div>
+
+<div class="painel-card" style="padding: 6px; margin-bottom: 0;">
+  <div class="painel-card-title" style="padding: 2px;">📋 HISTÓRICO DE VENDAS & PARCELAS</div>
+  <div class="tabela-container">
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Cliente</th><th>Peça</th><th>Vendido</th><th>Forma</th><th>Parcelas</th><th>Vencimentos</th><th>Ação</th></tr>
+      </thead>
+      <tbody id="tabela-vendas-corpo"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div id="modal-senha">
+  <div class="modal-box">
+    <div style="font-size: 22px; margin-bottom: 6px;">✨</div>
+    <div style="font-size: 13.5px; font-weight: 500; color: var(--amarelo-destaque); margin-bottom: 2px;">Olá, Simone.</div>
+    <div style="font-size: 11px; color: var(--texto-suave); margin-bottom: 10px;">Digite sua senha para acessar o painel.</div>
+    <input type="password" id="input-senha-simone" class="modal-input" placeholder="Senha">
+    <button class="modal-btn" onclick="validarSenha()">Entrar</button>
+    <div style="margin-top: 8px;"><a href="#" onclick="fecharModal(event)" style="font-size: 11px; color: var(--texto-suave); text-decoration: none;">Cancelar</a></div>
+  </div>
+</div>
+
+<script>
+function solicitarSenha() {
+  document.getElementById('modal-senha').style.display = 'flex';
+  document.getElementById('input-senha-simone').focus();
+}
+
+function fecharModal(e) {
+  if(e) e.preventDefault();
+  document.getElementById('modal-senha').style.display = 'none';
+  document.getElementById('input-senha-simone').value = "";
+}
+
+function validarSenha() {
+  if (document.getElementById('input-senha-simone').value === "1401") {
+    fecharModal();
+    document.getElementById('conteudo-principal').style.display = 'none';
+    document.getElementById('painel-privado').style.display = 'flex';
+    inicializarDatasPadrao();
+    carregarDadosPainel();
+  } else {
+    alert("Senha incorreta.");
+    document.getElementById('input-senha-simone').value = "";
+  }
+}
+
+function sairPainel() {
+  document.getElementById('painel-privado').style.display = 'none';
+  document.getElementById('conteudo-principal').style.display = 'flex';
+}
+
+function inicializarDatasPadrao() {
+  const hoje = new Date();
+  const dataStr = formatarDataBR(hoje);
+  
+  if(!document.getElementById('venda-data').value) {
+    document.getElementById('venda-data').value = dataStr;
+  }
+  
+  let vencimento1 = new Date(hoje);
+  vencimento1.setDate(vencimento1.getDate() + 30);
+  if(!document.getElementById('venda-p1').value) {
+    document.getElementById('venda-p1').value = formatarDataBR(vencimento1);
+    atualizarCamposParcelas();
+  }
+}
+
+function formatarDataBR(dataObj) {
+  let dia = String(dataObj.getDate()).padStart(2, '0');
+  let mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+  let ano = dataObj.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
+function converterDataParaObjeto(dataStr) {
+  let partes = dataStr.split('/');
+  if(partes.length === 3) {
+    return new Date(partes[2], partes[1] - 1, partes[0]);
+  }
+  return new Date();
+}
+
+function atualizarFormaPagamento() {
+  let forma = document.getElementById('venda-forma-pgto').value;
+  let selParcelas = document.getElementById('venda-parcelas');
+  if(forma === 'À Vista') {
+    selParcelas.value = '1';
+    selParcelas.disabled = true;
+    document.getElementById('venda-entrada').value = '0,00';
+  } else {
+    selParcelas.disabled = false;
+  }
+  atualizarCamposParcelas();
+}
+
+function atualizarCamposParcelas() {
+  let forma = document.getElementById('venda-forma-pgto').value;
+  let numParcelas = forma === 'À Vista' ? 1 : (parseInt(document.getElementById('venda-parcelas').value) || 1);
+  let p1Str = document.getElementById('venda-p1').value;
+  
+  if(!p1Str) {
+    let hoje = new Date();
+    hoje.setDate(hoje.getDate() + 30);
+    p1Str = formatarDataBR(hoje);
+    document.getElementById('venda-p1').value = p1Str;
+  }
+
+  let dataBase = converterDataParaObjeto(p1Str);
+
+  for(let i = 2; i <= 5; i++) {
+    let inputParc = document.getElementById('venda-p' + i);
+    if(inputParc) {
+      if(i <= numParcelas) {
+        inputParc.disabled = false;
+        inputParc.style.background = '#2a2a2a';
+        inputParc.style.color = '#fff';
+        
+        let novaData = new Date(dataBase);
+        novaData.setDate(novaData.getDate() + (30 * (i - 1)));
+        inputParc.value = formatarDataBR(novaData);
+      } else {
+        inputParc.disabled = true;
+        inputParc.style.background = '#222';
+        inputParc.style.color = '#777';
+        inputParc.value = '';
+      }
+    }
+  }
+  calcularValoresParcelas();
+}
+
+function ajustarDemaisParcelas() {
+  atualizarCamposParcelas();
+}
+
+function calcularValoresParcelas() {
+  let valVendido = parseFloat(document.getElementById('venda-val-vendido').value.replace(',', '.')) || 0;
+  let entrada = parseFloat(document.getElementById('venda-entrada').value.replace(',', '.')) || 0;
+  let forma = document.getElementById('venda-forma-pgto').value;
+  let numParcelas = forma === 'À Vista' ? 1 : (parseInt(document.getElementById('venda-parcelas').value) || 1);
+
+  let valorRestante = valVendido - entrada;
+  if(valorRestante < 0) valorRestante = 0;
+
+  let vlParcela = numParcelas > 0 ? valorRestante / numParcelas : 0;
+  document.getElementById('venda-val-parcela').value = vlParcela.toFixed(2).replace('.', ',');
+}
+
+const catalogoPadrao = [
+  {produto: "Anel Solitário Ouro", categoria: "Anéis", valor: "120,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Anel Cravejado Zircônia", categoria: "Anéis", valor: "145,00", foto: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=300"},
+  {produto: "Anel Chuveiro Elegance", categoria: "Anéis", valor: "189,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Anel Duplo Amor", categoria: "Anéis", valor: "110,00", foto: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=300"},
+  {produto: "Anel Trabalhado Ouro 18k", categoria: "Anéis", valor: "195,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Anel Delicado Coração", categoria: "Anéis", valor: "95,00", foto: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=300"},
+  {produto: "Anel Solitário Slim", categoria: "Anéis", valor: "105,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Anel Infinito Brilho", categoria: "Anéis", valor: "130,00", foto: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=300"},
+
+  {produto: "Brinco Argola Rommanel", categoria: "Brincos", valor: "85,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Brinco Ponto de Luz", categoria: "Brincos", valor: "75,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Brinco Solitário Redondo", categoria: "Brincos", valor: "90,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Brinco Argolinha Cravejada", categoria: "Brincos", valor: "115,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Brinco Gota Zircônia", categoria: "Brincos", valor: "105,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Brinco Flor Delicada", categoria: "Brincos", valor: "80,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Brinco Cascata Elegance", categoria: "Brincos", valor: "155,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Brinco Perola Clássico", categoria: "Brincos", valor: "70,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+
+  {produto: "Colar Ponto de Luz", categoria: "Colares", valor: "140,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Gargantilha Choker Ouro", categoria: "Colares", valor: "165,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+  {produto: "Colar Coração Zircônia", categoria: "Colares", valor: "135,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Colar Veneziana com Gota", categoria: "Colares", valor: "180,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+  {produto: "Colar Filha Menina", categoria: "Colares", valor: "125,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Colar Filha Menino", categoria: "Colares", valor: "125,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+  {produto: "Colar Gravatinha Luxo", categoria: "Colares", valor: "190,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Colar Trevo da Sorte", categoria: "Colares", valor: "150,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+
+  {produto: "Pulseira Elo Português", categoria: "Pulseiras", valor: "110,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Pulseira Corações Corrente", categoria: "Pulseiras", valor: "95,00", foto: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300"},
+  {produto: "Pulseira Tennis Zircônias", categoria: "Pulseiras", valor: "210,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Pulseira Chapa Nome", categoria: "Pulseiras", valor: "130,00", foto: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300"},
+  {produto: "Pulseira Berloques Ouro", categoria: "Pulseiras", valor: "195,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Pulseira Delicada Bolinhas", categoria: "Pulseiras", valor: "85,00", foto: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300"},
+  {produto: "Pulseira Infinito Amor", categoria: "Pulseiras", valor: "105,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Pulseira Elo Groumet", categoria: "Pulseiras", valor: "140,00", foto: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300"},
+
+  {produto: "Conjunto Pérola Clássico", categoria: "Conjuntos", valor: "220,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Conjunto Solitário Ouro", categoria: "Conjuntos", valor: "250,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Conjunto Gota Zircônia", categoria: "Conjuntos", valor: "280,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Conjunto Coração Luxo", categoria: "Conjuntos", valor: "240,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Conjunto Ponto de Luz", categoria: "Conjuntos", valor: "195,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Conjunto Trevo Madrepérola", categoria: "Conjuntos", valor: "260,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Conjunto Elegance Dourado", categoria: "Conjuntos", valor: "275,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Conjunto Zircônia Royal", categoria: "Conjuntos", valor: "295,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+
+  {produto: "Lançamento Anel Cravejado", categoria: "Lançamentos", valor: "180,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Lançamento Colar Choker Luxo", categoria: "Lançamentos", valor: "210,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+  {produto: "Lançamento Brinco Cascata", categoria: "Lançamentos", valor: "175,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Lançamento Pulseira Tennis", categoria: "Lançamentos", valor: "230,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Lançamento Conjunto Royal", categoria: "Lançamentos", valor: "310,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Lançamento Argola Glitter", categoria: "Lançamentos", valor: "160,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Lançamento Solitário Duplo", categoria: "Lançamentos", valor: "190,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Lançamento Gargantilha Luxo", categoria: "Lançamentos", valor: "240,00", foto: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300"},
+
+  {produto: "Oferta Especial Brinco", categoria: "Ofertas", valor: "65,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Oferta Anel Slim Dourado", categoria: "Ofertas", valor: "55,00", foto: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300"},
+  {produto: "Oferta Colar Ponto Luz", categoria: "Ofertas", valor: "89,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"},
+  {produto: "Oferta Pulseira Delicada", categoria: "Ofertas", valor: "70,00", foto: "https://images.unsplash.com/photo-1611591475754-07d0d087b339?w=300"},
+  {produto: "Oferta Conjunto Clássico", categoria: "Ofertas", valor: "149,00", foto: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300"},
+  {produto: "Oferta Argola Pequena", categoria: "Ofertas", valor: "49,00", foto: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300"},
+  {produto: "Oferta Tornozeleira Ouro", categoria: "Ofertas", valor: "75,00", foto: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300"},
+  {produto: "Oferta Pingente Coração", categoria: "Ofertas", valor: "39,00", foto: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300"}
+];
+
+function filtrarCategoria(categoria, el) {
+  if(el) {
+    document.querySelectorAll('.aba-categoria').forEach(b => b.classList.remove('ativo'));
+    el.classList.add('ativo');
+  }
+  
+  let todos = [...catalogoPadrao];
+  let vitrine = document.getElementById('vitrine-produtos');
+  vitrine.innerHTML = '';
+
+  let filtrados = todos.filter(p => p.categoria.toLowerCase() === categoria.toLowerCase());
+
+  if(filtrados.length === 0) {
+    vitrine.innerHTML = `<div style="grid-column: span 2; text-align:center; padding: 20px; color: var(--texto-suave); font-size:11px;">Nenhum produto nesta categoria.</div>`;
+    return;
+  }
+
+  filtrados.forEach(p => {
+    var card = document.createElement('div');
+    card.className = 'produto-card';
+    let fotoUrl = p.foto && p.foto.trim() !== '' ? p.foto : 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300';
+    card.innerHTML = `
+      <img src="${fotoUrl}" alt="${p.produto}" class="produto-img" onerror="this.src='https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300'">
+      <div class="produto-info">
+        <div class="produto-nome">${p.produto}</div>
+        <div>
+          <div class="produto-preco">R$ ${p.valor}</div>
+          <a href="https://wa.me/553199786134?text=Olá%20Simone!%20Gostaria%20de%20comprar%20o%20produto:%20${encodeURIComponent(p.produto)}%20-%20R$%20${p.valor}" class="btn-pedir" target="_blank">Pedir via WhatsApp</a>
+        </div>
+      </div>
+    `;
+    vitrine.appendChild(card);
+  });
+}
+
+function salvarVenda() {
+  const cliente = document.getElementById('venda-cliente').value;
+  const contato = document.getElementById('venda-contato').value;
+  const peca = document.getElementById('venda-peca').value;
+  const qtde = document.getElementById('venda-qtde').value || '1';
+  const valVendido = document.getElementById('venda-val-vendido').value;
+  const formaPgto = document.getElementById('venda-forma-pgto').value;
+  const parcelas = document.getElementById('venda-parcelas').value;
+  const entrada = document.getElementById('venda-entrada').value || '0,00';
+  const dataVenda = document.getElementById('venda-data').value;
+  
+  const p1 = document.getElementById('venda-p1').value;
+  const p2 = document.getElementById('venda-p2').value;
+  const p3 = document.getElementById('venda-p3').value;
+  const p4 = document.getElementById('venda-p4').value;
+  const p5 = document.getElementById('venda-p5').value;
+  const obs = document.getElementById('venda-obs').value;
+  
+  const pecasAdquiridas = document.getElementById('venda-pecas-adquiridas').value;
+  const valorPecas = document.getElementById('venda-valor-pecas').value;
+  const dataAquisicao = document.getElementById('venda-data-aquisicao').value;
+  const dataPagamento = document.getElementById('venda-data-pagamento').value;
+
+  if(!cliente || !peca || !valVendido) { alert("Preencha Cliente, Peça e Valor."); return; }
+
+  let numParcelas = formaPgto === 'À Vista' ? 1 : (parseInt(parcelas) || 1);
+  let valorNumerico = parseFloat(valVendido.replace(',', '.')) || 0;
+  
+  let vencimentosArr = [];
+  if(numParcelas >= 1 && p1) vencimentosArr.push("1ª: " + p1);
+  if(numParcelas >= 2 && p2) vencimentosArr.push("2ª: " + p2);
+  if(numParcelas >= 3 && p3) vencimentosArr.push("3ª: " + p3);
+  if(numParcelas >= 4 && p4) vencimentosArr.push("4ª: " + p4);
+  if(numParcelas >= 5 && p5) vencimentosArr.push("5ª: " + p5);
+
+  let novaVenda = {
+    data: dataVenda || formatarDataBR(new Date()),
+    cliente,
+    contato,
+    peca,
+    qtde: parseInt(qtde) || 1,
+    valVendido: valorNumerico,
+    formaPgto,
+    parcelas: numParcelas + 'x',
+    vencimentos: vencimentosArr.join(' | '),
+    obs,
+    pecasAdquiridas: parseInt(pecasAdquiridas) || 0,
+    valorPecas: parseFloat((valorPecas || '0').replace(',', '.')) || 0,
+    dataAquisicao,
+    dataPagamento
+  };
+
+  let listaVendas = JSON.parse(localStorage.getItem('simone_vendas') || '[]');
+  listaVendas.push(novaVenda);
+  localStorage.setItem('simone_vendas', JSON.stringify(listaVendas));
+
+  alert("Venda registrada com sucesso!");
+  limparFormVenda();
+  carregarDadosPainel();
+}
+
+function limparFormVenda() {
+  document.getElementById('venda-cliente').value = '';
+  document.getElementById('venda-contato').value = '';
+  document.getElementById('venda-peca').value = '';
+  document.getElementById('venda-qtde').value = '';
+  document.getElementById('venda-val-proposto').value = '';
+  document.getElementById('venda-val-vendido').value = '';
+  document.getElementById('venda-forma-pgto').value = 'À Vista';
+  document.getElementById('venda-entrada').value = '';
+  document.getElementById('venda-val-parcela').value = '';
+  document.getElementById('venda-obs').value = '';
+  document.getElementById('venda-pecas-adquiridas').value = '';
+  document.getElementById('venda-valor-pecas').value = '';
+  document.getElementById('venda-data-aquisicao').value = '';
+  document.getElementById('venda-data-pagamento').value = '';
+  atualizarFormaPagamento();
+  inicializarDatasPadrao();
+}
+
+function excluirVenda(index) {
+  if(confirm("Deseja excluir este registro de venda?")) {
+    let lista = JSON.parse(localStorage.getItem('simone_vendas') || '[]');
+    lista.splice(index, 1);
+    localStorage.setItem('simone_vendas', JSON.stringify(lista));
+    carregarDadosPainel();
+  }
+}
+
+function carregarDadosPainel() {
+  let vendas = JSON.parse(localStorage.getItem('simone_vendas') || '[]');
+  let tbodyVendas = document.getElementById('tabela-vendas-corpo');
+  tbodyVendas.innerHTML = '';
+
+  let vendasTotais = 0;
+  let qtdePecasVendidas = 0;
+  let totalAvista = 0;
+  let totalParcReceber = 0;
+  let pecasEstoqueTotal = 0;
+  let totalInvestidoAno = 0;
+
+  const nomesMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  let dataAtual = new Date();
+  let mesIdx = dataAtual.getMonth();
+  
+  for(let m = 1; m <= 4; m++) {
+    let proxMesIdx = (mesIdx + m) % 12;
+    document.getElementById(`lbl-mes-${m}`).innerText = `L3: ${nomesMeses[proxMesIdx]}`;
+  }
+
+  if(vendas.length === 0) {
+    tbodyVendas.innerHTML = `<tr><td colspan="8">Nenhuma venda registrada.</td></tr>`;
+  } else {
+    vendas.forEach((v, i) => {
+      let valVendidoNum = parseFloat(v.valVendido) || 0;
+      vendasTotais += valVendidoNum;
+      
+      let qtdPecasNum = parseInt(v.qtde) || 1;
+      qtdePecasVendidas += qtdPecasNum;
+
+      let qtdAdqNum = parseInt(v.pecasAdquiridas) || 0;
+      pecasEstoqueTotal += qtdAdqNum;
+
+      let valInvestidoNum = parseFloat(v.valorPecas) || 0;
+      totalInvestidoAno += valInvestidoNum;
+
+      if(v.formaPgto === 'À Vista') {
+        totalAvista += valVendidoNum;
+      } else {
+        totalParcReceber += valVendidoNum;
+      }
+
+      var tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${v.data}</td>
+        <td style="text-align:left">${v.cliente}</td>
+        <td style="text-align:left">${v.peca}</td>
+        <td>R$ ${valVendidoNum.toFixed(2).replace('.', ',')}</td>
+        <td>${v.formaPgto}</td>
+        <td>${v.parcelas}</td>
+        <td style="text-align:left; font-size:8.5px;">${v.vencimentos}</td>
+        <td><button class="btn-acao btn-excluir" onclick="excluirVenda(${i})">X</button></td>
+      `;
+      tbodyVendas.appendChild(tr);
+    });
+  }
+
+  let saldoAdqVendas = pecasEstoqueTotal - qtdePecasVendidas;
+  let totalLiquidoVendas = vendasTotais - totalInvestidoAno;
+
+  document.getElementById('ind-vendas-totais').innerText = 'R$ ' + vendasTotais.toFixed(2).replace('.', ',');
+  document.getElementById('ind-qtde-pecas-vendidas').innerText = qtdePecasVendidas;
+  document.getElementById('ind-total-avista').innerText = 'R$ ' + totalAvista.toFixed(2).replace('.', ',');
+  document.getElementById('ind-total-parc-receber').innerText = 'R$ ' + totalParcReceber.toFixed(2).replace('.', ',');
+
+  document.getElementById('ind-pecas-estoque').innerText = pecasEstoqueTotal;
+  document.getElementById('ind-saldo-adq-vendas').innerText = saldoAdqVendas;
+  document.getElementById('ind-total-liquido').innerText = 'R$ ' + totalLiquidoVendas.toFixed(2).replace('.', ',');
+  document.getElementById('ind-total-investido-ano').innerText = 'R$ ' + totalInvestidoAno.toFixed(2).replace('.', ',');
+
+  document.getElementById('ind-mes-1').innerText = 'R$ ' + (totalParcReceber * 0.35).toFixed(2).replace('.', ',');
+  document.getElementById('ind-mes-2').innerText = 'R$ ' + (totalParcReceber * 0.30).toFixed(2).replace('.', ',');
+  document.getElementById('ind-mes-3').innerText = 'R$ ' + (totalParcReceber * 0.20).toFixed(2).replace('.', ',');
+  document.getElementById('ind-mes-4').innerText = 'R$ ' + (totalParcReceber * 0.15).toFixed(2).replace('.', ',');
+}
+
+window.onload = function() {
+  const hoje = new Date();
+  const opcoesData = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  document.getElementById('espaco-data').innerText = hoje.toLocaleDateString('pt-BR', opcoesData);
+
+  filtrarCategoria('Anéis');
+  atualizarFormaPagamento();
+
+  const telaAbertura = document.getElementById('tela-abertura');
+  const conteudo = document.getElementById('conteudo-principal');
+
+  if (!sessionStorage.getItem('simone_ja_abriu')) {
+    sessionStorage.setItem('simone_ja_abriu', 'true');
+    const txts = [document.getElementById('txt1'), document.getElementById('txt2'), document.getElementById('txt3'), document.getElementById('txt4')];
+    txts.forEach((txt, index) => {
+      setTimeout(() => {
+        txt.style.opacity = '1';
+        txt.style.transform = 'translateY(0)';
+      }, index * 500); 
+    });
+
+    setTimeout(() => {
+      telaAbertura.style.opacity = '0';
+      setTimeout(() => {
+        telaAbertura.style.display = 'none';
+        conteudo.style.visibility = 'visible';
+        conteudo.style.opacity = '1';
+      }, 1000); 
+    }, 3000); 
+  } else {
+    telaAbertura.style.display = 'none';
+    conteudo.style.visibility = 'visible';
+    conteudo.style.opacity = '1';
+  }
+};
+</script>
+</body>
+</html>
