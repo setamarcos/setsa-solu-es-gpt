@@ -178,15 +178,12 @@ Com carinho,<br>
 <div id="painel-privado">
 <div class="painel-header">
   <div style="width: 50px;"></div>
-  <div class="painel-titulo-box">
+  <div class="painel-titulo-box" style="line-height: 1.3;">
     <div class="painel-titulo">Meu Espaço 🌸</div>
+    <div id="espaco-data" style="font-size:10px; font-weight:600; color:var(--azul-suave); text-transform:capitalize;"></div>
+    <div id="espaco-comemora" style="font-size:10.5px; color:var(--texto-principal);"></div>
   </div>
   <button class="btn-sair" onclick="sairPainel()">Sair</button>
-</div>
-
-<div class="painel-card" style="background:var(--rosa-fundo); text-align:center; padding:8px;">
-  <div id="espaco-data" style="font-size:11px; font-weight:600; color:var(--azul-suave); text-transform:capitalize;"></div>
-  <div id="espaco-comemora" style="font-size:11.5px; color:var(--texto-principal);"></div>
 </div>
 
 <div class="painel-card">
@@ -209,7 +206,19 @@ Com carinho,<br>
   <button class="btn-gravar" onclick="salvarAtendimento()">Salvar Cliente / Atendimento</button>
 </div>
 
-<!-- REGISTRO DO MÊS (Colocado Acima dos Totais para manter a lógica e consistência) -->
+<!-- Resumos Financeiros -->
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total Ano</div><div id="tot-valor-ano" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Melhor Mês</div><div id="tot-melhor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Pior Mês</div><div id="tot-pior-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
+  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Média Mensal</div><div id="tot-media-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
+</div>
+
+<div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
+
+<!-- REGISTRO DO MÊS (POR ÚLTIMO) -->
 <div class="painel-card" style="padding: 6px;">
   <div class="painel-card-title" style="padding: 2px;">📊 REGISTRO DO MÊS (CRESCE AUTOMATICAMENTE)</div>
   <div class="tabela-container">
@@ -231,17 +240,6 @@ Com carinho,<br>
   </div>
 </div>
 
-<!-- Resumos Financeiros / Cards Pequenos (Posicionados Logo Abaixo da Tabela) -->
-<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Atend. Mês</div><div id="tot-atend-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">0</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total R$ Mês</div><div id="tot-valor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Total Ano</div><div id="tot-valor-ano" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Melhor Mês</div><div id="tot-melhor-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Pior Mês</div><div id="tot-pior-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">-</div></div>
-  <div class="painel-card" style="padding:6px; text-align:center;"><div style="font-size:9px; color:var(--texto-suave);">Média Mensal</div><div id="tot-media-mes" style="font-weight:700; color:var(--azul-suave); font-size:12px;">R$ 0,00</div></div>
-</div>
-
-<div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
 </div>
 
 <!-- Modal de Senha -->
@@ -352,11 +350,31 @@ function salvarAtendimento() {
   };
   if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
   
-  google.script.run.withSuccessHandler(()=>{
-    alert(dados.nome + ' salva com sucesso!');
+  // Salvar no localStorage (mantendo funcionalidade local original)
+  let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+  listaAtendimentos.push(dados);
+  localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
+  
+  // Exportar para a Planilha do Google via Apps Script
+  const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
+  
+  fetch(urlScript, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dados)
+  }).then(() => {
+    alert(dados.nome + ' salvo e exportado para a planilha com sucesso!');
     limparForm();
     carregarPlanilha();
-  }).salvarNaPlanilha(dados);
+  }).catch(err => {
+    console.error("Erro ao exportar:", err);
+    alert(dados.nome + ' salvo localmente, mas houve um erro ao enviar para a planilha.');
+    limparForm();
+    carregarPlanilha();
+  });
 }
 
 function limparForm(){
@@ -371,41 +389,80 @@ function limparForm(){
 }
 
 function carregarPlanilha() {
-  google.script.run.withSuccessHandler(function(res){
-    var tbody = document.getElementById('tabela-corpo'); 
-    tbody.innerHTML=''; 
-    if(!res || res.length < 2){
-      tbody.innerHTML=`<tr><td colspan="8">Nenhum atendimento ainda.</td></tr>`; 
-      return;
-    }
-    var dados = res.slice(1); 
-    var totalMesValorCalc = 0;
-    var qtdeMes = 0;
-    var mesAtualStr = (new Date().getMonth() + 1).toString().padStart(2, '0');
+  let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+  var tbody = document.getElementById('tabela-corpo'); 
+  tbody.innerHTML=''; 
+  
+  if(listaAtendimentos.length === 0){
+    tbody.innerHTML=`<tr><td colspan="8">Nenhum atendimento ainda.</td></tr>`;
+    document.getElementById('tot-atend-mes').innerText = '0';
+    document.getElementById('tot-valor-mes').innerText = 'R$ 0,00';
+    document.getElementById('tot-valor-ano').innerText = 'R$ 0,00';
+    document.getElementById('tot-melhor-mes').innerText = '-';
+    document.getElementById('tot-pior-mes').innerText = '-';
+    document.getElementById('tot-media-mes').innerText = 'R$ 0,00';
+    return;
+  }
+  
+  var totalMesValorCalc = 0;
+  var totalAnoValorCalc = 0;
+  var qtdeMes = 0;
+  var agora = new Date();
+  var mesAtual = agora.getMonth();
+  var anoAtual = agora.getFullYear();
+  
+  var mesesTotais = {};
 
-    dados.forEach((r,i)=>{
-      var dataAtendStr = r[3] ? String(r[3]) : '';
-      var valNum = parseFloat(String(r[5]).replace(',', '.')) || 0;
+  listaAtendimentos.forEach((r, i) => {
+    var valNum = parseFloat(String(r.valor).replace(',', '.')) || 0;
+    var dataParts = r.data ? r.data.split('-') : [];
+    var anoAtend = dataParts.length === 3 ? parseInt(dataParts[0]) : anoAtual;
+    var mesAtend = dataParts.length === 3 ? parseInt(dataParts[1]) - 1 : mesAtual;
 
-      if(dataAtendStr.includes(`-${mesAtualStr}-`) || dataAtendStr.includes(`/${mesAtualStr}/`)){
+    if (anoAtend === anoAtual) {
+      totalAnoValorCalc += valNum;
+      if (mesAtend === mesAtual) {
         qtdeMes++;
         totalMesValorCalc += valNum;
       }
+    }
 
-      var tr=document.createElement('tr');
-      tr.innerHTML=`<td>${i+1}</td><td style="text-align:left">${r[1] || ''}</td><td>${dataAtendStr}</td><td>${r[4] || ''}</td><td>R$ ${valNum.toFixed(2).replace('.', ',')}</td><td>${r[6] || ''}</td><td style="text-align:left">${r[9] || ''}</td><td><button class="btn-acao btn-excluir" onclick="excluir(${i+2})">X</button></td>`;
-      tbody.appendChild(tr);
-    });
+    var chaveMes = `${anoAtend}-${String(mesAtend+1).padStart(2, '0')}`;
+    mesesTotais[chaveMes] = (mesesTotais[chaveMes] || 0) + valNum;
 
-    document.getElementById('tot-atend-mes').innerText = qtdeMes;
-    document.getElementById('tot-valor-mes').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
-    document.getElementById('tot-valor-ano').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
-  }).buscarDaPlanilha();
+    var tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td style="text-align:left">${r.nome || ''}</td>
+      <td>${r.data ? r.data.split('-').reverse().join('/') : ''}</td>
+      <td>${r.retorno ? r.retorno.split('-').reverse().join('/') : ''}</td>
+      <td>R$ ${valNum.toFixed(2).replace('.', ',')}</td>
+      <td>${r.tempo || ''}</td>
+      <td style="text-align:left">${r.obs || ''}</td>
+      <td><button class="btn-acao btn-excluir" onclick="excluir(${i})">X</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  var valoresMesesArr = Object.values(mesesTotais);
+  var melhorMesVal = valoresMesesArr.length > 0 ? Math.max(...valoresMesesArr) : 0;
+  var piorMesVal = valoresMesesArr.length > 0 ? Math.min(...valoresMesesArr) : 0;
+  var mediaMesVal = valoresMesesArr.length > 0 ? (valoresMesesArr.reduce((a, b) => a + b, 0) / valoresMesesArr.length) : 0;
+
+  document.getElementById('tot-atend-mes').innerText = qtdeMes;
+  document.getElementById('tot-valor-mes').innerText = 'R$ ' + totalMesValorCalc.toFixed(2).replace('.', ',');
+  document.getElementById('tot-valor-ano').innerText = 'R$ ' + totalAnoValorCalc.toFixed(2).replace('.', ',');
+  document.getElementById('tot-melhor-mes').innerText = melhorMesVal > 0 ? 'R$ ' + melhorMesVal.toFixed(2).replace('.', ',') : '-';
+  document.getElementById('tot-pior-mes').innerText = piorMesVal > 0 ? 'R$ ' + piorMesVal.toFixed(2).replace('.', ',') : '-';
+  document.getElementById('tot-media-mes').innerText = 'R$ ' + mediaMesVal.toFixed(2).replace('.', ',');
 }
 
-function excluir(linha){ 
+function excluir(index){ 
   if(confirm("Excluir este registro?")){ 
-    google.script.run.withSuccessHandler(carregarPlanilha).excluirLinha(linha); 
+    let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
+    listaAtendimentos.splice(index, 1);
+    localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
+    carregarPlanilha();
   } 
 }
 
