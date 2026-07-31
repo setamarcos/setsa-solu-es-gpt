@@ -254,6 +254,25 @@ Com carinho,<br>
 
 <div class="painel-card" style="background:#fdf8e2; border-color:#f39c12; text-align:center; padding:6px;"><div id="relex-txt" style="font-size:11px; font-style:italic;">Carregando...</div></div>
 
+<!-- TABELA AGENDA (AGENDAMENTOS DO SITE) -->
+<div class="painel-card" style="padding: 6px;">
+  <div class="painel-card-title" style="padding: 2px;">📅 AGENDAMENTOS DO SITE (AGENDA)</div>
+  <div class="tabela-container" style="max-height: 160px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Cliente</th>
+          <th>Data Agendada</th>
+          <th>Horário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-agenda-corpo"></tbody>
+    </table>
+  </div>
+</div>
+
 <!-- REGISTRO DO MÊS (POR ÚLTIMO) -->
 <div class="painel-card" style="padding: 6px;">
   <div class="painel-card-title" style="padding: 2px;">📊 REGISTRO DO MÊS (CRESCE AUTOMATICAMENTE)</div>
@@ -344,15 +363,57 @@ function enviarAgendamentoSite() {
     return;
   }
 
+  // Grava localmente no INÍCIO da lista (unshift) para figurar no TOPO da tabela
+  let listaAgendamentos = JSON.parse(localStorage.getItem('veronica_agendamentos') || '[]');
+  listaAgendamentos.unshift({
+    nome: nomeCliente,
+    dia: diaSelecionado,
+    horario: horarioSelecionado
+  });
+  localStorage.setItem('veronica_agendamentos', JSON.stringify(listaAgendamentos));
+
   var partesData = diaSelecionado.split('-');
   var dataFormatadaBr = partesData.reverse().join('/');
 
   var textoZap = `Olá Verônica! Gostaria de agendar Manicure Pé e Mão para o dia ${dataFormatadaBr} às ${horarioSelecionado}. Meu nome é ${nomeCliente}. WhatsApp confirmamos aqui.`;
   var urlZap = `https://wa.me/5531991946163?text=` + encodeURIComponent(textoZap);
 
-  alert("Olá, " + nomeCliente + "! Muito obrigada por agendar. Recebi sua solicitação e, assim que possível confirmo via  Whats.");
+  alert("Olá, " + nomeCliente + "! Muito obrigada por agendar. Recebi sua solicitação e, assim que possível confirmo via Whats.");
   
+  document.getElementById('input-nome-cliente').value = '';
   window.open(urlZap, '_blank');
+}
+
+function carregarAgenda() {
+  let listaAgendamentos = JSON.parse(localStorage.getItem('veronica_agendamentos') || '[]');
+  var tbody = document.getElementById('tabela-agenda-corpo');
+  tbody.innerHTML = '';
+
+  if (listaAgendamentos.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5">Nenhum agendamento pendente no site.</td></tr>`;
+    return;
+  }
+
+  listaAgendamentos.forEach((ag, i) => {
+    var tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td style="text-align:left">${ag.nome || ''}</td>
+      <td>${ag.dia ? ag.dia.split('-').reverse().join('/') : ''}</td>
+      <td>${ag.horario || ''}</td>
+      <td><button class="btn-acao btn-excluir" onclick="excluirAgenda(${i})">X</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function excluirAgenda(index) {
+  if (confirm("Excluir este agendamento da lista?")) {
+    let listaAgendamentos = JSON.parse(localStorage.getItem('veronica_agendamentos') || '[]');
+    listaAgendamentos.splice(index, 1);
+    localStorage.setItem('veronica_agendamentos', JSON.stringify(listaAgendamentos));
+    carregarAgenda();
+  }
 }
 
 function definirMomentoDoDia() {
@@ -401,6 +462,7 @@ function validarSenha() {
     document.getElementById('conteudo-principal').style.display = 'none';
     document.getElementById('painel-privado').style.display = 'flex';
     setarCabecalhoEspaco();
+    carregarAgenda();
     carregarPlanilha();
   } else {
     alert("Senha incorreta.");
@@ -443,8 +505,9 @@ function salvarAtendimento() {
   };
   if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
   
+  // Salva no INÍCIO da lista local (unshift) para ficar na Linha 1 da Tabela
   let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
-  listaAtendimentos.push(dados);
+  listaAtendimentos.unshift(dados);
   localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
   
   const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
@@ -576,7 +639,7 @@ window.onload = function() {
       setTimeout(() => {
         txt.style.opacity = '1';
         txt.style.transform = 'translateY(0)';
-      }, index * 800); 
+      }, (index + 1) * 800);
     });
 
     setTimeout(() => {
@@ -587,11 +650,10 @@ window.onload = function() {
         const conteudo = document.getElementById('conteudo-principal');
         conteudo.style.visibility = 'visible';
         conteudo.style.opacity = '1';
-      }, 1500); 
-    }, 4000); 
+      }, 1500);
+    }, 4500);
   } else {
-    const telaAbertura = document.getElementById('tela-abertura');
-    telaAbertura.style.display = 'none';
+    document.getElementById('tela-abertura').style.display = 'none';
     const conteudo = document.getElementById('conteudo-principal');
     conteudo.style.visibility = 'visible';
     conteudo.style.opacity = '1';
