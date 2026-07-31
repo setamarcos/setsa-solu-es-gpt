@@ -105,13 +105,21 @@ tr:nth-child(even) { background-color: #f9fafb; }
 .btn-whatsapp { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--azul-suave); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 30px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 15px rgba(27, 77, 142, 0.2); }
 .btn-whatsapp svg { width: 16px; height: 16px; fill: currentColor; }
 
+/* Seção Serviço Único & Agenda Simples */
 .secao-servicos { padding: 0 24px; margin-bottom: 24px; }
 .titulo-secao { font-size: 18px; color: var(--azul-suave); margin: 0 0 15px; border-bottom: 2px solid var(--rosa-suave); padding-bottom: 5px; display: inline-block; font-weight: 600; }
-.servicos-grid { display: flex; flex-direction: column; gap: 8px; }
-.servico-item { display: flex; align-items: center; padding: 12px 14px; background: var(--branco); border: 1px solid var(--borda); border-radius: 12px; }
-.servico-emoji { font-size: 18px; margin-right: 12px; }
-.servico-nome { font-size: 15px; font-weight: 500; color: var(--azul-suave); }
+.servico-unico { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--branco); border: 1px solid var(--borda); border-radius: 12px; margin-bottom: 16px; }
+.servico-info { display: flex; align-items: center; gap: 12px; }
+.servico-emoji { font-size: 22px; }
+.servico-nome { font-size: 15px; font-weight: 600; color: var(--azul-suave); }
 .servico-desc { font-size: 12px; color: var(--texto-suave); }
+.servico-preco { font-size: 16px; font-weight: 700; color: #27ae60; }
+
+/* Bloco Agenda Simples (Ideal para 3ª idade) */
+.bloco-agenda { background: #fafafa; border: 1px solid var(--borda); border-radius: 12px; padding: 16px; margin-top: 10px; }
+.agenda-label { font-size: 13px; font-weight: 600; color: var(--azul-suave); margin-bottom: 6px; display: block; }
+.agenda-select { width: 100%; padding: 10px; border: 1px solid var(--borda); border-radius: 8px; font-size: 14px; margin-bottom: 12px; background: #fff; outline: none; }
+.btn-agendar-site { background: #27ae60; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; width: 100%; cursor: pointer; text-align: center; }
 
 .rodape { margin-top: auto; text-align: center; padding: 30px 20px; background-color: #fafbfc; font-size: 13px; color: var(--texto-suave); }
 .rodape-flor { display: block; font-size: 14px; margin: 4px 0; }
@@ -154,17 +162,41 @@ tr:nth-child(even) { background-color: #f9fafb; }
 <div class="area-acao">
 <a href="https://wa.me/5531991946163?text=Olá%20Verônica!%20Gostaria%20de%20agendar%20um%20horário." class="btn-whatsapp" target="_blank">
 <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-Agendar pelo WhatsApp
+Falar com Verônica no WhatsApp
 </a>
 </div>
 
 <section class="secao-servicos">
-<h2 class="titulo-secao">O que levo até você</h2>
-<div class="servicos-grid">
-<div class="servico-item"><span class="servico-emoji">🌷</span><div><div class="servico-nome">Pé e Mão Completo</div><div class="servico-desc">Atendimento completo.</div></div></div>
-<div class="servico-item"><span class="servico-emoji">💅</span><div><div class="servico-nome">Manicure</div><div class="servico-desc">Cuidado delicado.</div></div></div>
-<div class="servico-item"><span class="servico-emoji">👣</span><div><div class="servico-nome">Pedicure</div><div class="servico-desc">Leveza para os pés.</div></div></div>
-<div class="servico-item"><span class="servico-emoji">✨</span><div><div class="servico-nome">Spa dos Pés</div><div class="servico-desc">Relaxamento profundo.</div></div></div>
+<h2 class="titulo-secao">Atendimento</h2>
+<div class="servico-unico">
+<div class="servico-info">
+<span class="servico-emoji">🌷</span>
+<div>
+<div class="servico-nome">Manicure Pé e Mão</div>
+<div class="servico-desc">Atendimento completo e dedicado.</div>
+</div>
+</div>
+<div class="servico-preco">R$ 50,00</div>
+</div>
+
+<!-- Bloco Agenda Simples (Segunda a Sexta, 3 horários fixos) -->
+<div class="bloco-agenda">
+<label class="agenda-label" for="select-dia">1. Escolha o dia (Segunda a Sexta):</label>
+<select id="select-dia" class="agenda-select">
+  <!-- Preenchido via JavaScript -->
+</select>
+
+<label class="agenda-label" for="select-horario">2. Escolha o horário:</label>
+<select id="select-horario" class="agenda-select">
+  <option value="17:20">17:20</option>
+  <option value="18:30">18:30</option>
+  <option value="19:40">19:40</option>
+</select>
+
+<label class="agenda-label" for="input-nome-cliente">3. Seu Nome:</label>
+<input type="text" id="input-nome-cliente" class="agenda-select" placeholder="Digite seu nome completo" style="background:#fff;">
+
+<button class="btn-agendar-site" onclick="enviarAgendamentoSite()">Agendar Horário</button>
 </div>
 </section>
 
@@ -194,7 +226,7 @@ Com carinho,<br>
     <div class="form-group"><label class="form-label">Próximo Retorno</label><input type="date" id="input-retorno" class="form-input"></div>
   </div>
   <div class="form-grid">
-    <div class="form-group"><label class="form-label">Valor (R$)</label><input type="text" id="input-valor" class="form-input" placeholder="50,00" value=""></div>
+    <div class="form-group"><label class="form-label">Valor (R$)</label><input type="text" id="input-valor" class="form-input" placeholder="50,00" value="50,00"></div>
     <div class="form-group" style="flex: 2;"><label class="form-label">Forma Pgto</label><div style="display:flex; gap:8px; align-items:center; height:26px; font-size:11px;"><label><input type="checkbox" class="pgto" value="PIX"> PIX</label><label><input type="checkbox" class="pgto" value="Din"> Din</label><label><input type="checkbox" class="pgto" value="Prz"> Prz</label></div></div>
     <div class="form-group"><label class="form-label">Tempo</label><input type="text" id="input-tempo" class="form-input" placeholder="70 ou 1h10"></div>
   </div>
@@ -270,6 +302,50 @@ function obterDiaDoAno(data) {
   return Math.floor(diff / umDia);
 }
 
+function preencherDiasUteis() {
+  var selectDia = document.getElementById('select-dia');
+  selectDia.innerHTML = "";
+  var hoje = new Date();
+  
+  var contador = 0;
+  var d = new Date(hoje);
+  while (contador < 10) {
+    d.setDate(d.getDate() + 1);
+    var diaSemana = d.getDay();
+    if (diaSemana !== 0 && diaSemana !== 6) { 
+      var iso = d.toISOString().split('T')[0];
+      var textoFormatado = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+      var opt = document.createElement('option');
+      opt.value = iso;
+      opt.text = textoFormatado.charAt(0).toUpperCase() + textoFormatado.slice(1);
+      selectDia.appendChild(opt);
+      contador++;
+    }
+  }
+}
+
+function enviarAgendamentoSite() {
+  var nomeCliente = document.getElementById('input-nome-cliente').value.trim();
+  var diaSelecionado = document.getElementById('select-dia').value;
+  var horarioSelecionado = document.getElementById('select-horario').value;
+
+  if (!nomeCliente) {
+    alert("Por favor, digite seu nome antes de agendar.");
+    document.getElementById('input-nome-cliente').focus();
+    return;
+  }
+
+  var partesData = diaSelecionado.split('-');
+  var dataFormatadaBr = partesData.reverse().join('/');
+
+  var textoZap = `Olá Verônica! Gostaria de agendar Manicure Pé e Mão para o dia ${dataFormatadaBr} às ${horarioSelecionado}. Meu nome é ${nomeCliente}. Confirmamos aqui.`;
+  var urlZap = `https://wa.me/5531991946163?text=` + encodeURIComponent(textoZap);
+
+  alert("Olá, " + nomeCliente + "! Muito obrigada por agendar. Recebi sua solicitação e, assim que possível, confirmo seu horário por aqui.");
+  
+  window.open(urlZap, '_blank');
+}
+
 function definirMomentoDoDia() {
   var hoje = new Date();
   var opcoesData = { weekday: 'long', day: 'numeric', month: 'long' };
@@ -283,8 +359,11 @@ function definirMomentoDoDia() {
   document.getElementById('autor-momento').innerText = '— ' + selecionado.autor;
   
   var dataIso = hoje.toISOString().split('T')[0];
-  document.getElementById('input-data').value = dataIso;
-  atualizarRetornoAutomatico();
+  var inputDataEl = document.getElementById('input-data');
+  if(inputDataEl) {
+    inputDataEl.value = dataIso;
+    atualizarRetornoAutomatico();
+  }
 }
 
 function atualizarRetornoAutomatico() {
@@ -312,6 +391,7 @@ function validarSenha() {
     fecharModal();
     document.getElementById('conteudo-principal').style.display = 'none';
     document.getElementById('painel-privado').style.display = 'flex';
+    setarCabecalhoEspaco();
     carregarPlanilha();
   } else {
     alert("Senha incorreta.");
@@ -329,11 +409,15 @@ function setarCabecalhoEspaco(){
   const opcoesData = { weekday: 'long', day: 'numeric', month: 'long' };
   const dataFormatada = hoje.toLocaleDateString('pt-BR', opcoesData);
   
-  document.getElementById('espaco-data').innerText = dataFormatada;
+  const espacoDataEl = document.getElementById('espaco-data');
+  if(espacoDataEl) espacoDataEl.innerText = dataFormatada;
   
   const comem = ["Dia da renovação","Dia do autocuidado","Dia da beleza","Dia da gratidão","Dia da leveza", "Dia de cuidar de si", "Dia de pausas suaves"];
-  document.getElementById('espaco-comemora').innerText = "Hoje comemoramos: " + comem[obterDiaDoAno(hoje) % comem.length];
-  document.getElementById('relex-txt').innerText = '"' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].frase + '" — ' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].autor;
+  const espacoComemoraEl = document.getElementById('espaco-comemora');
+  if(espacoComemoraEl) espacoComemoraEl.innerText = "Hoje comemoramos: " + comem[obterDiaDoAno(hoje) % comem.length];
+  
+  const relexTxtEl = document.getElementById('relex-txt');
+  if(relexTxtEl) relexTxtEl.innerText = '"' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].frase + '" — ' + momentosDoAno[obterDiaDoAno(hoje) % momentosDoAno.length].autor;
 }
 
 function salvarAtendimento() {
@@ -350,12 +434,10 @@ function salvarAtendimento() {
   };
   if(!dados.nome || !dados.valor || !dados.data){ alert("Preencha Cliente, Data e Valor."); return; }
   
-  // Salvar no localStorage (mantendo funcionalidade local original)
   let listaAtendimentos = JSON.parse(localStorage.getItem('veronica_atendimentos') || '[]');
   listaAtendimentos.push(dados);
   localStorage.setItem('veronica_atendimentos', JSON.stringify(listaAtendimentos));
   
-  // Exportar para a Planilha do Google via Apps Script
   const urlScript = "https://script.google.com/macros/s/AKfycbyWTN1XC2JWhqWFPiVvxKSM8EUGUW8BvxSw59j5kQx8BD580ctuiqjiFW2uPPwjF3a9/exec";
   
   fetch(urlScript, {
@@ -379,7 +461,7 @@ function salvarAtendimento() {
 
 function limparForm(){
   document.getElementById('input-cliente').value='';
-  document.getElementById('input-valor').value='';
+  document.getElementById('input-valor').value='50,00';
   document.getElementById('input-tempo').value='';
   document.getElementById('input-niver').value='';
   document.getElementById('input-endereco').value='';
@@ -469,6 +551,7 @@ function excluir(index){
 window.onload = function() {
   definirMomentoDoDia();
   setarCabecalhoEspaco();
+  preencherDiasUteis();
 
   if (!sessionStorage.getItem('veronica_ja_abriu')) {
     sessionStorage.setItem('veronica_ja_abriu', 'true');
