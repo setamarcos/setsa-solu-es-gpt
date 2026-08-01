@@ -1,110 +1,239 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MP Instalações Inteligentes | Seta Soluções</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
-    body{background-color: #0A2A4A;color: #fff;}
-   .wrap{max-width: 950px;margin: 0 auto;padding: 0 15px;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seta Soluções | Elétricas e Telemáticas</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', system-ui, -apple-system, sans-serif;}
+  body{background:#061727;color:#E6EDF3;line-height:1.4;font-size:14px;}
+  .container{max-width:1100px;margin:0 auto;padding:0 15px;}
 
-    /* BLOCO 1: TOPO COM DATA + FRASE */
-  .topo{text-align:center;padding:15px 0;}
-  .data{font-size:14px;font-weight:bold;}
-  .frase{font-size:12px;opacity:0.9;margin-top:3px;}
+  /* TOPO SLIM / CABEÇALHO COMPACTO */
+  header{background:#030D17;border-bottom:1px solid rgba(255,255,255,0.08);padding:8px 0;position:sticky;top:0;z-index:100;}
+  .top-bar{display:flex;justify-content:space-between;align-items:center;gap:15px;}
+  
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .brand-logo{height:32px;width:auto;}
+  .brand-title{font-size:1.05em;font-weight:700;color:#FFFFFF;letter-spacing:0.5px;line-height:1.1;}
+  .brand-sub{font-size:0.7em;color:#FF6600;font-weight:600;display:block;}
 
-    /* BLOCO 2: TITULO + 5 CARDS 3x2 */
-  .titulo{text-align:center;padding:15px 0;font-size:1.5em;font-weight:bold;color:#ff6600;}
-   #frase-pisca{transition:opacity 0.5s;}
-  .grid{display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap;justify-content:center;}
-  .card {flex:0 1 31%;background-color: #123A5E;padding: 15px;border-radius:8px;border-left:3px solid #ff6600;cursor:pointer;}
-  .card:hover{background:#1A4E7A;}
-  .card h3 {color: #ff6600;font-size:14px;margin-bottom:8px;}
-  .card p {font-size:12px;line-height:1.4;min-height:50px;}
-  .clientes{margin-top:8px;font-size:10px;opacity:0.8;}
+  .header-info{text-align:right;}
+  .clock{font-size:0.8em;font-weight:600;color:#8B9EB0;}
+  .slogan{font-size:0.7em;color:#FF6600;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
 
-    /* BLOCO 3: CHAMADA LARANJA + BOTÃO */
-  .chamada{text-align:center;padding:30px 15px;}
-  .chamada h1{font-size:2em;color:#ff6600;animation:pulsar 2s infinite;}
-  .chamada p{font-size:1.1em;margin:10px 0 20px 0;}
-  .btn{background-color: #ff6600;color: #fff;padding: 14px 28px;border: none;border-radius: 6px;cursor: pointer;font-weight: bold;font-size:16px;text-decoration:none;display:inline-block;}
-   @keyframes pulsar{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+  /* HERO COMPACTO */
+  .hero{padding:25px 0 15px 0;text-align:center;}
+  .hero h1{font-size:1.4em;color:#FFFFFF;font-weight:700;max-width:800px;margin:0 auto 6px auto;}
+  .hero p{font-size:0.88em;color:#8B9EB0;max-width:650px;margin:0 auto;}
 
-    /* RODAPÉ */
-  .contato {background-color: #0A2A4A;color: #fff;text-align: center;padding: 20px 15px;margin-top: 20px;border-top:2px solid #ff6600;}
-  .contato a{color: #fff;text-decoration: none;margin:0 15px;font-size:14px;}
-  .contato a:hover{color:#ff6600;}
+  /* SERVIÇOS / GRID OTIMIZADO */
+  .servicos{padding:15px 0 30px 0;}
+  .section-title{text-align:center;font-size:1em;color:#FF6600;margin-bottom:15px;letter-spacing:1px;font-weight:700;text-transform:uppercase;}
+  
+  .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:12px;}
+  
+  .card{
+    background:#0B2238;
+    border:1px solid rgba(255,255,255,0.05);
+    border-left:3px solid #FF6600;
+    border-radius:5px;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .card:hover{background:#0F2B47;transform:translateY(-2px);}
+  
+  .card-header{margin-bottom:8px;}
+  .card-title{color:#FF6600;font-size:0.92em;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .card-desc{font-size:0.82em;color:#B3C5D6;margin-top:6px;line-height:1.35;}
+  .card-diff{font-size:0.78em;color:#FF6600;margin-top:5px;font-weight:600;}
+  
+  .card-meta{margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.75em;color:#708599;}
+  .card-meta b{color:#C2D1E0;}
+  
+  .card-action{margin-top:10px;text-align:right;}
+  .btn-card{
+    display:inline-block;
+    padding:4px 10px;
+    background:transparent;
+    border:1px solid #FF6600;
+    color:#FF6600;
+    text-decoration:none;
+    font-size:0.75em;
+    font-weight:600;
+    border-radius:3px;
+    transition:0.2s;
+  }
+  .btn-card:hover{background:#FF6600;color:#FFF;}
 
-    @media(max-width:900px){
-  .card{flex:0 1 100%;}
-    }
-  </style>
+  /* CTA PRINCIPAL */
+  .cta-block{text-align:center;padding:15px 0 35px 0;}
+  .btn-main{
+    background:#FF6600;
+    color:#FFFFFF;
+    padding:10px 24px;
+    border-radius:5px;
+    font-size:0.9em;
+    font-weight:700;
+    text-decoration:none;
+    display:inline-block;
+    transition:background 0.2s, transform 0.2s;
+    box-shadow:0 3px 12px rgba(255,102,0,0.2);
+  }
+  .btn-main:hover{background:#E65C00;transform:scale(1.01);}
+
+  /* RODAPÉ ENXUTO */
+  footer{background:#030D17;border-top:1px solid rgba(255,255,255,0.08);padding:15px 0;font-size:0.78em;color:#708599;}
+  .footer-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .footer-links a{color:#C2D1E0;text-decoration:none;margin-left:15px;transition:color 0.2s;}
+  .footer-links a:hover{color:#FF6600;}
+
+  @media(max-width:650px){
+    .top-bar{flex-direction:column;align-items:flex-start;gap:4px;}
+    .header-info{text-align:left;}
+    .hero h1{font-size:1.2em;}
+    .grid{grid-template-columns:1fr;}
+    .footer-content{flex-direction:column;align-items:flex-start;}
+    .footer-links a{margin-left:0;margin-right:12px;display:inline-block;margin-top:4px;}
+  }
+</style>
 </head>
 <body>
 
-<!-- BLOCO 1: DATA + FRASE -->
-<div class="wrap topo">
-  <div class="data" id="data-hora"></div>
-  <div class="frase">Sua Empresa Não Pode Parar</div>
-</div>
-
-<!-- BLOCO 2: 5 CARDS -->
-<div class="wrap">
-  <h2 class="titulo"><span id="frase-pisca">NOSSOS SERVIÇOS</span></h2>
-
-  <div class="grid">
-    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20EXECUÇÃO%20ELÉTRICA')">
-      <h3>⚡ EXECUÇÃO ELÉTRICA COMERCIAL</h3>
-      <p>Manutenção geral, emergência 24h, projetos, painéis e as built.</p>
-      <div class="clientes"><b>Clientes:</b> BH Shopping, Super Nosso</div>
-    </div>
-    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20PROJETOS%20E%20AUTOMAÇÃO')">
-      <h3>📐 PROJETOS + AUTOMAÇÃO</h3>
-      <p>Projetos elétricos, segurança, automação, licitação e obra nova.</p>
-      <div class="clientes"><b>Clientes:</b> Irmãos Rivelle, CRM-MG</div>
-    </div>
-    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20CABEAMENTO%20E%20FIBRA')">
-      <h3>🌐 CABEAMENTO + FIBRA</h3>
-      <p>Infraestrutura, racks, fusão óptica e rede estruturada.</p>
-      <div class="clientes"><b>Clientes:</b> Palácio Aviação, Forno de Minas</div>
+<header>
+  <div class="container top-bar">
+    <a href="#" class="brand">
+      <!-- VETOR OFICIAL 'S' SETA SOLUÇÕES (Azul sólido, pontas laranja cortadas e base rebatida) -->
+      <svg class="brand-logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 12,98 C 12,98 22,22 62,12 C 98,4 112,42 82,68 C 57,88 22,82 22,82 C 22,82 37,47 62,37 C 77,30 87,47 72,57 C 57,67 37,67 37,67 Z" fill="#1D53A4"/>
+        <path d="M 68,14 L 98,14 L 83,30 Z M 78,27 L 108,27 L 93,43 Z M 88,40 L 118,40 L 103,56 Z" fill="#FF6600"/>
+      </svg>
+      <div>
+        <span class="brand-title">SETA SOLUÇÕES</span>
+        <span class="brand-sub">ELÉTRICAS E TELEMÁTICAS</span>
+      </div>
+    </a>
+    <div class="header-info">
+      <div class="clock" id="data-hora"></div>
+      <div class="slogan">Sua Empresa Não Pode Parar</div>
     </div>
   </div>
+</header>
+
+<section class="hero container">
+  <h1>Engenharia Elétrica, Redes & Automação</h1>
+  <p>Infraestrutura de alta precisão, execução técnica rigorosa e entrega orientada ao cliente.</p>
+</section>
+
+<section class="container servicos">
+  <div class="section-title">Especialidades & Infraestrutura</div>
 
   <div class="grid">
-    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20CFTV%20E%20CASA%20INTELIGENTE')">
-      <h3>📹 CFTV + CASA INTELIGENTE</h3>
-      <p>Levantamento, execução completa de CFTV, alarme e automação.</p>
-      <div class="clientes"><b>Clientes:</b> Postos Ipiranga, Apoio Mineiro</div>
+    <!-- CARD 1 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ ELÉTRICA COMERCIAL & INFRAESTRUTURA</div>
+        <p class="card-desc">Manutenção preventiva, corretiva e atendimento emergencial. Execução integral de infraestrutura para novas instalações: lançamento de condutores, montagem e comissionamento de painéis elétricos.</p>
+        <p class="card-diff"><b>Diferencial:</b> Mapeamento de circuitos e entrega de projeto As-Built no encerramento da obra.</p>
+      </div>
+      <div>
+        <div class="card-meta"><b>Clientes atendidos:</b> BH Shopping, Super Nosso, redes comerciais.</div>
+        <div class="card-action">
+          <a href="https://wa.me/5531984821901?text=Olá,%20preciso%20de%20atendimento%20para%20Elétrica%20Comercial" target="_blank" class="btn-card">Solicitar Orçamento →</a>
+        </div>
+      </div>
     </div>
-    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20SOLUÇÕES%20DIGITAIS%20E%20IA')">
-      <h3>🤖 SOLUÇÕES DIGITAIS + IA</h3>
-      <p>Sistemas inteligentes, gestão e prompts para IA.</p>
-      <div class="clientes"><b>Clientes:</b> CEDAF, CEFET, Comerciantes</div>
+
+    <!-- CARD 2 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📐 PROJETOS DE ENGENHARIA & AUTOMAÇÃO</div>
+        <p class="card-desc">Elaboração e especificação de projetos elétricos, cabeamento, segurança e automação para obras novas e reformas. Desenvolvimento de acervo técnico para processos licitatórios e acompanhamento de obras.</p>
+        <p class="card-diff"><b>Diferencial:</b> Atualização contínua da documentação técnica e orientação de uso ao cliente.</p>
+      </div>
+      <div>
+        <div class="card-meta"><b>Clientes atendidos:</b> Irmãos Rivelle, CRM-MG, órgãos públicos.</div>
+        <div class="card-action">
+          <a href="https://wa.me/5531984821901?text=Olá,%20preciso%20de%20atendimento%20para%20Projetos%20e%20Automação" target="_blank" class="btn-card">Solicitar Orçamento →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🌐 CABEAMENTO ESTRUTURADO & REDES ÓPTICAS</div>
+        <p class="card-desc">Construção de infraestrutura, lançamento de cabos de rede, montagem e organização de racks, consolidação de área de trabalho e soluções ópticas completas (lançamento, fusão e conexão).</p>
+        <p class="card-diff"><b>Diferencial:</b> Identificação técnica de pontos e certificação da rede.</p>
+      </div>
+      <div>
+        <div class="card-meta"><b>Clientes atendidos:</b> Palácio da Aviação, Forno de Minas.</div>
+        <div class="card-action">
+          <a href="https://wa.me/5531984821901?text=Olá,%20preciso%20de%20atendimento%20para%20Cabeamento%20e%20Fibra" target="_blank" class="btn-card">Solicitar Orçamento →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📹 SEGURANÇA ELETRÔNICA, CFTV & ALARMES</div>
+        <p class="card-desc">Levantamento detalhado de demanda, especificação de soluções, execução completa e entrega da obra 100% acabada e funcional para sistemas de CFTV IP, alarmes e automação.</p>
+        <p class="card-diff"><b>Diferencial:</b> Treinamento prático e instrução de uso das plataformas entregues.</p>
+      </div>
+      <div>
+        <div class="card-meta"><b>Clientes atendidos:</b> Postos Ipiranga, Apoio Mineiro, comércios.</div>
+        <div class="card-action">
+          <a href="https://wa.me/5531984821901?text=Olá,%20preciso%20de%20atendimento%20para%20CFTV%20e%20Segurança" target="_blank" class="btn-card">Solicitar Orçamento →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🤖 SOLUÇÕES DIGITAIS, SISTEMAS & IA</div>
+        <p class="card-desc">Estudo de caso, desenvolvimento de sistemas inteligentes e programas para gestão de negócios. Engenharia e geradores de prompts avançados para Inteligência Artificial aplicada.</p>
+        <p class="card-diff"><b>Diferencial:</b> Mapeamento de fluxo de trabalho e acompanhamento de integração.</p>
+      </div>
+      <div>
+        <div class="card-meta"><b>Clientes atendidos:</b> CEDAF, CEFET, estudantes e empresários.</div>
+        <div class="card-action">
+          <a href="https://wa.me/5531984821901?text=Olá,%20preciso%20de%20atendimento%20para%20Soluções%20Digitais%20e%20IA" target="_blank" class="btn-card">Solicitar Orçamento →</a>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- BLOCO 3: CHAMADA FINAL -->
-<div class="wrap chamada">
-  <h1>MP Instalações Inteligentes</h1>
-  <p>Tecnologia, segurança e eficiência para sua casa ou empresa</p>
-  <a href="https://wa.me/5531984821901?text=Olá,%20quero%20um%20orçamento" class="btn">FALAR NO WHATSAPP</a>
-</div>
+<section class="cta-block container">
+  <a href="https://wa.me/5531984821901?text=Olá,%20gostaria%20de%20falar%20com%20um%20especialista" target="_blank" class="btn-main">FALAR COM UM ESPECIALISTA</a>
+</section>
 
-<!-- RODAPÉ -->
-<div class="contato">
-  <a href="tel:31984821901">📞 (31) 98482-1901</a>
-  <a href="mailto:setamarcos@gmail.com">📧 setamarcos@gmail.com</a>
-  <a href="https://www.setasolucoes.com.br" target="_blank">🌐 www.setasolucoes.com.br</a>
-</div>
+<footer>
+  <div class="container footer-content">
+    <div>
+      © Seta Soluções — Elétricas e Telemáticas. Todos os direitos reservados.
+    </div>
+    <div class="footer-links">
+      <a href="tel:31984821901">📞 (31) 98482-1901</a>
+      <a href="mailto:setamarcos@gmail.com">📧 setamarcos@gmail.com</a>
+    </div>
+  </div>
+</footer>
 
 <script>
-function atualizarData(){const agora=new Date();const data=agora.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});document.getElementById('data-hora').innerText=data;}
-atualizarData();setInterval(atualizarData,60000);
-
-const frases=["20 ANOS DE MERCADO","SOLUÇÕES P/ GRANDES E PEQUENOS NEGÓCIOS","ESTAMOS AQUI PRA TE ATENDER"];
-let i=0;setInterval(()=>{const el=document.getElementById('frase-pisca');el.style.opacity=0;setTimeout(()=>{el.innerText=frases[i];el.style.opacity=1;i=(i+1)%frases.length;},500);},1500);
+function atualizarData(){
+  const agora = new Date();
+  const data = agora.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+  document.getElementById('data-hora').innerText = data.charAt(0).toUpperCase() + data.slice(1);
+}
+atualizarData();
+setInterval(atualizarData, 60000);
 </script>
+
 </body>
 </html>
