@@ -1,106 +1,110 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seta Soluções – Instalações Elétricas e Redes</title>
+  <title>MP Instalações Inteligentes | Seta Soluções</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #1A33D8;
-      color: #fff;
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header p {
-      margin: 0.5rem 0 0;
-      font-size: 1.2rem;
-    }
-    .logo {
-      max-width: 250px;
-      margin-bottom: 1rem;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background-color: #fff;
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .servico {
-      margin-bottom: 1.5rem;
-    }
-    .servico h3 {
-      color: #003366;
-    }
-    .contato {
-      background-color: #003366;
-      color: #fff;
-      text-align: center;
-      padding: 1.5rem;
-      margin-top: 2rem;
-    }
-    .contato p {
-      margin: 0.5rem 0;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #ccc;
-      font-size: 0.9rem;
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+    body{background-color: #0A2A4A;color: #fff;}
+   .wrap{max-width: 950px;margin: 0 auto;padding: 0 15px;}
+
+    /* BLOCO 1: TOPO COM DATA + FRASE */
+  .topo{text-align:center;padding:15px 0;}
+  .data{font-size:14px;font-weight:bold;}
+  .frase{font-size:12px;opacity:0.9;margin-top:3px;}
+
+    /* BLOCO 2: TITULO + 5 CARDS 3x2 */
+  .titulo{text-align:center;padding:15px 0;font-size:1.5em;font-weight:bold;color:#ff6600;}
+   #frase-pisca{transition:opacity 0.5s;}
+  .grid{display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap;justify-content:center;}
+  .card {flex:0 1 31%;background-color: #123A5E;padding: 15px;border-radius:8px;border-left:3px solid #ff6600;cursor:pointer;}
+  .card:hover{background:#1A4E7A;}
+  .card h3 {color: #ff6600;font-size:14px;margin-bottom:8px;}
+  .card p {font-size:12px;line-height:1.4;min-height:50px;}
+  .clientes{margin-top:8px;font-size:10px;opacity:0.8;}
+
+    /* BLOCO 3: CHAMADA LARANJA + BOTÃO */
+  .chamada{text-align:center;padding:30px 15px;}
+  .chamada h1{font-size:2em;color:#ff6600;animation:pulsar 2s infinite;}
+  .chamada p{font-size:1.1em;margin:10px 0 20px 0;}
+  .btn{background-color: #ff6600;color: #fff;padding: 14px 28px;border: none;border-radius: 6px;cursor: pointer;font-weight: bold;font-size:16px;text-decoration:none;display:inline-block;}
+   @keyframes pulsar{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+
+    /* RODAPÉ */
+  .contato {background-color: #0A2A4A;color: #fff;text-align: center;padding: 20px 15px;margin-top: 20px;border-top:2px solid #ff6600;}
+  .contato a{color: #fff;text-decoration: none;margin:0 15px;font-size:14px;}
+  .contato a:hover{color:#ff6600;}
+
+    @media(max-width:900px){
+  .card{flex:0 1 100%;}
     }
   </style>
 </head>
 <body>
-<header>
-  <img src="logomarca5.png" alt="Logotipo MP" class="logo">
+
+<!-- BLOCO 1: DATA + FRASE -->
+<div class="wrap topo">
+  <div class="data" id="data-hora"></div>
+  <div class="frase">Sua Empresa Não Pode Parar</div>
+</div>
+
+<!-- BLOCO 2: 5 CARDS -->
+<div class="wrap">
+  <h2 class="titulo"><span id="frase-pisca">NOSSOS SERVIÇOS</span></h2>
+
+  <div class="grid">
+    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20EXECUÇÃO%20ELÉTRICA')">
+      <h3>⚡ EXECUÇÃO ELÉTRICA COMERCIAL</h3>
+      <p>Manutenção geral, emergência 24h, projetos, painéis e as built.</p>
+      <div class="clientes"><b>Clientes:</b> BH Shopping, Super Nosso</div>
+    </div>
+    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20PROJETOS%20E%20AUTOMAÇÃO')">
+      <h3>📐 PROJETOS + AUTOMAÇÃO</h3>
+      <p>Projetos elétricos, segurança, automação, licitação e obra nova.</p>
+      <div class="clientes"><b>Clientes:</b> Irmãos Rivelle, CRM-MG</div>
+    </div>
+    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20CABEAMENTO%20E%20FIBRA')">
+      <h3>🌐 CABEAMENTO + FIBRA</h3>
+      <p>Infraestrutura, racks, fusão óptica e rede estruturada.</p>
+      <div class="clientes"><b>Clientes:</b> Palácio Aviação, Forno de Minas</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20CFTV%20E%20CASA%20INTELIGENTE')">
+      <h3>📹 CFTV + CASA INTELIGENTE</h3>
+      <p>Levantamento, execução completa de CFTV, alarme e automação.</p>
+      <div class="clientes"><b>Clientes:</b> Postos Ipiranga, Apoio Mineiro</div>
+    </div>
+    <div class="card" onclick="window.open('https://wa.me/5531984821901?text=Olá,%20quero%20orçamento%20de%20SOLUÇÕES%20DIGITAIS%20E%20IA')">
+      <h3>🤖 SOLUÇÕES DIGITAIS + IA</h3>
+      <p>Sistemas inteligentes, gestão e prompts para IA.</p>
+      <div class="clientes"><b>Clientes:</b> CEDAF, CEFET, Comerciantes</div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCO 3: CHAMADA FINAL -->
+<div class="wrap chamada">
   <h1>MP Instalações Inteligentes</h1>
-  <p>Soluções, orçamento e atendimento rápido</p>
-</header>
+  <p>Tecnologia, segurança e eficiência para sua casa ou empresa</p>
+  <a href="https://wa.me/5531984821901?text=Olá,%20quero%20um%20orçamento" class="btn">FALAR NO WHATSAPP</a>
+</div>
 
-  <div class="container">
-    <div class="servico">
-      <h3>🔌 Instalação elétrica comercial e industrial</h3>
-      <p>Projetos e execução com segurança e qualidade para sua empresa.</p>
-    </div>
+<!-- RODAPÉ -->
+<div class="contato">
+  <a href="tel:31984821901">📞 (31) 98482-1901</a>
+  <a href="mailto:setamarcos@gmail.com">📧 setamarcos@gmail.com</a>
+  <a href="https://www.setasolucoes.com.br" target="_blank">🌐 www.setasolucoes.com.br</a>
+</div>
 
-    <div class="servico">
-      <h3>🖧 Manutenção física de redes e cabeamento</h3>
-      <p>Organização de rack, cabeamento estruturado e identificação de pontos.</p>
-    </div>
+<script>
+function atualizarData(){const agora=new Date();const data=agora.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});document.getElementById('data-hora').innerText=data;}
+atualizarData();setInterval(atualizarData,60000);
 
-    <div class="servico">
-      <h3>📹 CFTV e segurança para empresas</h3>
-      <p>Instalação e manutenção de CFTV com visita técnica ou projeto completo.</p>
-    </div>
-
-    <div class="servico">
-      <h3>🛠 Revisão e manutenção preventiva elétrica</h3>
-      <p>Evite falhas com revisão elétrica e manutenção profissional para empresas.</p>
-    </div>
-  </div>
-
-  <div class="contato">
-    <h2>Solicite seu orçamento agora</h2>
-    <p><strong>Marcos</strong></p>
-    <p>📞 <a href="https://wa.me/5531984821901" style="color: #fff; text-decoration: underline;" target="_blank"><strong>(31) 98482-1901</strong> (WhatsApp)</a></p>
-    <p>📧 <a href="mailto:setamarcos@gmail.com" style="color: #fff; text-decoration: underline;">setamarcos@gmail.com</a></p>
-    <p>🌐 <a href="https://www.setasolucoes.com.br" style="color: #fff; text-decoration: underline;">www.setasolucoes.com.br</a></p>
-    <p>📍 Esmeraldas/MG</p>
-  </div>
-
-  <footer>
-    &copy; 2025 MP Instalações Inteligentes | Seta Soluções. Todos os direitos reservados.
-  </footer>
+const frases=["20 ANOS DE MERCADO","SOLUÇÕES P/ GRANDES E PEQUENOS NEGÓCIOS","ESTAMOS AQUI PRA TE ATENDER"];
+let i=0;setInterval(()=>{const el=document.getElementById('frase-pisca');el.style.opacity=0;setTimeout(()=>{el.innerText=frases[i];el.style.opacity=1;i=(i+1)%frases.length;},500);},1500);
+</script>
 </body>
 </html>
