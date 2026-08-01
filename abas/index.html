@@ -10,24 +10,6 @@
     body { font-family: 'Segoe UI', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; color: white; }
     
     header { background: var(--primary); color: white; padding: 1rem; border-bottom: 5px solid var(--accent); }
-
-  /* MARCA D'ÁGUA SEM FUNDO BRANCO */
-    header::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-image: url('logo.png');
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center;
-      width: 90%;
-      height: 250px;
-      opacity: 0.04; /* bem sutil */
-      z-index: 0;
-    }
-
     .header-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 800px; margin: 0 auto; gap: 1rem; }
     .logo-area img { height: 70px; width: auto; }
     .data-hora { font-size: 1rem; font-weight: 700; text-align: center; }
