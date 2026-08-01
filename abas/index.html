@@ -5,121 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seta Soluções | Hub Tecnológico</title>
   <style>
-    :root { --primary: #002244; --accent: #ff6600; --bg: #f8fafc; }
+    :root { --primary: #002244; --accent: #ff6600; --bg: #002244; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; color: white; }
     
-    header { background: var(--primary); color: white; padding: 2.5rem 1rem 1rem 1rem; text-align: center; border-bottom: 5px solid var(--accent); }
-    header h1 { margin-bottom: 0.5rem; }
-    header p { margin-bottom: 1.5rem; opacity: 0.9; }
+    header { background: var(--primary); color: white; padding: 1rem; border-bottom: 5px solid var(--accent); }
 
-    /* Estilo das Abas de Navegação no Topo */
-    .nav-tabs {
+  /* MARCA D'ÁGUA SEM FUNDO BRANCO */
+    header::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-image: url('logo.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      width: 90%;
+      height: 250px;
+      opacity: 0.04; /* bem sutil */
+      z-index: 0;
+    }
+
+    .header-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 800px; margin: 0 auto; gap: 1rem; }
+    .logo-area img { height: 70px; width: auto; }
+    .data-hora { font-size: 1rem; font-weight: 700; text-align: center; }
+    .header-desc { text-align: center; margin: 0.8rem auto; opacity: 0.9; font-size: 0.95rem; max-width: 800px; }
+
+    .nav-area { max-width: 800px; margin: 0 auto; }
+    .nav-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; background: rgba(0, 0, 0, 0.3); padding: 0.8rem; border-radius: 10px; }
+    .tab-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 0.6rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; }
+    .tab-btn.active { background: var(--accent); }
+
+     /* ÁREA DOS 2 BOTÕES */
+    .botoes-acao {
       display: flex;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .btn-acao {
+      flex: 1;
+      min-width: 200px;
+      background: linear-gradient(135deg, var(--accent), #ff8533);
+      border: none;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.75rem 1rem;
-      border-radius: 8px 8px 0 0;
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .tab-btn:hover, .tab-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
-      transform: translateY(-2px);
-    }
-    
-    .container { 
-      max-width: 1100px; 
-      margin: 2rem auto; 
-      padding: 0 1rem; 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-      gap: 1.5rem; 
-      width: 100%; 
-    }
-    
-    .card { 
-      background: white; 
-      padding: 1.5rem; 
-      border-radius: 16px; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-      text-decoration: none; 
-      color: #333; 
-      display: flex; 
-      align-items: center; 
-      gap: 1rem;
-      border: 1px solid #eee;
       transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(255,102,0,0.3);
+      text-decoration: none;
+    }
+    .btn-acao:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255,102,0,0.4);
+    }
+    .btn-github {
+      background: linear-gradient(135deg, #24292e, #444);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .btn-github:hover {
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
     }
     
-    .card:hover { border-color: var(--accent); transform: translateY(-5px); }
-    .icon { font-size: 2.5rem; }
-    
-    footer { background: #111; color: #ccc; padding: 3rem; text-align: center; margin-top: auto; }
-    .contact-link { color: var(--accent); display: block; margin: 0.5rem 0; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+    footer { background: #000; color: #aaa; padding: 2rem 1rem; text-align: center; margin-top: auto; border-top: 4px solid var(--accent); }
+    .contact-link { color: var(--accent); display: block; margin: 0.4rem 0; text-decoration: none; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Seta Soluções</h1>
-    <p>Tecnologia, Governança e Inteligência Artificial</p>
-    
-    <!-- Sistema de Abas Integrado -->
-    <nav class="nav-tabs">
-      <a href="/" class="tab-btn active">🏠 Início</a>
-      <a href="/ia/" class="tab-btn">🤖 MP Hub IA</a>
-      <a href="/laura/" class="tab-btn">👩‍💼 Laura</a>
-      <a href="https://www.setasolucoes.com.br/cedaf2026/" class="tab-btn">🎯 CEDAF 2026</a>
-      <a href="/neurociencia/" class="tab-btn">🧠 Neurociência</a>
-      <a href="/governança/" class="tab-btn">📋 Governança</a>
-      <a href="https://www.setasolucoes.com.br/cartao/" class="tab-btn">💳 Cartão</a>
-      <a href="https://www.setasolucoes.com.br/bolao" class="tab-btn">⚽ Bolão</a>
-      <a href="https://www.setasolucoes.com.br/livro" class="tab-btn">📚 Livro</a>
-    </nav>
+    <div class="header-top">
+      <div class="logo-area"><img src="logo.png" alt="Seta Soluções"></div>
+      <div class="data-hora" id="data-hora">Carregando...</div>
+      <div class="logo-area"><img src="logo.png" alt="Seta Soluções"></div>
+    </div>
+    <p class="header-desc">Tecnologia, Governança e Inteligência Artificial</p>
+    <div class="nav-area">
+      <nav class="nav-tabs">
+        <a href="index.html" class="tab-btn active">🏠 Início</a>
+        <a href="ia/index.html" class="tab-btn">🤖 MP Hub IA</a>
+        <a href="laura/index.html" class="tab-btn">👩‍💼 Laura</a>
+        <a href="veronica/index.html" class="tab-btn">💜 Verônica</a>
+        <a href="simonesemijoias/index.html" class="tab-btn">💎 Simone Semijoias</a>
+        <a href="cedaf2026/index.html" class="tab-btn">🎯 CEDAF 2026</a>
+        <a href="neurociencia/index.html" class="tab-btn">🧠 Neurociência</a>
+        <a href="governança/index.html" class="tab-btn">📋 Governança</a>
+        <a href="cartao/index.html" class="tab-btn">💳 Cartão</a>
+        <a href="bolao/index.html" class="tab-btn">⚽ Bolão</a>
+        <a href="livro/index.html" class="tab-btn">📚 Livro</a>
+      </nav>
+      <div class="botoes-acao">
+        <button class="btn-acao">➕ Gerador de Abas</button>
+        <a href="https://github.com/setamarcos/setsa-solu-es-gpt" target="_blank" class="btn-acao btn-github">💻 GitHub</a>
+      </div>
+    </div>
   </header>
   
-  <main class="container">
-    <a href="/" class="card"><div class="icon">🏠</div><div><h3>Início</h3><p>Página principal</p></div></a>
-    <a href="/ia/" class="card"><div class="icon">🤖</div><div><h3>MP Hub IA</h3><p>Demandas complexas</p></div></a>
-    <a href="/laura/" class="card"><div class="icon">👩‍💼</div><div><h3>Laura</h3><p>Soluções corporativas</p></div></a>
-    <a href="https://www.setasolucoes.com.br/cedaf2026/" class="card"><div class="icon">🎯</div><div><h3>CEDAF 2026</h3><p>Simulados e análise</p></div></a>
-    <a href="/neurociencia/" class="card"><div class="icon">🧠</div><div><h3>Neurociência</h3><p>Negócios aplicados</p></div></a>
-    <a href="/governança/" class="card"><div class="icon">📋</div><div><h3>Governança</h3><p>Diagnóstico IA</p></div></a>
-    <a href="/prospect-governanca-mp/" class="card"><div class="icon">💼</div><div><h3>Prospect MP</h3><p>Prospecção especializada</p></div></a>
-    <a href="/album/" class="card"><div class="icon">📖</div><div><h3>Álbum</h3><p>Criação de álbuns</p></div></a>
-    <a href="https://www.setasolucoes.com.br/bolao" class="card"><div class="icon">⚽</div><div><h3>Bolão</h3><p>Gestão e palpites</p></div></a>
-    <a href="https://www.setasolucoes.com.br/bolaocruzeiro" class="card"><div class="icon">🦊</div><div><h3>Bolão Cruzeiro</h3><p>Palpites exclusivos</p></div></a>
-    <a href="https://www.setasolucoes.com.br/livro" class="card"><div class="icon">📚</div><div><h3>Livro</h3><p>Acervo digital e crônicas</p></div></a>
-  </main>
+  <!-- TIREI O MAIN COM OS CARDS DUPLICADOS -->
   
   <footer>
+    <!-- TIREI AS LOGOS DAQUI -->
     <p>Conecte-se com a Seta Soluções:</p>
     <a href="https://wa.me/5531984821901" class="contact-link">WhatsApp: (31) 98482-1901</a>
     <a href="mailto:setamarcos@gmail.com" class="contact-link">Email: setamarcos@gmail.com</a>
-    <a href="https://www.setasolucoes.com.br" class="contact-link">www.setasolucoes.com.br</a>
-    <p style="margin-top: 1rem;">&copy; 2026 Seta Soluções. Todos os direitos reservados.</p>
+    <p style="margin-top: 1rem; font-size: 0.8rem;">&copy; 2026 Seta Soluções</p>
   </footer>
+
+<script>
+  function atualizarDataHora() {
+    const agora = new Date();
+    const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const diaSemana = dias[agora.getDay()];
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = agora.getFullYear();
+    const hora = String(agora.getHours()).padStart(2, '0');
+    const min = String(agora.getMinutes()).padStart(2, '0');
+    document.getElementById('data-hora').innerText = `${diaSemana}. ${dia}/${mes}/${ano} - ${hora}:${min}`;
+  }
+  atualizarDataHora();
+  setInterval(atualizarDataHora, 60000);
+</script>
 </body>
 </html>
