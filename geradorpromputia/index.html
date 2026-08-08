@@ -60,7 +60,10 @@
     <h1>Estamos juntos nisso.</h1>
     <div class="subtitle">Refine sua intenção: Garanta respostas precisas da IA eliminando alucinações e desvios de escopo.</div>
 
-    <div id="login"></div>
+    <div id="login">
+      <input type="text" id="input-telefone" placeholder="(xx) xxxxx-xxxx" maxlength="15" oninput="mascaraTelefone(this)">
+      <button type="button" onclick="fazerLogin()">Fazer Login</button>
+    </div>
     <div id="exercise"></div>
     <div id="progressChart"></div>
 
@@ -81,22 +84,9 @@
     </div>
     <textarea id="evitar" placeholder="Escreva o que está fora de cogitação..."></textarea>
 
-    <label for="imagem">4. Se quiser inserir imagem (Print de tela ou Notícia):</label>
-    <input type="file" id="imagem" accept="image/*" style="display:none;" onchange="processarEClassificarImagem(this)">
-    <button class="btn-audio" type="button" style="background:#e2e8f0; color:#000; border:2px dashed #cbd5e1;" onclick="document.getElementById('imagem').click()">Toque aqui para selecionar uma imagem do seu Android</button>
-    <div id="img-status"></div>
-
-    <label for="objetivo_imagem">Qual o objetivo desse print/imagem?</label>
-    <select id="objetivo_imagem">
-      <option value="conversar">É o print de uma conversa (Quero uma resposta/retorno)</option>
-      <option value="erro">É o print de um erro de sistema (Quero solução)</option>
-      <option value="dados">Contém dados e tabelas para análise</option>
-    </select>
-
     <div class="button-row">
       <button class="action-btn" type="button" onclick="gerarPromptEstruturado()">Me ajuda com isso</button>
       <button class="action-btn" type="button" onclick="copiarPromptGerado()">Copiar Prompt</button>
-      <button class="action-btn" type="button" onclick="exportarDadosPlanilha()">Exportar CSV</button>
       <button class="action-btn" type="button" style="background:#0284c7;" onclick="gerarRelatorioPDF()">Gerar PDF</button>
     </div>
 
@@ -124,8 +114,19 @@
   <script>
     let reconhecimentoAudio;
     let campoGravandoId = null;
-    let imagemBase64 = "";
-    let classificacaoAuto = "Geral (Sem imagem anexada)";
+
+    function mascaraTelefone(input) {
+      let v = input.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
+      } else if (v.length > 0) {
+        v = v.replace(/^(\d*)/, "($1");
+      }
+      input.value = v;
+    }
 
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechGen = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -181,39 +182,21 @@
       }
     }
 
-    function processarEClassificarImagem(input) {
-      const indicador = document.getElementById('img-status');
-      if (input.files && input.files[0]) {
-        const arquivo = input.files[0];
-        const nomeLimpo = arquivo.name.toLowerCase();
-
-        if (nomeLimpo.includes('screenshot') || nomeLimpo.includes('wa') || /^\d+/.test(nomeLimpo)) {
-          classificacaoAuto = "Conversa / Mensagem de Texto Recortada";
-          document.getElementById('objetivo_imagem').value = 'conversar';
-          indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Autodetectado: Print de Conversa</span>`;
-        } else {
-          classificacaoAuto = "Evidência de Sistema / Dados Técnicos";
-          document.getElementById('objetivo_imagem').value = 'erro';
-          indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📊 Autodetectado: Print de Tela ou Erro</span>`;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) { imagemBase64 = "Injetada (Base64)"; };
-        reader.readAsDataURL(arquivo);
-      }
-    }
-
     function gerarPromptEstruturado() {
-      let prompt = `CONTEXTO E DIRETRIZ DE ENTRADA:\n`;
+      let prompt = `O QUE EU ENTENDI DO SEU PEDIDO:\n`;
       prompt += `Solicitação Principal: ${document.getElementById('solicitacao').value}\n`;
       prompt += `Contexto Adicional: ${document.getElementById('detalhe').value}\n\n`;
+      prompt += `O QUE EU TE ENTREGUEI ASSIM:\n`;
       prompt += `RESTRIÇÕES DA INTERAÇÃO (O QUE EVITAR):\n${document.getElementById('evitar').value || "Nenhuma restrição informada."}\n\n`;
-      prompt += `TRATAMENTO DE MÍDIA INTEGRADO:\nIntenção do Print/Imagem: Classificado como [${classificacaoAuto}].\n\n`;
       prompt += `DIRETRIZ DE SAÍDA EXECUTIVA:\nResponder de forma coesa, direta, aplicando o método de resolução limpa, sem fragmentação ou respostas em pedaços.`;
 
       let painel = document.getElementById('prompt-final');
       painel.innerText = prompt;
       painel.style.display = 'block';
+
+      if(window.salvarNoGoogleSheets) {
+        window.salvarNoGoogleSheets();
+      }
     }
 
     function copiarPromptGerado() {
@@ -221,22 +204,6 @@
       if(!texto) { alert('Clique em "Me ajuda com isso" primeiro!'); return; }
       navigator.clipboard.writeText(texto);
       alert('Prompt estruturado copiado para a área de transferência!');
-    }
-
-    function exportarDadosPlanilha() {
-      if(window.salvarNoGoogleSheets) {
-        window.salvarNoGoogleSheets();
-      } else {
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFFData,Solicitacao,Classificacao\n";
-        csvContent += `"${new Date().toLocaleString()}","${document.getElementById('solicitacao').value.replace(/\n/g, ' ')}","${classificacaoAuto}"\n`;
-        let encodedUri = encodeURI(csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "historico_diagnostico.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
     }
 
     function executarFeedback(status) {
