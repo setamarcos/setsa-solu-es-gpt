@@ -1,4 +1,4 @@
-// google.js - PRONPTIA v6.3
+// google.js - PRONPTIA v6.1 (Ajustado para Telefone)
 const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwAFjbqPdEk5rcgQahgsOn35tPXpTIj9vjSIA63LgyYDPj2QOvMB4K-kNGrkqscmYzp/exec";
 
 let usuarioTelefone = localStorage.getItem('promptTelefone') || null;
@@ -6,21 +6,21 @@ let usuarioTelefone = localStorage.getItem('promptTelefone') || null;
 // FUNÇÃO QUE O HTML VAI CHAMAR PARA SALVAR
 function salvarNoGoogleSheets() {
   if (!usuarioTelefone) {
-    alert("⚠️ Faça login primeiro!");
+    alert("⚠️ Faça login primeiro informando seu telefone!");
     return;
   }
 
   const dados = {
     data: new Date().toLocaleString("pt-BR"),
-    telefone: usuarioTelefone,
+    email: usuarioTelefone, // Enviado no campo existente para compatibilidade com a planilha
     contato: usuarioTelefone,
-    loguinho: usuarioTelefone,
+    loguinho: usuarioTelefone.replace(/\D/g, ""), // Apenas os números do telefone como identificador curto
     acao: "Diagnostico",
     userAgent: navigator.userAgent,
     solicitacao: document.getElementById('solicitacao').value,
     detalhe: document.getElementById('detalhe').value,
     evitar: document.getElementById('evitar').value,
-    classificacao: "Geral (Sem imagem)",
+    classificacao: window.classificacaoAuto || "Geral (Sem imagem anexada)",
     objetivoImagem: "",
     promptGerado: document.getElementById('prompt-final')?.innerText || "",
     respostaIA: document.getElementById('resposta_ia')?.value || "",
@@ -40,25 +40,20 @@ function enviarFeedbackPlanilha(status) {
   salvarNoGoogleSheets();
 }
 
-// FUNÇÃO PARA FORMATAR TELEFONE (xx) xxxxx-xxxx
-function formatarTelefone(valor) {
-  valor = valor.replace(/\D/g, "");
-  if (valor.length <= 2) return `(${valor}`;
-  if (valor.length <= 7) return `(${valor.slice(0,2)}) ${valor.slice(2)}`;
-  return `(${valor.slice(0,2)}) ${valor.slice(2,7)}-${valor.slice(7,11)}`;
-}
-
-// LOGIN
+// LOGIN COM TELEFONE
 function fazerLoginPrompt() {
-  const telInput = document.getElementById('telefoneInput').value.trim();
-  const telefoneLimpo = telInput.replace(/\D/g, "");
-
-  if(telefoneLimpo.length === 11){
-    usuarioTelefone = telInput;
-    localStorage.setItem('promptTelefone', telInput);
-    document.getElementById('login').innerHTML = `<p style="color:#16a34a; font-weight:bold">✅ Logado: ${telInput} <button onclick="fazerLogoutPrompt()">Sair</button></p>`;
+  const inputEl = document.getElementById('input-telefone');
+  const telefone = inputEl ? inputEl.value.trim() : "";
+  
+  // Validação simples do formato (xx) xxxxx-xxxx ou similar com pelo menos 10 dígitos numéricos
+  const apenasNumeros = telefone.replace(/\D/g, "");
+  
+  if (apenasNumeros.length >= 10) {
+    usuarioTelefone = telefone;
+    localStorage.setItem('promptTelefone', telefone);
+    renderizarEstadoLogin();
   } else {
-    alert("Telefone inválido. Use (xx) xxxxx-xxxx")
+    alert("Digite um número de telefone válido no formato (xx) xxxxx-xxxx");
   }
 }
 
@@ -68,14 +63,21 @@ function fazerLogoutPrompt() {
   location.reload();
 }
 
-// CARREGA LOGIN AO ABRIR
-document.addEventListener('DOMContentLoaded', function() {
-  if(usuarioTelefone) {
-    document.getElementById('login').innerHTML = `<p style="color:#16a34a; font-weight:bold">✅ Logado: ${usuarioTelefone} <button onclick="fazerLogoutPrompt()">Sair</button></p>`;
+function renderizarEstadoLogin() {
+  const loginDiv = document.getElementById('login');
+  if (!loginDiv) return;
+
+  if (usuarioTelefone) {
+    loginDiv.innerHTML = `<p style="color:#16a34a; font-weight:bold; margin:0;">✅ Logado: ${usuarioTelefone} <button type="button" onclick="fazerLogoutPrompt()" style="margin-left:10px; background:#dc2626; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Sair</button></p>`;
   } else {
-    document.getElementById('login').innerHTML = `
-      <input type="text" id="telefoneInput" placeholder="(xx) xxxxx-xxxx" maxlength="15" oninput="this.value = formatarTelefone(this.value)">
-      <button class="action-btn" onclick="fazerLoginPrompt()">Fazer Login</button>
+    loginDiv.innerHTML = `
+      <input type="text" id="input-telefone" placeholder="(xx) xxxxx-xxxx" maxlength="15" oninput="mascaraTelefone(this)">
+      <button type="button" onclick="fazerLoginPrompt()">Fazer Login</button>
     `;
   }
+}
+
+// CARREGA LOGIN AO ABRIR
+document.addEventListener('DOMContentLoaded', function() {
+  renderizarEstadoLogin();
 });
