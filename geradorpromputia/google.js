@@ -1,8 +1,7 @@
-// google.js - PRONPTIA v6.2
+// google.js - PRONPTIA v6.3
 const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwAFjbqPdEk5rcgQahgsOn35tPXpTIj9vjSIA63LgyYDPj2QOvMB4K-kNGrkqscmYzp/exec";
 
 let usuarioTelefone = localStorage.getItem('promptTelefone') || null;
-let usuarioWatts = localStorage.getItem('promptWatts') || null;
 
 // FUNÇÃO QUE O HTML VAI CHAMAR PARA SALVAR
 function salvarNoGoogleSheets() {
@@ -14,7 +13,6 @@ function salvarNoGoogleSheets() {
   const dados = {
     data: new Date().toLocaleString("pt-BR"),
     telefone: usuarioTelefone,
-    watts: usuarioWatts,
     contato: usuarioTelefone,
     loguinho: usuarioTelefone,
     acao: "Diagnostico",
@@ -22,7 +20,7 @@ function salvarNoGoogleSheets() {
     solicitacao: document.getElementById('solicitacao').value,
     detalhe: document.getElementById('detalhe').value,
     evitar: document.getElementById('evitar').value,
-    classificacao: window.classificacaoAuto || "Geral (Sem imagem anexada)",
+    classificacao: "Geral (Sem imagem)",
     objetivoImagem: "",
     promptGerado: document.getElementById('prompt-final')?.innerText || "",
     respostaIA: document.getElementById('resposta_ia')?.value || "",
@@ -53,25 +51,20 @@ function formatarTelefone(valor) {
 // LOGIN
 function fazerLoginPrompt() {
   const telInput = document.getElementById('telefoneInput').value.trim();
-  const wattsInput = document.getElementById('wattsInput').value.trim();
   const telefoneLimpo = telInput.replace(/\D/g, "");
 
-  if(telefoneLimpo.length === 11 && wattsInput !== ""){
+  if(telefoneLimpo.length === 11){
     usuarioTelefone = telInput;
-    usuarioWatts = wattsInput;
     localStorage.setItem('promptTelefone', telInput);
-    localStorage.setItem('promptWatts', wattsInput);
     document.getElementById('login').innerHTML = `<p style="color:#16a34a; font-weight:bold">✅ Logado: ${telInput} <button onclick="fazerLogoutPrompt()">Sair</button></p>`;
   } else {
-    alert("Telefone inválido. Use (xx) xxxxx-xxxx e preencha o Watts")
+    alert("Telefone inválido. Use (xx) xxxxx-xxxx")
   }
 }
 
 function fazerLogoutPrompt() {
   usuarioTelefone = null;
-  usuarioWatts = null;
   localStorage.removeItem('promptTelefone');
-  localStorage.removeItem('promptWatts');
   location.reload();
 }
 
@@ -82,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     document.getElementById('login').innerHTML = `
       <input type="text" id="telefoneInput" placeholder="(xx) xxxxx-xxxx" maxlength="15" oninput="this.value = formatarTelefone(this.value)">
-      <input type="text" id="wattsInput" placeholder="Watts">
       <button class="action-btn" onclick="fazerLoginPrompt()">Fazer Login</button>
     `;
   }
