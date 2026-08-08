@@ -1,7 +1,6 @@
-// script.js - PRONPTIA v6.1
+// script.js - PRONPTIA v6.2
 let reconhecimentoAudio;
 let campoGravandoId = null;
-let classificacaoAuto = "Geral (Sem imagem anexada)";
 
 // INICIA RECONHECIMENTO DE VOZ
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -60,37 +59,22 @@ function toggleFiltro(elemento, texto) {
   }
 }
 
-// IMAGEM
-function processarEClassificarImagem(input) {
-  const indicador = document.getElementById('img-status');
-  if (input.files && input.files[0]) {
-    const arquivo = input.files[0];
-    const nomeLimpo = arquivo.name.toLowerCase();
-
-    if (nomeLimpo.includes('screenshot') || nomeLimpo.includes('wa') || /^\d+/.test(nomeLimpo)) {
-      classificacaoAuto = "Conversa / Mensagem de Texto Recortada";
-      document.getElementById('objetivo_imagem').value = 'conversar';
-      indicador.innerHTML = `<span class="status-tag" style="background:#16a34a">💬 Autodetectado: Print de Conversa</span>`;
-    } else {
-      classificacaoAuto = "Evidência de Sistema / Dados Técnicos";
-      document.getElementById('objetivo_imagem').value = 'erro';
-      indicador.innerHTML = `<span class="status-tag" style="background:#ca8a04">📊 Autodetectado: Print de Tela</span>`;
-    }
-  }
-}
-
-// GERAR PROMPT EM BLOCOS
+// FUNÇÃO "ME AJUDA" AGORA SALVA E GERA
 function gerarPromptEstruturado() {
-  let prompt = `### TAREFA PRINCIPAL ###\n`;
+  // 1. PRIMEIRO SALVA NA PLANILHA
+  if(window.salvarNoGoogleSheets) {
+    salvarNoGoogleSheets();
+  }
+
+  // 2. DEPOIS GERA O TEXTO NOVO
+  let prompt = `O QUE EU ENTENDI DO SEU PEDIDO:\n`;
   prompt += `${document.getElementById('solicitacao').value}\n\n`;
-  prompt += `### CONTEXTO ###\n`;
+  prompt += `CONTEXTO QUE VOCÊ ME DEU:\n`;
   prompt += `${document.getElementById('detalhe').value}\n\n`;
-  prompt += `### RESTRIÇÕES - O QUE EVITAR ###\n`;
-  prompt += `${document.getElementById('evitar').value || "Nenhuma"}\n\n`;
-  prompt += `### MÍDIA ANEXADA ###\n`;
-  prompt += `Tipo: ${classificacaoAuto}\n\n`;
-  prompt += `### INSTRUÇÃO FINAL ###\n`;
-  prompt += `Responda de forma direta, em blocos com títulos. Sem enrolação.`;
+  prompt += `O QUE VOCÊ PEDIU PRA EU EVITAR:\n`;
+  prompt += `${document.getElementById('evitar').value || "Nenhuma restrição"}\n\n`;
+  prompt += `O QUE EU TE ENTREGUEI ASSIM:\n`;
+  prompt += `Resposta direta, sem enrolação, focada em resolver sua solicitação acima.`;
 
   let painel = document.getElementById('prompt-final');
   painel.innerText = prompt;
@@ -110,7 +94,4 @@ function gerarRelatorioPDF() {
   window.print();
 }
 
-// EXPORTAR = SALVAR NA PLANILHA
-function exportarDadosPlanilha() {
-  salvarNoGoogleSheets(); // chama a função do google.js
-}
+// FUNÇÃO EXPORTAR REMOVIDA - "Me ajuda" já faz isso
