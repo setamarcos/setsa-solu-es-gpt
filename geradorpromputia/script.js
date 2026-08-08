@@ -1,4 +1,4 @@
-// script.js - PRONPTIA v6.2
+// script.js - PRONPTIA v6.3
 let reconhecimentoAudio;
 let campoGravandoId = null;
 
@@ -13,7 +13,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     if (campoGravandoId) {
       const resultadoTexto = event.results[0][0].transcript;
       const campoTarget = document.getElementById(campoGravandoId);
-      campoTarget.value += (campoTarget.value? " " : "") + resultadoTexto;
+      campoTarget.value += (campoTarget.value? " : "") + resultadoTexto;
     }
   };
   reconhecimentoAudio.onend = pararGravacaoUI;
@@ -59,7 +59,7 @@ function toggleFiltro(elemento, texto) {
   }
 }
 
-// FUNÇÃO "ME AJUDA" AGORA SALVA E GERA
+// FUNÇÃO "ME AJUDA" SALVA E GERA O PROMPT
 function gerarPromptEstruturado() {
   // 1. PRIMEIRO SALVA NA PLANILHA
   if(window.salvarNoGoogleSheets) {
@@ -93,5 +93,3 @@ function copiarPromptGerado() {
 function gerarRelatorioPDF() {
   window.print();
 }
-
-// FUNÇÃO EXPORTAR REMOVIDA - "Me ajuda" já faz isso
